@@ -28,10 +28,9 @@ VALUEABLE_BLOCKS = [
     "lapis",
     "emerald",
     "cobble",
-    "dirt",
 ]  # not coal, we wanna keep that
 
-TRASH_BLOCKS = ["diorite", "granite", "andesite"]
+TRASH_BLOCKS = ["diorite", "granite", "andesite", "dirt"]
 
 # Const type things
 TURTLE_SLOTS = 16
