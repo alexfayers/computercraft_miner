@@ -4,7 +4,7 @@ from cc import term
 MOVE_DISTANCE = 10
 REFUEL_THRESH = 10
 FUEL_SATISFIED_THRESH = 60
-LIGHT_SEPARATION = 16
+LIGHT_SEPARATION = 17
 
 BRANCH_COUNT = 2
 BRANCH_SEPARATION = 3
@@ -123,7 +123,7 @@ def forward_and_check_lights():
 
     DISTANCE_COVERED += 1
 
-    if DISTANCE_COVERED % LIGHT_SEPARATION == 0 or DISTANCE_COVERED == 2:
+    if DISTANCE_COVERED % LIGHT_SEPARATION == 0 or DISTANCE_COVERED == 3:
         place_light_from_inventory()
     
     print(f"Move forward ({DISTANCE_COVERED})")
@@ -153,6 +153,8 @@ def create_branch():
         mine_step()
 
     # head back
+
+    print("Heading back!")
 
     turtle.up()
     turn_around()
