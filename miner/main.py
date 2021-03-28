@@ -20,7 +20,7 @@ def find_item(search):
     for slot in range(1, TURTLE_SLOTS + 1):
         info = turtle.getItemDetail(slot)
 
-        if info not None and search in info['name']:
+        if info is not None and search in info['name']:
             return slot
     return False
 
