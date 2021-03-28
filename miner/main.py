@@ -172,7 +172,7 @@ for branch_number in BRANCH_COUNT:
     turtle.turnRight()
 
     # move along to new branch section
-    for _ in range(BRANCH_SEPARATION + 1)
+    for _ in range(BRANCH_SEPARATION + 1):
         mine_step()
     
     turtle.turnLeft()
