@@ -12,6 +12,10 @@ BRANCH_SEPARATION = 2
 FUEL_TYPES = ["lava", "blaze", "coal", "wood"]
 LIGHTING_TYPES = ["torch"]
 
+CURSED_BLOCKS = ["gravel"]
+
+VALUEABLE_BLOCKS = ["ore"]
+
 # Const type things
 TURTLE_SLOTS = 16
 
@@ -82,7 +86,9 @@ def refuel_from_inventory():
                 while turtle.getFuelLevel() <= FUEL_SATISFIED_THRESH:
                     print(f"Refueling from slot {fuel_slot}...")
                     if not turtle.refuel(1):
-                        print("Run out of fuel in this slot, rescanning inventory for more.")
+                        print(
+                            "Run out of fuel in this slot, rescanning inventory for more."
+                        )
                         break
 
                 turtle.select(prevSlot)
@@ -90,7 +96,7 @@ def refuel_from_inventory():
                 refueled = True
                 doRefuel = False
                 break
-        
+
         # give up
         if not foundFuel:
             print("Ran out of fuel :/")
@@ -115,11 +121,16 @@ def check_fuel():
 
     return level
 
+
 def forward_and_check_lights():
     global DISTANCE_COVERED
 
     if turtle.detect():
-        turtle.dig()
+        if not check_if_cursed_block():
+            turtle.dig()
+        else:
+            return False
+
     turtle.forward()
 
     DISTANCE_COVERED += 1
@@ -129,42 +140,114 @@ def forward_and_check_lights():
 
     print(f"Move forward ({DISTANCE_COVERED})")
 
+    return True
+
+
+def check_if_cursed_block():
+    for block in CURSED_BLOCKS:
+        info = turtle.inspect()
+
+        if info is not None and block in info['name']:
+            print("CURSED BLOCK, ABANDON BRANCH!!!")
+            return True
+    return False
+
+
+def check_valueable_up():
+    for block in VALUABLE_BLOCKS:
+        info = turtle.inspectUp()
+
+        if info is not None and block in info['name']:
+            turtle.digUp()
+            print(f"Got valueable block ({info['name']})!")
+
+
+def check_valueable_down():
+    for block in VALUABLE_BLOCKS:
+        info = turtle.inspectDown()
+
+        if info is not None and block in info['name']:
+            turtle.digDown()
+            print(f"Got valueable block ({info['name']})!")
+
+
+def check_valueable_left_right():
+    turtle.turnLeft()
+
+    for block in VALUABLE_BLOCKS:
+        info = turtle.inspect()
+
+        if info is not None and block in info['name']:
+            turtle.dig()
+            print(f"Got valueable block ({info['name']})!")
+
+    turn_around()
+
+    for block in VALUABLE_BLOCKS:
+        info = turtle.inspect()
+
+        if info is not None and block in info['name']:
+            turtle.dig()
+            print(f"Got valueable block ({info['name']})!")
+
+    turtle.turnLeft()
+
+
 def mine_step(branch_number):
     check_fuel()
 
-    forward_and_check_lights()
+    if not forward_and_check_lights():
+        return False
+    check_valueable_left_right()
+    check_valueable_down()
 
     if turtle.detectUp():
         turtle.digUp()
     turtle.up()
 
-    forward_and_check_lights()
+    check_valueable_left_right()
+    check_valueable_up()
+
+    if not forward_and_check_lights():
+        return False
+    check_valueable_left_right()
+    check_valueable_up()
 
     if turtle.detectDown():
         turtle.digDown()
     turtle.down()
+    
+    check_valueable_left_right()
+    check_valueable_down()
 
     if branch_number >= 0 and DISTANCE_COVERED == 2:
         place_light_from_inventory()
+
+    return True
+
 
 def return_step():
     check_fuel()
     turtle.forward()
     print("Forward")
 
+
 def create_branch(branch_number):
     global DISTANCE_COVERED
 
     block_in_front = turtle.inspect()
 
-    if block_in_front is not None and any(lighting_block in block_in_front['name'] for lighting_block in LIGHTING_TYPES):
+    if block_in_front is not None and any(
+        lighting_block in block_in_front["name"] for lighting_block in LIGHTING_TYPES
+    ):
         # we've done this already, skip it
         return False
 
     DISTANCE_COVERED = 0
     # start branch
     for count in range(MOVE_DISTANCE // 2):
-        mine_step(branch_number)
+        if not mine_step(branch_number):
+            break
 
     # head back
 
@@ -173,13 +256,14 @@ def create_branch(branch_number):
     turtle.up()
     turn_around()
 
-    for _ in range(DISTANCE_COVERED): # come back the distance that we came
+    for _ in range(DISTANCE_COVERED):  # come back the distance that we came
         return_step()
 
     turn_around()
     turtle.down()
 
     return True
+
 
 branch_number = 0
 while branch_number < BRANCH_COUNT:
@@ -196,7 +280,7 @@ while branch_number < BRANCH_COUNT:
     # move along to new branch section
     for _ in range(BRANCH_SEPARATION):
         mine_step(-1)
-    
+
     turtle.turnLeft()
 
 print("Returning home!")
