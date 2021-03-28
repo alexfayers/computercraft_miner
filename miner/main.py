@@ -7,7 +7,7 @@ REFUEL_THRESH = 20
 FUEL_SATISFIED_THRESH = 200
 LIGHT_SEPARATION = 16
 
-BRANCH_COUNT = 10
+BRANCH_COUNT = 4
 BRANCH_SEPARATION = 2
 
 BLOCK_LOG_FILENAME = "block_log.csv"
@@ -364,7 +364,7 @@ failed_branches = 0
 while branch_number < BRANCH_COUNT:
     print(f"STARTING BRANCH {branch_number + failed_branches + 1}!")
 
-    if create_branch(branch_number):
+    if create_branch(branch_number + failed_branches):
         print(f"BRANCH {branch_number + failed_branches + 1} COMPLETE!")
         branch_number += 1
     else:
