@@ -1,5 +1,6 @@
 from cc import is_turtle, turtle
 from cc import term
+from cc import fs
 
 MOVE_DISTANCE = 10
 REFUEL_THRESH = 20
@@ -8,6 +9,8 @@ LIGHT_SEPARATION = 16
 
 BRANCH_COUNT = 2
 BRANCH_SEPARATION = 2
+
+BLOCK_LOG_FILENAME = 'block_log.csv'
 
 FUEL_TYPES = ["lava", "blaze", "coal", "wood"]
 LIGHTING_TYPES = ["torch"]
@@ -59,6 +62,9 @@ def place_light_from_inventory():  # place a light behind us
 
             turn_around()
             turtle.place()
+
+            throw_away_trash() # attempt to throw away trash while we're facing away
+
             turn_around()
 
             turtle.select(prevSlot)
@@ -142,8 +148,6 @@ def forward_and_check_lights():
     if DISTANCE_COVERED % LIGHT_SEPARATION == 0:
         place_light_from_inventory()
 
-    throw_away_trash() # attempt to throw away trash
-
     print(f"Move forward ({DISTANCE_COVERED})")
 
     return True
@@ -155,26 +159,37 @@ def check_if_cursed_block():
 
         if info is not None and block in info["name"]:
             print("CURSED BLOCK, ABANDON BRANCH!!!")
+
+            with fs.open(BLOCK_LOG_FILENAME, 'a') as f:
+                f.writeLine(f'{branch_number}, abandoned\n')
+
             return True
     return False
 
 
-def check_valueable_up():
+def block_log(branch_number, block_name):
+    print(f"Got valueable block ({block_name)}) in branch {branch_number}!")
+
+    with fs.open(BLOCK_LOG_FILENAME, 'a') as f:
+        f.writeLine(f'{branch_number}, {block_name}\n')
+
+
+def check_valueable_up(branch_number):
     for block in VALUEABLE_BLOCKS:
         info = turtle.inspectUp()
 
         if info is not None and block in info["name"]:
             turtle.digUp()
-            print(f"Got valueable block ({info['name']})!")
+            block_log(branch_number, info['name'])
 
 
-def check_valueable_down():
+def check_valueable_down(branch_number):
     for block in VALUEABLE_BLOCKS:
         info = turtle.inspectDown()
 
         if info is not None and block in info["name"]:
             turtle.digDown()
-            print(f"Got valueable block ({info['name']})!")
+            block_log(branch_number, info['name'])
 
 
 def throw_away_trash():
@@ -184,7 +199,7 @@ def throw_away_trash():
             prevSlot = turtle.getSelectedSlot()
             turtle.select(block_slot)
 
-            turtle.dropUp()
+            turtle.drop()
             
             turtle.select(prevSlot)
 
@@ -194,7 +209,7 @@ def throw_away_trash():
     return False
 
 
-def check_valueable_left_right():
+def check_valueable_left_right(branch_number):
     turtle.turnLeft()
 
     for block in VALUEABLE_BLOCKS:
@@ -202,7 +217,7 @@ def check_valueable_left_right():
 
         if info is not None and block in info["name"]:
             turtle.dig()
-            print(f"Got valueable block ({info['name']})!")
+            block_log(branch_number, info['name'])
 
     turn_around()
 
@@ -211,7 +226,7 @@ def check_valueable_left_right():
 
         if info is not None and block in info["name"]:
             turtle.dig()
-            print(f"Got valueable block ({info['name']})!")
+            block_log(branch_number, info['name'])
 
     turtle.turnLeft()
 
@@ -221,27 +236,27 @@ def mine_step(branch_number):
 
     if not forward_and_check_lights():
         return False
-    check_valueable_left_right()
-    check_valueable_down()
+    check_valueable_left_right(branch_number)
+    check_valueable_down(branch_number)
 
     if turtle.detectUp():
         turtle.digUp()
     turtle.up()
 
-    check_valueable_left_right()
-    check_valueable_up()
+    check_valueable_left_right(branch_number)
+    check_valueable_up(branch_number)
 
     if not forward_and_check_lights():
         return False
-    check_valueable_left_right()
-    check_valueable_up()
+    check_valueable_left_right(branch_number)
+    check_valueable_up(branch_number)
 
     if turtle.detectDown():
         turtle.digDown()
     turtle.down()
 
-    check_valueable_left_right()
-    check_valueable_down()
+    check_valueable_left_right(branch_number)
+    check_valueable_down(branch_number)
 
     if branch_number >= 0 and DISTANCE_COVERED == 2:
         place_light_from_inventory()
@@ -298,26 +313,34 @@ def deposit_valueables():
             canDeposit = True
             break
 
-    deposited = False
     if canDeposit:
-        for block in VALUEABLE_BLOCKS:
-            block_slot = find_item(block)
+        deposit_count = 0
+        
+        while True:
+            deposited = False
 
-            if block_slot:
-                prevSlot = turtle.getSelectedSlot()
-                turtle.select(block_slot)
+            for block in VALUEABLE_BLOCKS:
+                block_slot = find_item(block)
 
-                turtle.dropDown()  # drop the items into the chest or whatever
+                if block_slot:
+                    prevSlot = turtle.getSelectedSlot()
+                    turtle.select(block_slot)
 
-                turtle.select(prevSlot)
+                    turtle.dropDown()  # drop the items into the chest or whatever
 
-                print(f"Deposited some {block} into storage")
+                    turtle.select(prevSlot)
 
-                deposited = True
+                    print(f"Deposited some {block} into storage")
 
-        if not deposited:
-            print("Didn't deposit anything. Better luck next time :/")
-        return deposited
+                    deposit_count += 1
+
+                    deposited = True
+            
+            if not deposited:
+                print("Didn't deposit anything this run, breaking.")
+                break
+
+        return True
 
     else:
         print("Can't deposit in this block!")
