@@ -1,5 +1,6 @@
 from cc import is_turtle, turtle
 from cc import term
+from cc import gps
 
 term.clear()
 
@@ -8,5 +9,11 @@ if not is_turtle():
     exit()
 
 for _ in range(4):
-    turtle.tunnel(1)
-    turtle.go(1)
+    print(gps.locate())
+
+    if turtle.detect():
+        turtle.dig()
+    if turtle.detectUp():
+        turtle.digUp()
+
+    turtle.forward()
