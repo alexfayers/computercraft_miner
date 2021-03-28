@@ -304,14 +304,16 @@ def deposit_valueables():
 
 
 branch_number = 0
+failed_branches = 0
 while branch_number < BRANCH_COUNT:
-    print(f"STARTING BRANCH {branch_number + 1}!")
+    print(f"STARTING BRANCH {branch_number + failed_branches + 1}!")
 
     if create_branch(branch_number):
-        print(f"BRANCH {branch_number + 1} COMPLETE!")
+        print(f"BRANCH {branch_number + failed_branches + 1} COMPLETE!")
         branch_number += 1
     else:
         print("Already mined this branch!")
+        failed_branches += 1
 
     turtle.turnRight()
 
@@ -325,7 +327,7 @@ print("Returning home!")
 
 turtle.turnLeft()
 
-for _ in range((BRANCH_SEPARATION + 1) * (BRANCH_COUNT + 1)):
+for _ in range((BRANCH_SEPARATION + 1) * (branch_number + failed_branches + 1)) - 1:
     return_step()
 
 turtle.turnRight()
