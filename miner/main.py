@@ -3,6 +3,7 @@ from cc import term
 
 MOVE_DISTANCE = 10
 REFUEL_THRESH = 10
+FUEL_SATISFIED_THRESH = 60
 LIGHT_SEPARATION = 15
 
 FUEL_TYPES = ["lava", "blaze", "coal", "wood"]
@@ -10,6 +11,11 @@ LIGHTING_TYPES = ["torch"]
 
 # Const type things
 TURTLE_SLOTS = 16
+
+# Global updated tings
+
+DISTANCE_COVERED = 0
+
 
 term.clear()
 
@@ -33,6 +39,7 @@ def find_item(search):
 
 
 def place_light_from_inventory():  # place a light behind us
+    print("Attemping to place a light...")
     for lighting_type in LIGHTING_TYPES:
         light_slot = find_item(lighting_type)
         if light_slot:
@@ -45,28 +52,47 @@ def place_light_from_inventory():  # place a light behind us
 
             turtle.select(prevSlot)
 
-            print("Light placed behind")
+            print("Light placed!")
 
             return True
+    print("Light place failed :/")
     return False
 
 
 def refuel_from_inventory():
-    for fuel_type in FUEL_TYPES:
-        fuel_slot = find_item(fuel_type)
-        if fuel_slot:
-            prevSlot = turtle.getSelectedSlot()
-            turtle.select(fuel_slot)
+    doRefuel = True
+    refueled = False
 
-            while turtle.getFuelLevel() <= REFUEL_THRESH:
-                print("Refueling...")
-                turtle.refuel(1)
+    while doRefuel:
 
-            turtle.select(prevSlot)
-            print("Refueled")
+        foundFuel = False
+        for fuel_type in FUEL_TYPES:
+            fuel_slot = find_item(fuel_type)
+            if fuel_slot:
+                foundFuel = True
 
-            return True
-    return False
+                prevSlot = turtle.getSelectedSlot()
+                turtle.select(fuel_slot)
+
+                while turtle.getFuelLevel() <= FUEL_SATISFIED_THRESH:
+                    print(f"Refueling from slot {fuel_slot}...")
+                    if not turtle.refuel(1):
+                        print("Run out of fuel in this slot, rescanning inventory for more.")
+                        break
+
+                turtle.select(prevSlot)
+                print("Refueled")
+
+                refueled = True
+                doRefuel = False
+                break
+        
+        # give up
+        if not foundFuel:
+            print("Ran out of fuel :/")
+            doRefuel = False
+
+    return refueled
 
 
 def check_fuel():
@@ -80,41 +106,43 @@ def check_fuel():
 
     return level
 
+def forward_and_check_lights():
+    global DISTANCE_COVERED
+
+    if turtle.detect():
+        turtle.dig()
+    turtle.forward()
+
+    DISTANCE_COVERED += 1
+
+    if DISTANCE_COVERED % LIGHT_SEPARATION == 0:
+        place_light_from_inventory()
 
 for count in range(MOVE_DISTANCE):
 
     check_fuel()
 
-    if turtle.detect():
-        turtle.dig()
-    turtle.forward()
+    forward_and_check_lights()
 
     if turtle.detectUp():
         turtle.digUp()
     turtle.up()
 
-    if turtle.detect():
-        turtle.dig()
-    turtle.forward()
+    forward_and_check_lights()
 
     if turtle.detectDown():
         turtle.digDown()
     turtle.down()
 
-    if count % LIGHT_SEPARATION == 0:
-        place_light_from_inventory()
 
-
-# turn around after going up (so we dont break torches)
+# head back
 
 turtle.up()
-
 turn_around()
 
 for _ in range(MOVE_DISTANCE):
     turtle.forward()
     turtle.forward()
 
-# turn around again
-turtle.turnRight()
-turtle.turnRight()
+turn_around()
+turtle.down()
