@@ -395,7 +395,7 @@ if latest_branch:
     print(f"Heading to branch {latest_branch}")
     turtle.turnRight()
 
-    for branch_number in range(latest_branch):
+    for _ in range(latest_branch):
         for _ in range(BRANCH_SEPARATION * 2):
             return_step()
         failed_branches += 1
