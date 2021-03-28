@@ -28,6 +28,9 @@ def checkFuel():
 
     return level
 
+findItem()
+
+exit()
 
 for _ in range(move_length):
 
