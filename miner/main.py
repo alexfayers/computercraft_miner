@@ -1,5 +1,9 @@
-from cc import disk, os
+from cc import is_turtle, turtle
 
-print("Hello!")
+if not is_turtle():
+    print('Turtle required!')
+    exit()
 
-print(os.getComputerLabel())
+for _ in range(4):
+    turtle.tunnel(1)
+    turtle.go(1)
