@@ -218,20 +218,25 @@ def check_valueable_down(branch_number):
 
 
 def throw_away_trash():
+    threw_away = False
     for block in TRASH_BLOCKS:
-        block_slot = find_item(block)
-        if block_slot:
-            prevSlot = turtle.getSelectedSlot()
-            turtle.select(block_slot)
+        while True:
+            block_slot = find_item(block)
+            if block_slot:
+                prevSlot = turtle.getSelectedSlot()
+                turtle.select(block_slot)
 
-            turtle.drop()
+                turtle.drop()
 
-            turtle.select(prevSlot)
+                turtle.select(prevSlot)
 
-            print(f"Dropped some {block} (trash block)")
+                print(f"Dropped some {block} (trash block)")
 
-            return True
-    return False
+                threw_away = True
+            else:
+                break
+    
+    return threw_away
 
 
 def check_valueable_left_right(branch_number):
