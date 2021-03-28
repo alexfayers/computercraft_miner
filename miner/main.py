@@ -10,7 +10,7 @@ LIGHT_SEPARATION = 16
 BRANCH_COUNT = 2
 BRANCH_SEPARATION = 2
 
-BLOCK_LOG_FILENAME = 'block_log.csv'
+BLOCK_LOG_FILENAME = "block_log.csv"
 
 FUEL_TYPES = ["lava", "blaze", "coal", "wood"]
 LIGHTING_TYPES = ["torch"]
@@ -19,7 +19,17 @@ CURSED_BLOCKS = ["gravel", "lava"]
 
 DEPOSIT_BLOCKS = ["chest", "hopper"]
 
-VALUEABLE_BLOCKS = ["ore", "diamond", "redstone", "iron", "gold", "lapis", "emerald", "cobble", "dirt"] # not coal, we wanna keep that
+VALUEABLE_BLOCKS = [
+    "ore",
+    "diamond",
+    "redstone",
+    "iron",
+    "gold",
+    "lapis",
+    "emerald",
+    "cobble",
+    "dirt",
+]  # not coal, we wanna keep that
 
 TRASH_BLOCKS = ["diorite", "granite", "andesite"]
 
@@ -63,7 +73,7 @@ def place_light_from_inventory():  # place a light behind us
             turn_around()
             turtle.place()
 
-            throw_away_trash() # attempt to throw away trash while we're facing away
+            throw_away_trash()  # attempt to throw away trash while we're facing away
 
             turn_around()
 
@@ -160,18 +170,18 @@ def check_if_cursed_block():
         if info is not None and block in info["name"]:
             print("CURSED BLOCK, ABANDON BRANCH!!!")
 
-            with fs.open(BLOCK_LOG_FILENAME, 'a') as f:
-                f.writeLine(f'{branch_number}, abandoned\n')
+            with fs.open(BLOCK_LOG_FILENAME, "a") as f:
+                f.writeLine(f"{branch_number}, abandoned\n")
 
             return True
     return False
 
 
 def block_log(branch_number, block_name):
-    print(f"Got valueable block ({block_name)}) in branch {branch_number}!")
+    print(f"Got valueable block ({block_name}) in branch {branch_number}!")
 
-    with fs.open(BLOCK_LOG_FILENAME, 'a') as f:
-        f.writeLine(f'{branch_number}, {block_name}\n')
+    with fs.open(BLOCK_LOG_FILENAME, "a") as f:
+        f.writeLine(f"{branch_number}, {block_name}\n")
 
 
 def check_valueable_up(branch_number):
@@ -180,7 +190,7 @@ def check_valueable_up(branch_number):
 
         if info is not None and block in info["name"]:
             turtle.digUp()
-            block_log(branch_number, info['name'])
+            block_log(branch_number, info["name"])
 
 
 def check_valueable_down(branch_number):
@@ -189,7 +199,7 @@ def check_valueable_down(branch_number):
 
         if info is not None and block in info["name"]:
             turtle.digDown()
-            block_log(branch_number, info['name'])
+            block_log(branch_number, info["name"])
 
 
 def throw_away_trash():
@@ -200,7 +210,7 @@ def throw_away_trash():
             turtle.select(block_slot)
 
             turtle.drop()
-            
+
             turtle.select(prevSlot)
 
             print(f"Dropped some {block} (trash block)")
@@ -217,7 +227,7 @@ def check_valueable_left_right(branch_number):
 
         if info is not None and block in info["name"]:
             turtle.dig()
-            block_log(branch_number, info['name'])
+            block_log(branch_number, info["name"])
 
     turn_around()
 
@@ -226,7 +236,7 @@ def check_valueable_left_right(branch_number):
 
         if info is not None and block in info["name"]:
             turtle.dig()
-            block_log(branch_number, info['name'])
+            block_log(branch_number, info["name"])
 
     turtle.turnLeft()
 
@@ -315,7 +325,7 @@ def deposit_valueables():
 
     if canDeposit:
         deposit_count = 0
-        
+
         while True:
             deposited = False
 
@@ -335,7 +345,7 @@ def deposit_valueables():
                     deposit_count += 1
 
                     deposited = True
-            
+
             if not deposited:
                 print("Didn't deposit anything this run, breaking.")
                 break
