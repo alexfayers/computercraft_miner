@@ -1,6 +1,5 @@
 from cc import is_turtle, turtle
 from cc import term
-from cc import gps
 
 move_length = 10
 
@@ -11,16 +10,22 @@ if not is_turtle():
     exit()
 
 for _ in range(move_length):
-    location = gps.locate()
-    if location:
-        print(locationn)
 
     if turtle.detect():
         turtle.dig()
+    turtle.forward()
+
     if turtle.detectUp():
         turtle.digUp()
+    turtle.up()
 
+    if turtle.detect():
+        turtle.dig()
     turtle.forward()
+
+    if turtle.detectDown():
+        turtle.digDown()
+    turtle.Down()
 
 # turn around
 turtle.turnRight()
