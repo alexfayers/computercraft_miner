@@ -129,7 +129,7 @@ def forward_and_check_lights():
 
     print(f"Move forward ({DISTANCE_COVERED})")
 
-def mine_step():
+def mine_step(branch_number):
     check_fuel()
 
     forward_and_check_lights()
@@ -144,7 +144,7 @@ def mine_step():
         turtle.digDown()
     turtle.down()
 
-    if DISTANCE_COVERED == 2:
+    if branch_number >= 0 and DISTANCE_COVERED == 2:
         place_light_from_inventory()
 
 def return_step():
@@ -183,6 +183,8 @@ def create_branch():
 
 branch_number = 0
 while branch_number < BRANCH_COUNT:
+    mined_this = False
+
     print(f"STARTING BRANCH {branch_number + 1}!")
 
     if create_branch():
@@ -190,12 +192,16 @@ while branch_number < BRANCH_COUNT:
         branch_number += 1
     else:
         print("Already mined this branch!")
+        mined_this = True
 
     turtle.turnRight()
 
     # move along to new branch section
     for _ in range(BRANCH_SEPARATION):
-        mine_step()
+        if mined_this:
+            mine_step(-1)
+        else:
+            mine_step(branch_number)
     
     turtle.turnLeft()
 
