@@ -154,7 +154,7 @@ def check_if_cursed_block():
 
 
 def check_valueable_up():
-    for block in VALUABLE_BLOCKS:
+    for block in VALUEABLE_BLOCKS:
         info = turtle.inspectUp()
 
         if info is not None and block in info['name']:
@@ -163,7 +163,7 @@ def check_valueable_up():
 
 
 def check_valueable_down():
-    for block in VALUABLE_BLOCKS:
+    for block in VALUEABLE_BLOCKS:
         info = turtle.inspectDown()
 
         if info is not None and block in info['name']:
@@ -174,7 +174,7 @@ def check_valueable_down():
 def check_valueable_left_right():
     turtle.turnLeft()
 
-    for block in VALUABLE_BLOCKS:
+    for block in VALUEABLE_BLOCKS:
         info = turtle.inspect()
 
         if info is not None and block in info['name']:
@@ -183,7 +183,7 @@ def check_valueable_left_right():
 
     turn_around()
 
-    for block in VALUABLE_BLOCKS:
+    for block in VALUEABLE_BLOCKS:
         info = turtle.inspect()
 
         if info is not None and block in info['name']:
