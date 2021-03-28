@@ -141,7 +141,7 @@ def check_fuel():
     return level
 
 
-def forward_and_check_lights():
+def forward_and_check_cursed():
     global DISTANCE_COVERED
 
     if turtle.detect():
@@ -153,9 +153,6 @@ def forward_and_check_lights():
     turtle.forward()
 
     DISTANCE_COVERED += 1
-
-    if DISTANCE_COVERED % LIGHT_SEPARATION == 0:
-        place_light_from_inventory()
 
     print(f"Move forward ({DISTANCE_COVERED})")
 
@@ -245,8 +242,12 @@ def check_valueable_left_right(branch_number):
 def mine_step(branch_number):
     check_fuel()
 
-    if not forward_and_check_lights():
+    if not forward_and_check_cursed():
         return False
+    
+    if DISTANCE_COVERED % LIGHT_SEPARATION == 0 or DISTANCE_COVERED % LIGHT_SEPARATION == 1:
+        place_light_from_inventory()
+
     check_valueable_left_right(branch_number)
     check_valueable_down(branch_number)
 
@@ -257,7 +258,7 @@ def mine_step(branch_number):
     check_valueable_left_right(branch_number)
     check_valueable_up(branch_number)
 
-    if not forward_and_check_lights():
+    if not forward_and_check_cursed():
         return False
     check_valueable_left_right(branch_number)
     check_valueable_up(branch_number)
