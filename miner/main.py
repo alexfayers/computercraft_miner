@@ -61,7 +61,7 @@ for _ in range(move_length):
 
     if turtle.detectDown():
         turtle.digDown()
-    turtle.Down()
+    turtle.down()
 
 # turn around
 turtle.turnRight()
