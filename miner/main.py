@@ -16,7 +16,9 @@ CURSED_BLOCKS = ["gravel", "lava"]
 
 DEPOSIT_BLOCKS = ["chest", "hopper"]
 
-VALUEABLE_BLOCKS = ["ore"]
+VALUEABLE_BLOCKS = ["ore", "diamond", "redstone", "iron", "gold", "lapis", "emerald", "cobble", "dirt"] # not coal, we wanna keep that
+
+TRASH_BLOCKS = ["diorite", "granite", "andesite"]
 
 # Const type things
 TURTLE_SLOTS = 16
@@ -140,6 +142,8 @@ def forward_and_check_lights():
     if DISTANCE_COVERED % LIGHT_SEPARATION == 0:
         place_light_from_inventory()
 
+    throw_away_trash() # attempt to throw away trash
+
     print(f"Move forward ({DISTANCE_COVERED})")
 
     return True
@@ -171,6 +175,23 @@ def check_valueable_down():
         if info is not None and block in info["name"]:
             turtle.digDown()
             print(f"Got valueable block ({info['name']})!")
+
+
+def throw_away_trash():
+    for block in TRASH_BLOCKS:
+        block_slot = find_item(block)
+        if block_slot:
+            prevSlot = turtle.getSelectedSlot()
+            turtle.select(block_slot)
+
+            turtle.dropUp()
+            
+            turtle.select(prevSlot)
+
+            print(f"Dropped some {block} (trash block)")
+
+            return True
+    return False
 
 
 def check_valueable_left_right():
@@ -299,8 +320,9 @@ def deposit_valueables():
         return deposited
 
     else:
-
         print("Can't deposit in this block!")
+
+    return False
 
 
 branch_number = 0
@@ -327,11 +349,12 @@ print("Returning home!")
 
 turtle.turnLeft()
 
-for _ in range((BRANCH_SEPARATION + 1) * (branch_number + failed_branches + 1)):
+while True:
+    # for _ in range((BRANCH_SEPARATION + 1) * (branch_number + failed_branches + 1)):
     return_step()
+    if deposit_valueables():
+        break
 
 turtle.turnRight()
 
 print("Back!")
-
-deposit_valueables()
