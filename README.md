@@ -4,5 +4,5 @@ Simple miner for [Computercraft Tweaked](https://github.com/SquidDev-CC/CC-Tweak
 ## Run the latest version:
 
 ```
-pastebin run W6dVmZ5A
+pastebin run Bad API request, Post limit, maximum pastes per 24h reached 
 ```

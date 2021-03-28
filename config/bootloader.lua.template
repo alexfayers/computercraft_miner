@@ -16,4 +16,4 @@ print("Running miner!")
 
 shell.run('py {{REPO_NAME}}/miner/main.py')
 
-print("Lua exit!)
+print("Lua exit!")

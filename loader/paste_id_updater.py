@@ -8,7 +8,7 @@ import getpass
 
 def populate_template(config_data, **kwargs):
 
-    required_args = ["repo_path", "python_url"]
+    required_args = ["repo_path", "repo_name", "python_url"]
 
     for arg in required_args:
         if arg not in kwargs.keys():
@@ -80,6 +80,7 @@ def create_paste(cc_config, secrets_config):
     lua = populate_template(
         config_data,
         repo_path=config_data["github"]["repo_path"],
+        repo_name=config_data["github"]["repo_path"].split('/')[-1],
         python_url=config_data["python"]["interpreter_url"],
     )
 
@@ -92,11 +93,23 @@ def create_paste(cc_config, secrets_config):
 
         res = pastebin.create_paste(lua)
 
-        paste = res.split("/")[-1]
+        if not ' ' in res:
 
-        secrets_config.update_field("pastebin", "last_paste", paste)
+            paste = res.split("/")[-1]
 
-        return paste
+            secrets_config.update_field("pastebin", "last_paste", paste)
+
+            return paste
+        
+        else:
+
+            logging.error(res)
+            logging.error("Error in pastebin API - writing locally")
+
+            with open('bootloader.lua', 'w') as bootloaderfile:
+                bootloaderfile.write(lua)
+
+            return False
 
     else:
 
