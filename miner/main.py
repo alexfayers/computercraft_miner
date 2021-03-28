@@ -5,7 +5,7 @@ from cc import fs
 MOVE_DISTANCE = 20
 REFUEL_THRESH = 20
 FUEL_SATISFIED_THRESH = 200
-LIGHT_SEPARATION = 16
+LIGHT_SEPARATION = 10
 
 BRANCH_COUNT = 4
 BRANCH_SEPARATION = 2
@@ -26,11 +26,10 @@ VALUEABLE_BLOCKS = [
     "iron",
     "gold",
     "lapis",
-    "emerald",
-    "cobble",
+    "emerald"
 ]  # not coal, we wanna keep that
 
-TRASH_BLOCKS = ["diorite", "granite", "andesite", "dirt"]
+TRASH_BLOCKS = ["diorite", "granite", "andesite", "dirt" ,"cobble"]
 
 # Const type things
 TURTLE_SLOTS = 16
@@ -245,7 +244,7 @@ def mine_step(branch_number):
     if not forward_and_check_cursed():
         return False
     
-    if DISTANCE_COVERED + 1 % LIGHT_SEPARATION == 0:
+    if (DISTANCE_COVERED + 1) % LIGHT_SEPARATION == 0:
         place_light_from_inventory()
 
     check_valueable_left_right(branch_number)
