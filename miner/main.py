@@ -385,6 +385,7 @@ try:
     with fs.open(BLOCK_LOG_FILENAME, "r") as f:
         for line in f:
             latest_branch = line
+            latest_branch = int(latest_branch)
             break
 except Exception:
     pass
