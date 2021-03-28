@@ -8,7 +8,7 @@ import getpass
 
 def populate_template(config_data, **kwargs):
 
-    required_args = ["repo_path"]
+    required_args = ["repo_path", "python_url"]
 
     for arg in required_args:
         if arg not in kwargs.keys():
@@ -17,7 +17,7 @@ def populate_template(config_data, **kwargs):
             )
             return False
 
-    replace_map = {arg.upper(): kwargs[arg] for arg in required_args}
+    replace_map = {arg.upper(): kwargs[arg.lower()] for arg in required_args}
 
     bootloader_template = ""
 
@@ -77,7 +77,11 @@ def create_paste(cc_config, secrets_config):
                 f"http://pastebin.com/raw/{secret_data['pastebin']['last_paste']}"
             ).text
 
-    lua = populate_template(config_data, repo_path=config_data["github"]["repo_path"])
+    lua = populate_template(
+        config_data,
+        repo_path=config_data["github"]["repo_path"],
+        python_url=config_data["python"]["interpreter_url"],
+    )
 
     if paste != lua:
 
