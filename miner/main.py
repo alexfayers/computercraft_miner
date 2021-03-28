@@ -163,7 +163,7 @@ def create_branch():
     turn_around()
     turtle.down()
 
-for branch_number in BRANCH_COUNT:
+for branch_number in range(BRANCH_COUNT):
     print(f"STARTING BRANCH {branch_number + 1}!")
     create_branch()
 
