@@ -34,6 +34,7 @@ VALUEABLE_BLOCKS = [
     "gold",
     "lapis",
     "emerald",
+    "flint"
 ]  # not coal, we wanna keep that
 
 TRASH_BLOCKS = ["diorite", "granite", "andesite", "dirt", "cobble", "gravel", "sand"]
@@ -77,9 +78,6 @@ def place_light_from_inventory():  # place a light behind us
 
             turn_around()
             turtle.place()
-
-            throw_away_trash()  # attempt to throw away trash while we're facing away
-
             turn_around()
 
             turtle.select(prevSlot)
@@ -231,7 +229,7 @@ def throw_away_trash():
                 prevSlot = turtle.getSelectedSlot()
                 turtle.select(block_slot)
 
-                turtle.drop()
+                turtle.dropUp()
 
                 turtle.select(prevSlot)
 
@@ -282,6 +280,8 @@ def mine_step(branch_number):
         turtle.digUp()
     turtle.up()
 
+    throw_away_trash()  # attempt to throw away trash while we're facing away
+
     check_valueable_left_right(branch_number)
     check_valueable_up(branch_number)
 
@@ -300,6 +300,7 @@ def mine_step(branch_number):
 
     if branch_number >= 0 and DISTANCE_COVERED == 2:
         place_light_from_inventory()
+    
 
     return True
 
