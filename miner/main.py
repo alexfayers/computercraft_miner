@@ -2,12 +2,12 @@ from cc import is_turtle, turtle
 from cc import term
 from cc import fs
 
-MOVE_DISTANCE = 10
+MOVE_DISTANCE = 20
 REFUEL_THRESH = 20
 FUEL_SATISFIED_THRESH = 200
 LIGHT_SEPARATION = 16
 
-BRANCH_COUNT = 2
+BRANCH_COUNT = 10
 BRANCH_SEPARATION = 2
 
 BLOCK_LOG_FILENAME = "block_log.csv"

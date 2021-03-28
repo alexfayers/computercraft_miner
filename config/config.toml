@@ -5,4 +5,4 @@ repo_path = "alexfayers/computercraft_miner"
 bootloader_template = "config/bootloader.lua.template"
 
 [python]
-interpreter_url = "http://127.0.0.1:8080/"
+interpreter_url = "http://192.168.1.54:8080/"
