@@ -382,7 +382,7 @@ failed_branches = 0
 latest_branch = 0
 
 try:
-    with fs.open(BLOCK_LOG_FILENAME, "r") as f:
+    with fs.open(LAST_BRANCH_FILE, "r") as f:
         for line in f:
             latest_branch = line
             break
@@ -410,13 +410,12 @@ while branch_number < BRANCH_COUNT:
     if create_branch(branch_number + failed_branches):
         print(f"BRANCH {branch_number + failed_branches + 1} COMPLETE!")
 
-        LAST_BRANCH_FILE
         branch_number += 1
     else:
         print("Already mined this branch!")
         failed_branches += 1
 
-    with fs.open(BLOCK_LOG_FILENAME, "w") as f:
+    with fs.open(LAST_BRANCH_FILE, "w") as f:
         f.writeLine(f"{branch_number + failed_branches}")
 
     turtle.turnRight()
