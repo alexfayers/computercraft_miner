@@ -152,7 +152,7 @@ def return_step():
     turtle.forward()
     print("Forward")
 
-def create_branch():
+def create_branch(branch_number):
     global DISTANCE_COVERED
 
     block_in_front = turtle.inspect()
@@ -164,7 +164,7 @@ def create_branch():
     DISTANCE_COVERED = 0
     # start branch
     for count in range(MOVE_DISTANCE // 2):
-        mine_step()
+        mine_step(branch_number)
 
     # head back
 
@@ -183,25 +183,19 @@ def create_branch():
 
 branch_number = 0
 while branch_number < BRANCH_COUNT:
-    mined_this = False
-
     print(f"STARTING BRANCH {branch_number + 1}!")
 
-    if create_branch():
+    if create_branch(branch_number):
         print(f"BRANCH {branch_number + 1} COMPLETE!")
         branch_number += 1
     else:
         print("Already mined this branch!")
-        mined_this = True
 
     turtle.turnRight()
 
     # move along to new branch section
     for _ in range(BRANCH_SEPARATION):
-        if mined_this:
-            mine_step(-1)
-        else:
-            mine_step(branch_number)
+        mine_step(-1)
     
     turtle.turnLeft()
 
