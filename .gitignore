@@ -129,3 +129,4 @@ dmypy.json
 .pyre/
 config/secrets.toml
 bootloader.lua
+join.key

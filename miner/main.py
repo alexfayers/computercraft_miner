@@ -2,6 +2,8 @@ from cc import is_turtle, turtle
 from cc import term
 from cc import fs
 
+import requests
+
 MOVE_DISTANCE = 20
 REFUEL_THRESH = 20
 FUEL_SATISFIED_THRESH = 200
@@ -13,6 +15,7 @@ BRANCH_SEPARATION = 2
 BLOCK_LOG_FILENAME = "block_log.csv"
 LAST_BRANCH_FILE = "last_branch.txt"
 
+JOIN_KEY = requests.get('http://192.168.1.54:8000/join.key').text
 
 FUEL_TYPES = ["lava", "blaze", "coal", "wood"]
 LIGHTING_TYPES = ["torch"]
@@ -195,6 +198,8 @@ def block_log(branch_number, block_name):
 
     print(f"Got valueable block ({block_name}) in branch {branch_number}!")
 
+    requests.get(f'https://joinjoaomgcd.appspot.com/_ah/api/messaging/v1/sendPush?text=Miner%20found%20{block_name}%20into%20storage&title=Miner%20found%20good%20block&apikey={JOIN_KEY}')
+
     with fs.open(BLOCK_LOG_FILENAME, "a") as f:
         f.writeLine(f"{branch_number}, {block_name}")
 
@@ -366,6 +371,8 @@ def deposit_valueables():
 
                     print(f"Deposited some {block} into storage")
 
+                    requests.get(f'https://joinjoaomgcd.appspot.com/_ah/api/messaging/v1/sendPush?text=Miner%20deposited%20{block}%20into%20storage&title=Miner%20deposit&apikey={JOIN_KEY}')
+
                     deposit_count += 1
 
                     deposited = True
@@ -415,6 +422,8 @@ while branch_number < BRANCH_COUNT:
     if create_branch(branch_number + failed_branches):
         print(f"BRANCH {branch_number + failed_branches + 1} COMPLETE!")
 
+        requests.get(f'https://joinjoaomgcd.appspot.com/_ah/api/messaging/v1/sendPush?text=Miner%20finished%20branch%20{branch_number + failed_branches + 1}&title=Finished%20branch&apikey={JOIN_KEY}')
+
         branch_number += 1
     else:
         print("Already mined this branch!")
@@ -432,6 +441,8 @@ while branch_number < BRANCH_COUNT:
     turtle.turnLeft()
 
 print("Returning home!")
+
+requests.get(f'https://joinjoaomgcd.appspot.com/_ah/api/messaging/v1/sendPush?text=Miner%20returning%20home&title=Miner%finished&apikey={JOIN_KEY}')
 
 turtle.turnLeft()
 
