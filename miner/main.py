@@ -245,7 +245,7 @@ def mine_step(branch_number):
     if not forward_and_check_cursed():
         return False
     
-    if DISTANCE_COVERED % LIGHT_SEPARATION == 0 or DISTANCE_COVERED % LIGHT_SEPARATION == 1:
+    if DISTANCE_COVERED + 1 % LIGHT_SEPARATION == 0:
         place_light_from_inventory()
 
     check_valueable_left_right(branch_number)
