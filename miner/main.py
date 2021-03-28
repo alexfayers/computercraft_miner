@@ -287,7 +287,7 @@ print("Returning home!")
 
 turtle.turnLeft()
 
-for _ in range(((BRANCH_SEPARATION + 1) * 2) * (BRANCH_COUNT + 1) + 1):
+for _ in range((BRANCH_SEPARATION + 1) * BRANCH_COUNT):
     return_step()
 
 turtle.turnRight()
