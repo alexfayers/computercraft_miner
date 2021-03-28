@@ -7,7 +7,7 @@ import requests
 MOVE_DISTANCE = 20
 REFUEL_THRESH = 20
 FUEL_SATISFIED_THRESH = 200
-LIGHT_SEPARATION = 10
+LIGHT_SEPARATION = 14
 
 BRANCH_COUNT = 4
 BRANCH_SEPARATION = 2
@@ -196,7 +196,7 @@ def block_log(branch_number, block_name):
 
     print(f"Got valueable block ({block_name}) in branch {branch_number}!")
 
-    requests.get(f'https://joinjoaomgcd.appspot.com/_ah/api/messaging/v1/sendPush?deviceId=group.all&text=Miner%20found%20{block_name}%20into%20storage&title=Miner%20found%20good%20block&apikey={JOIN_KEY}')
+    requests.get(f'https://joinjoaomgcd.appspot.com/_ah/api/messaging/v1/sendPush?deviceId=group.all&text=Found%20in%20branch%20{branch_number}&title=Miner%20found%20{block_name}&apikey={JOIN_KEY}')
 
     with fs.open(BLOCK_LOG_FILENAME, "a") as f:
         f.writeLine(f"{branch_number}, {block_name}")
@@ -420,12 +420,12 @@ if latest_branch:
 while branch_number < BRANCH_COUNT:
     print(f"STARTING BRANCH {branch_number + failed_branches + 1}!")
 
-    requests.get(f'https://joinjoaomgcd.appspot.com/_ah/api/messaging/v1/sendPush?deviceId=group.all&text=Miner%20starting%20branch%20{branch_number + failed_branches + 1}&title=Starting%20branch&apikey={JOIN_KEY}')
+    requests.get(f'https://joinjoaomgcd.appspot.com/_ah/api/messaging/v1/sendPush?deviceId=group.all&text=Miner%20starting%20branch%20{branch_number + failed_branches + 1}&title=Branch%20{branch_number + failed_branches + 1}%20update&apikey={JOIN_KEY}')
 
     if create_branch(branch_number + failed_branches):
         print(f"BRANCH {branch_number + failed_branches + 1} COMPLETE!")
 
-        requests.get(f'https://joinjoaomgcd.appspot.com/_ah/api/messaging/v1/sendPush?deviceId=group.all&text=Miner%20finished%20branch%20{branch_number + failed_branches + 1}&title=Finished%20branch&apikey={JOIN_KEY}')
+        requests.get(f'https://joinjoaomgcd.appspot.com/_ah/api/messaging/v1/sendPush?deviceId=group.all&text=Miner%20finished%20branch%20{branch_number + failed_branches + 1}&title=Branch%20{branch_number + failed_branches + 1}%20update&apikey={JOIN_KEY}')
 
         branch_number += 1
     else:
