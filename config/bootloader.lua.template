@@ -6,7 +6,7 @@ shell.run('pastebin run p8PJVxC4')
 
 print("Cloning repo...")
 
-shell.run('github clone {{REPO_PATH}}')
+shell.run('github clone {{REPO_PATH}} -b main')
 
 -- run it?
 
