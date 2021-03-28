@@ -9,7 +9,9 @@ if not is_turtle():
     exit()
 
 for _ in range(4):
-    print(gps.locate())
+    x, y, z = gps.locate()
+
+    print(x, y, z)
 
     if turtle.detect():
         turtle.dig()
