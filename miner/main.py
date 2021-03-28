@@ -7,7 +7,7 @@ FUEL_SATISFIED_THRESH = 60
 LIGHT_SEPARATION = 17
 
 BRANCH_COUNT = 2
-BRANCH_SEPARATION = 3
+BRANCH_SEPARATION = 2
 
 FUEL_TYPES = ["lava", "blaze", "coal", "wood"]
 LIGHTING_TYPES = ["torch"]
@@ -123,7 +123,7 @@ def forward_and_check_lights():
 
     DISTANCE_COVERED += 1
 
-    if DISTANCE_COVERED % LIGHT_SEPARATION == 0 or DISTANCE_COVERED == 3:
+    if DISTANCE_COVERED % LIGHT_SEPARATION == 0 or DISTANCE_COVERED == 1:
         place_light_from_inventory()
     
     print(f"Move forward ({DISTANCE_COVERED})")
@@ -148,6 +148,9 @@ def return_step():
     turtle.forward()
 
 def create_branch():
+    global DISTANCE_COVERED
+
+    DISTANCE_COVERED = 0
     # start branch
     for count in range(MOVE_DISTANCE):
         mine_step()
@@ -159,7 +162,7 @@ def create_branch():
     turtle.up()
     turn_around()
 
-    for _ in range(MOVE_DISTANCE * 2): # times 2 because there are 2 forward moves in the mining function
+    for _ in range(DISTANCE_COVERED): # come back the distance that we came
         return_step()
 
     turn_around()
@@ -174,7 +177,7 @@ for branch_number in range(BRANCH_COUNT):
     turtle.turnRight()
 
     # move along to new branch section
-    for _ in range(BRANCH_SEPARATION + 1):
+    for _ in range(BRANCH_SEPARATION - 1):
         mine_step()
     
     turtle.turnLeft()
@@ -183,5 +186,5 @@ print("Returning home!")
 
 turtle.turnLeft()
 
-for _ in range((BRANCH_SEPARATION + 1) * BRANCH_COUNT):
+for _ in range((BRANCH_SEPARATION - 1) * BRANCH_COUNT):
     return_step()
