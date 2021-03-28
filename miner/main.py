@@ -12,7 +12,9 @@ BRANCH_SEPARATION = 2
 FUEL_TYPES = ["lava", "blaze", "coal", "wood"]
 LIGHTING_TYPES = ["torch"]
 
-CURSED_BLOCKS = ["gravel"]
+CURSED_BLOCKS = ["gravel", "lava"]
+
+DEPOSIT_BLOCKS = ["chest", "hopper"]
 
 VALUEABLE_BLOCKS = ["ore"]
 
@@ -147,7 +149,7 @@ def check_if_cursed_block():
     for block in CURSED_BLOCKS:
         info = turtle.inspect()
 
-        if info is not None and block in info['name']:
+        if info is not None and block in info["name"]:
             print("CURSED BLOCK, ABANDON BRANCH!!!")
             return True
     return False
@@ -157,7 +159,7 @@ def check_valueable_up():
     for block in VALUEABLE_BLOCKS:
         info = turtle.inspectUp()
 
-        if info is not None and block in info['name']:
+        if info is not None and block in info["name"]:
             turtle.digUp()
             print(f"Got valueable block ({info['name']})!")
 
@@ -166,7 +168,7 @@ def check_valueable_down():
     for block in VALUEABLE_BLOCKS:
         info = turtle.inspectDown()
 
-        if info is not None and block in info['name']:
+        if info is not None and block in info["name"]:
             turtle.digDown()
             print(f"Got valueable block ({info['name']})!")
 
@@ -177,7 +179,7 @@ def check_valueable_left_right():
     for block in VALUEABLE_BLOCKS:
         info = turtle.inspect()
 
-        if info is not None and block in info['name']:
+        if info is not None and block in info["name"]:
             turtle.dig()
             print(f"Got valueable block ({info['name']})!")
 
@@ -186,7 +188,7 @@ def check_valueable_left_right():
     for block in VALUEABLE_BLOCKS:
         info = turtle.inspect()
 
-        if info is not None and block in info['name']:
+        if info is not None and block in info["name"]:
             turtle.dig()
             print(f"Got valueable block ({info['name']})!")
 
@@ -216,7 +218,7 @@ def mine_step(branch_number):
     if turtle.detectDown():
         turtle.digDown()
     turtle.down()
-    
+
     check_valueable_left_right()
     check_valueable_down()
 
@@ -265,6 +267,42 @@ def create_branch(branch_number):
     return True
 
 
+def deposit_valueables():
+    canDeposit = False
+    for block in DEPOSIT_BLOCKS:
+        info = turtle.inspectDown()
+
+        if info is not None and block in info["name"]:
+            print(f"found deposit block!")
+            canDeposit = True
+            break
+
+    deposited = False
+    if canDeposit:
+        for block in VALUEABLE_BLOCKS:
+            block_slot = find_item(block)
+
+            if block_slot:
+                prevSlot = turtle.getSelectedSlot()
+                turtle.select(block_slot)
+
+                turtle.dropDown()  # drop the items into the chest or whatever
+
+                turtle.select(prevSlot)
+
+                print(f"Deposited some {block} into storage")
+
+                deposited = True
+
+        if not deposited:
+            print("Didn't deposit anything. Better luck next time :/")
+        return deposited
+
+    else:
+
+        print("Can't deposit in this block!")
+
+
 branch_number = 0
 while branch_number < BRANCH_COUNT:
     print(f"STARTING BRANCH {branch_number + 1}!")
@@ -293,3 +331,5 @@ for _ in range((BRANCH_SEPARATION + 1) * (BRANCH_COUNT + 1)):
 turtle.turnRight()
 
 print("Back!")
+
+deposit_valueables()
