@@ -419,6 +419,8 @@ if latest_branch:
 while branch_number < BRANCH_COUNT:
     print(f"STARTING BRANCH {branch_number + failed_branches + 1}!")
 
+    requests.get(f'https://joinjoaomgcd.appspot.com/_ah/api/messaging/v1/sendPush?text=Miner%20starting%20branch%20{branch_number + failed_branches + 1}&title=Starting%20branch&apikey={JOIN_KEY}')
+
     if create_branch(branch_number + failed_branches):
         print(f"BRANCH {branch_number + failed_branches + 1} COMPLETE!")
 
