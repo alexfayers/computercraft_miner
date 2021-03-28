@@ -1,0 +1,13 @@
+-- Bootloader to fetch latest data from github and run it
+
+print("Installing github module...")
+
+shell.run('pastebin run p8PJVxC4')
+
+print("Cloning repo...")
+
+shell.run('github clone {{REPO_PATH}}')
+
+-- run it?
+
+print("Done!")

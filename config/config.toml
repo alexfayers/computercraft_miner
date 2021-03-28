@@ -1,0 +1,8 @@
+[github]
+repo_path = "alexfayers/computercraft_miner"
+
+[pastebin]
+bootloader_template = "config/bootloader.lua.template"
+
+[python]
+interpreter_url = "http://127.0.0.1:8080/"
