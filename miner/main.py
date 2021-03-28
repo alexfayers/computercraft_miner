@@ -1,4 +1,7 @@
 from cc import is_turtle, turtle
+from cc import os
+
+os.clear()
 
 if not is_turtle():
     print('Turtle required!')
