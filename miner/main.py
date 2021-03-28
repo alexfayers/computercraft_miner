@@ -110,7 +110,8 @@ def check_fuel():
         else:
             print("Couldn't refuel! Uh oh...")
     else:
-        print("No need to refuel.")
+        pass
+        # print("No need to refuel.")
 
     return level
 
@@ -149,6 +150,7 @@ def mine_step():
 def return_step():
     check_fuel()
     turtle.forward()
+    print("Forward")
 
 def create_branch():
     global DISTANCE_COVERED
@@ -182,7 +184,7 @@ def create_branch():
 branch_number = 0
 while branch_number < BRANCH_COUNT:
     print(f"STARTING BRANCH {branch_number + 1}!")
-    
+
     if create_branch():
         print(f"BRANCH {branch_number + 1} COMPLETE!")
         branch_number += 1
@@ -201,5 +203,7 @@ print("Returning home!")
 
 turtle.turnLeft()
 
-for _ in range((BRANCH_SEPARATION) * BRANCH_COUNT):
+for _ in range(((BRANCH_SEPARATION + 1) * 2) * (BRANCH_COUNT + 1) + 1):
     return_step()
+
+print("Back!")
