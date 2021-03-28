@@ -69,6 +69,8 @@ def refuel_from_inventory():
         for fuel_type in FUEL_TYPES:
             fuel_slot = find_item(fuel_type)
             if fuel_slot:
+                print(f"Found fuel in slot {fuel_slot}")
+
                 foundFuel = True
 
                 prevSlot = turtle.getSelectedSlot()
@@ -81,7 +83,6 @@ def refuel_from_inventory():
                         break
 
                 turtle.select(prevSlot)
-                print("Refueled")
 
                 refueled = True
                 doRefuel = False
@@ -99,10 +100,14 @@ def check_fuel():
     level = turtle.getFuelLevel()
 
     if level <= REFUEL_THRESH:
+        print("Need to refuel!")
+
         if refuel_from_inventory():
-            pass
+            print("Refueled successfully!")
         else:
             print("Couldn't refuel! Uh oh...")
+    else:
+        print("No need to refuel.")
 
     return level
 
@@ -117,6 +122,9 @@ def forward_and_check_lights():
 
     if DISTANCE_COVERED % LIGHT_SEPARATION == 0:
         place_light_from_inventory()
+    
+    print(f"Move forward (moved {DISTANCE_COVERED} blocks overall")
+
 
 for count in range(MOVE_DISTANCE):
 
