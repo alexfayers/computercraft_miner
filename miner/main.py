@@ -120,10 +120,10 @@ def forward_and_check_lights():
 
     DISTANCE_COVERED += 1
 
-    if DISTANCE_COVERED % LIGHT_SEPARATION == 0:
+    if DISTANCE_COVERED % LIGHT_SEPARATION == 0 or DISTANCE_COVERED == 1:
         place_light_from_inventory()
     
-    print(f"Move forward (moved {DISTANCE_COVERED} blocks overall")
+    print(f"Move forward ({DISTANCE_COVERED})")
 
 
 for count in range(MOVE_DISTANCE):
