@@ -11,11 +11,15 @@ BRANCH_COUNT = 4
 BRANCH_SEPARATION = 2
 
 BLOCK_LOG_FILENAME = "block_log.csv"
+LAST_BRANCH_FILE = "last_branch.txt"
+
 
 FUEL_TYPES = ["lava", "blaze", "coal", "wood"]
 LIGHTING_TYPES = ["torch"]
 
-CURSED_BLOCKS = ["gravel", "lava"]
+CURSED_BLOCKS = ["lava", "water"]
+
+GRAVITY_BLOCKS = ["gravel", "sand"]
 
 DEPOSIT_BLOCKS = ["chest", "hopper"]
 
@@ -26,10 +30,10 @@ VALUEABLE_BLOCKS = [
     "iron",
     "gold",
     "lapis",
-    "emerald"
+    "emerald",
 ]  # not coal, we wanna keep that
 
-TRASH_BLOCKS = ["diorite", "granite", "andesite", "dirt" ,"cobble"]
+TRASH_BLOCKS = ["diorite", "granite", "andesite", "dirt", "cobble", "gravel", "sand"]
 
 # Const type things
 TURTLE_SLOTS = 16
@@ -149,6 +153,9 @@ def forward_and_check_cursed():
         else:
             return False
 
+        while check_if_gravity_block():
+            turtle.dig()
+
     turtle.forward()
 
     DISTANCE_COVERED += 1
@@ -167,6 +174,17 @@ def check_if_cursed_block():
 
             with fs.open(BLOCK_LOG_FILENAME, "a") as f:
                 f.writeLine(f"{branch_number}, abandoned")
+
+            return True
+    return False
+
+
+def check_if_gravity_block():
+    for block in GRAVITY_BLOCKS:
+        info = turtle.inspect()
+
+        if info is not None and block in info["name"]:
+            print("Gravity block!")
 
             return True
     return False
@@ -243,7 +261,7 @@ def mine_step(branch_number):
 
     if not forward_and_check_cursed():
         return False
-    
+
     if branch_number >= 0 and (DISTANCE_COVERED + 1) % LIGHT_SEPARATION == 0:
         place_light_from_inventory()
 
@@ -259,6 +277,7 @@ def mine_step(branch_number):
 
     if not forward_and_check_cursed():
         return False
+
     check_valueable_left_right(branch_number)
     check_valueable_up(branch_number)
 
@@ -278,7 +297,6 @@ def mine_step(branch_number):
 def return_step():
     check_fuel()
     turtle.forward()
-    print("Forward")
 
 
 def create_branch(branch_number):
@@ -361,15 +379,43 @@ def deposit_valueables():
 
 branch_number = 0
 failed_branches = 0
+latest_branch = 0
+
+try:
+    with fs.open(BLOCK_LOG_FILENAME, "r") as f:
+        for line in f:
+            latest_branch = line
+            break
+except Exception:
+    pass
+
+if latest_branch:
+    print(f"Heading to branch {latest_branch}")
+    turtle.turnRight()
+
+    for branch_number in range(latest_branch):
+        for _ in range(BRANCH_SEPARATION * 2):
+            return_step()
+        failed_branches += 1
+
+    turtle.turnLeft()
+
+    print("At latest branch, resuming normal behaviour")
+
 while branch_number < BRANCH_COUNT:
     print(f"STARTING BRANCH {branch_number + failed_branches + 1}!")
 
     if create_branch(branch_number + failed_branches):
         print(f"BRANCH {branch_number + failed_branches + 1} COMPLETE!")
+
+        LAST_BRANCH_FILE
         branch_number += 1
     else:
         print("Already mined this branch!")
         failed_branches += 1
+
+    with fs.open(BLOCK_LOG_FILENAME, "w") as f:
+        f.writeLine(f"{branch_number + failed_branches}")
 
     turtle.turnRight()
 
