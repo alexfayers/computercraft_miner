@@ -2,9 +2,9 @@ from cc import is_turtle, turtle
 from cc import term
 
 MOVE_DISTANCE = 10
-REFUEL_THRESH = 10
-FUEL_SATISFIED_THRESH = 60
-LIGHT_SEPARATION = 17
+REFUEL_THRESH = 20
+FUEL_SATISFIED_THRESH = 200
+LIGHT_SEPARATION = 16
 
 BRANCH_COUNT = 2
 BRANCH_SEPARATION = 2
@@ -123,9 +123,9 @@ def forward_and_check_lights():
 
     DISTANCE_COVERED += 1
 
-    if DISTANCE_COVERED % LIGHT_SEPARATION == 0 or DISTANCE_COVERED == 1:
+    if DISTANCE_COVERED % LIGHT_SEPARATION == 0:
         place_light_from_inventory()
-    
+
     print(f"Move forward ({DISTANCE_COVERED})")
 
 def mine_step():
@@ -143,6 +143,9 @@ def mine_step():
         turtle.digDown()
     turtle.down()
 
+    if DISTANCE_COVERED == 2:
+        place_light_from_inventory()
+
 def return_step():
     check_fuel()
     turtle.forward()
@@ -150,9 +153,15 @@ def return_step():
 def create_branch():
     global DISTANCE_COVERED
 
+    block_in_front = turtle.inspect()
+
+    if block_in_front is not None and any(lighting_block in block_in_front['name'] for lighting_block in LIGHTING_TYPES):
+        # we've done this already, skip it
+        return False
+
     DISTANCE_COVERED = 0
     # start branch
-    for count in range(MOVE_DISTANCE):
+    for count in range(MOVE_DISTANCE // 2):
         mine_step()
 
     # head back
@@ -168,16 +177,22 @@ def create_branch():
     turn_around()
     turtle.down()
 
-for branch_number in range(BRANCH_COUNT):
-    print(f"STARTING BRANCH {branch_number + 1}!")
-    create_branch()
+    return True
 
-    print(f"BRANCH {branch_number + 1} COMPLETE!")
+branch_number = 0
+while branch_number < BRANCH_COUNT:
+    print(f"STARTING BRANCH {branch_number + 1}!")
+    
+    if create_branch():
+        print(f"BRANCH {branch_number + 1} COMPLETE!")
+        branch_number += 1
+    else:
+        print("Already mined this branch!")
 
     turtle.turnRight()
 
     # move along to new branch section
-    for _ in range(BRANCH_SEPARATION - 1):
+    for _ in range(BRANCH_SEPARATION):
         mine_step()
     
     turtle.turnLeft()
@@ -186,5 +201,5 @@ print("Returning home!")
 
 turtle.turnLeft()
 
-for _ in range((BRANCH_SEPARATION - 1) * BRANCH_COUNT):
+for _ in range((BRANCH_SEPARATION) * BRANCH_COUNT):
     return_step()
