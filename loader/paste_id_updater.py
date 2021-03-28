@@ -80,7 +80,7 @@ def create_paste(cc_config, secrets_config):
     lua = populate_template(
         config_data,
         repo_path=config_data["github"]["repo_path"],
-        repo_name=config_data["github"]["repo_path"].split('/')[-1],
+        repo_name=config_data["github"]["repo_path"].split("/")[-1],
         python_url=config_data["python"]["interpreter_url"],
     )
 
@@ -93,20 +93,20 @@ def create_paste(cc_config, secrets_config):
 
         res = pastebin.create_paste(lua)
 
-        if not ' ' in res:
+        if not " " in res:
 
             paste = res.split("/")[-1]
 
             secrets_config.update_field("pastebin", "last_paste", paste)
 
             return paste
-        
+
         else:
 
             logging.error(res)
             logging.error("Error in pastebin API - writing locally")
 
-            with open('bootloader.lua', 'w') as bootloaderfile:
+            with open("bootloader.lua", "w") as bootloaderfile:
                 bootloaderfile.write(lua)
 
             return False
