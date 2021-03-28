@@ -5,6 +5,10 @@ move_length = 10
 
 TURTLE_SLOTS = 16
 
+REFUEL_THRESH = 1
+
+FUEL_TYPES = ['coal']
+
 term.clear()
 
 if not is_turtle():
@@ -12,25 +16,34 @@ if not is_turtle():
     exit()
 
 
-def findItem():
+def find_item(search):
     for slot in range(1, TURTLE_SLOTS + 1):
         info = turtle.getItemDetail(slot)
 
-        print(info)
+        if info not None and search in info['name']:
+            return slot
+    return False
+
+def refuel_from_inventory():
+    for fuel_type in FUEL_TYPES:
+        if find_item(fuel_type):
+
+            return True
+    return False
 
 
-def checkFuel():
+def check_fuel():
     level = turtle.getFuelLevel()
 
-    if level <= 0:
+    if level <= REFUEL_THRESH:
         # do some error stuff here ?
         pass
 
     return level
 
-findItem()
+#refuel_from_inventory()
 
-exit()
+#exit()
 
 for _ in range(move_length):
 
