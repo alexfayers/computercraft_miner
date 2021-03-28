@@ -206,4 +206,6 @@ turtle.turnLeft()
 for _ in range(((BRANCH_SEPARATION + 1) * 2) * (BRANCH_COUNT + 1) + 1):
     return_step()
 
+turtle.turnRight()
+
 print("Back!")
