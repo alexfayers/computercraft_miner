@@ -420,12 +420,12 @@ if latest_branch:
 while branch_number < BRANCH_COUNT:
     print(f"STARTING BRANCH {branch_number + failed_branches + 1}!")
 
-    requests.get(f'https://joinjoaomgcd.appspot.com/_ah/api/messaging/v1/sendPush?deviceId=group.all&text=Miner%20starting%20branch%20{branch_number + failed_branches + 1}&title=Branch%20{branch_number + failed_branches + 1}%20update&apikey={JOIN_KEY}')
+    requests.get(f'https://joinjoaomgcd.appspot.com/_ah/api/messaging/v1/sendPush?deviceId=group.all&text=Miner%20starting%20branch%20{branch_number + failed_branches + 1}&title=Branch%20update&apikey={JOIN_KEY}')
 
     if create_branch(branch_number + failed_branches):
         print(f"BRANCH {branch_number + failed_branches + 1} COMPLETE!")
 
-        requests.get(f'https://joinjoaomgcd.appspot.com/_ah/api/messaging/v1/sendPush?deviceId=group.all&text=Miner%20finished%20branch%20{branch_number + failed_branches + 1}&title=Branch%20{branch_number + failed_branches + 1}%20update&apikey={JOIN_KEY}')
+        requests.get(f'https://joinjoaomgcd.appspot.com/_ah/api/messaging/v1/sendPush?deviceId=group.all&text=Miner%20finished%20branch%20{branch_number + failed_branches + 1}&title=Branch%20update&apikey={JOIN_KEY}')
 
         branch_number += 1
     else:
@@ -445,7 +445,7 @@ while branch_number < BRANCH_COUNT:
 
 print("Returning home!")
 
-requests.get(f'https://joinjoaomgcd.appspot.com/_ah/api/messaging/v1/sendPush?deviceId=group.all&text=Miner%20returning%20home&title=Miner%finished&apikey={JOIN_KEY}')
+requests.get(f'https://joinjoaomgcd.appspot.com/_ah/api/messaging/v1/sendPush?deviceId=group.all&text=Miner%20returning%20home&title=Miner%20finished&apikey={JOIN_KEY}')
 
 turtle.turnLeft()
 
