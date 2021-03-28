@@ -171,17 +171,19 @@ def check_if_cursed_block():
             print("CURSED BLOCK, ABANDON BRANCH!!!")
 
             with fs.open(BLOCK_LOG_FILENAME, "a") as f:
-                f.writeLine(f"{branch_number}, abandoned\n")
+                f.writeLine(f"{branch_number}, abandoned")
 
             return True
     return False
 
 
 def block_log(branch_number, block_name):
+    branch_number += 1
+
     print(f"Got valueable block ({block_name}) in branch {branch_number}!")
 
     with fs.open(BLOCK_LOG_FILENAME, "a") as f:
-        f.writeLine(f"{branch_number}, {block_name}\n")
+        f.writeLine(f"{branch_number}, {block_name}")
 
 
 def check_valueable_up(branch_number):
