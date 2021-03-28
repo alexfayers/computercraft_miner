@@ -8,6 +8,12 @@ print("Cloning repo...")
 
 shell.run('github clone {{REPO_PATH}} -b main')
 
--- run it?
+print("Fetching python...")
 
-print("Done!")
+shell.run('wget {{PYTHON_URL}} py')
+
+print("Running miner!")
+
+shell.run('py {{REPO_NAME}}/miner/main.py')
+
+print("Lua exit!)
