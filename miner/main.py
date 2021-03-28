@@ -388,6 +388,7 @@ try:
             latest_branch = int(latest_branch)
             break
 except Exception:
+    print("Error opening status file. can be ignored usually.")
     pass
 
 if latest_branch:
