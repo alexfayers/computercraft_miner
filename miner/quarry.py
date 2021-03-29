@@ -170,6 +170,15 @@ def deposit_valueables():
     return False
 
 
+def get_items_from_in_front(number):
+    success = False
+    if turtle.suck(number):
+        success = True
+    sort_inventory()
+
+    return success
+
+
 def get_fuel_from_chest():
     target_fuel_count = FUEL_REQUIREMENT
 
@@ -240,5 +249,5 @@ def mine():
         get_fuel_from_chest()
         if not refuel_from_inventory():
             print("Ran out of fuel in chest probs")
-            break # used up da fuel
+            break  # used up da fuel
     mine_layer()
