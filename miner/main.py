@@ -290,6 +290,7 @@ def sort_inventory():
 
 def throw_away_trash():
     threw_away = False
+
     for block in TRASH_BLOCKS:
         while True:
             block_slot = find_item(block)
@@ -299,10 +300,13 @@ def throw_away_trash():
 
                 if "cobble" in block:
                     if turtle.getItemCount() > 32:
-                        print("Keeping some cobble for placing")
+                        print("Keeping some cobble for placing, dropping the rest")
                         turtle.dropUp(turtle.getItemCount() - 32)
+                        break
                     else:
                         print("Accumulating cobble so not dropping yet")
+                        break
+
                 else:
                     turtle.dropUp()
 
