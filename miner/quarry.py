@@ -237,8 +237,6 @@ def mine_line(current_line_number):
         dig_step()
         turtle.forward()
 
-    dig_step()
-
     print(f"Finished line {current_line_number}")
 
 
@@ -267,7 +265,10 @@ def mine_several_layers():
         mine_layer()
         down_layer()
 
-        turtle.turnRight()
+        if CHUNK_SIZE % 2 == 0:
+            turtle.turnLeft()
+        else:
+            turtle.turnRight()
 
 
 def mine():
