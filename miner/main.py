@@ -520,6 +520,8 @@ while branch_number < BRANCH_COUNT:
     with fs.open(LAST_BRANCH_FILE, "w") as f:
         f.writeLine(f"{branch_number + failed_branches}")
 
+    sort_inventory()
+
     turtle.turnRight()
 
     # move along to new branch section
@@ -527,8 +529,6 @@ while branch_number < BRANCH_COUNT:
         mine_step(-1)
 
     turtle.turnLeft()
-
-    sort_inventory()
 
 print("Returning home!")
 
