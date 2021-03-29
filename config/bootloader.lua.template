@@ -14,6 +14,7 @@ shell.run('wget {{PYTHON_URL}} py')
 
 print("Running miner!")
 
-shell.run('py {{REPO_NAME}}/miner/main.py')
+shell.run('cd {{REPO_NAME}}/miner/')
+shell.run('/py main.py')
 
 print("Lua exit!")
