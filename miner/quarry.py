@@ -21,7 +21,6 @@ VALUEABLE_BLOCKS = [
     "flint",
 ]  # not coal, we wanna keep that
 
-TRASH_BLOCKS = ["diorite", "granite", "andesite", "dirt", "cobble", "gravel", "sand"]
 
 # Const type things
 TURTLE_SLOTS = 16
@@ -119,24 +118,17 @@ def check_fuel():
 def throw_away_trash():
     threw_away = False
 
-    for block in TRASH_BLOCKS:
-        while True:
-            block_slot = find_item(block)
-            if block_slot:
-                prevSlot = turtle.getSelectedSlot()
-                turtle.select(block_slot)
+    for slot in range(1, TURTLE_SLOTS + 1):
+        slotinfo = turtle.getItemDetail(slot)
 
-                turtle.dropUp()
+        if slotinfo is not None and not any(search in slotinfo["name"] for search in VALUEABLE_BLOCKS+FUEL_TYPES): # if not valuable or fuel, drop it
+            prevSlot = turtle.getSelectedSlot()
+            turtle.select(slot)
 
-                turtle.select(prevSlot)
+            turtle.dropUp()
 
-                print(f"Dropped some {block} (trash block)")
-
-                threw_away = True
-            else:
-                break
-
-    return threw_away
+            turtle.select(prevSlot)
+            print(f"Dropped some {slotinfo['name']} (non-valuable block)")
 
 
 def deposit_valueables():
@@ -234,7 +226,7 @@ def mine_line(current_line_number):
     for block in range(CHUNK_SIZE - 1):
         dig_step()
         turtle.forward()
-        
+
     dig_step()
 
     print(f"Finished line {current_line_number}")
@@ -243,10 +235,12 @@ def mine_line(current_line_number):
 def next_line(current_line_number):
     if current_line_number % 2 == 0:
         turtle.turnRight()
+        dig_step()
         turtle.forward()
         turtle.turnRight()
     else:
         turtle.turnLeft()
+        dig_step()
         turtle.forward()
         turtle.turnLeft()
 
