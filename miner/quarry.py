@@ -233,12 +233,10 @@ def down_layer():
 
 
 def mine_line(current_line_number):
-    for block in range(CHUNK_SIZE - 3):
+    for block in range(CHUNK_SIZE - 1):
         dig_step()
         turtle.forward()
     
-    dig_step()
-
     print(f"Finished line {current_line_number}")
 
 
@@ -256,10 +254,13 @@ def next_line(current_line_number):
 
 
 def mine_layer():
-    for line_number in range(CHUNK_SIZE):
+    for line_number in range(CHUNK_SIZE - 1):
         status_check()
         mine_line(line_number)
         next_line(line_number)
+    
+    status_check()
+    mine_line(line_number)
 
 
 def mine_several_layers():
