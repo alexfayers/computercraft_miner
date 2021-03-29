@@ -5,6 +5,7 @@ from cc import os
 
 import requests
 import urllib
+import math
 
 MOVE_DISTANCE = 40
 REFUEL_THRESH = 20
@@ -83,6 +84,15 @@ def find_item(search):
         if info is not None and search in info["name"]:
             return slot
     return False
+
+
+def get_items_from_in_front(number):
+    success = False
+    if turtle.suck(number):
+        success = True
+    sort_inventory()
+
+    return success
 
 
 def place_light_from_inventory():  # place a light behind us
@@ -326,7 +336,7 @@ def mine_step(branch_number):
     if not forward_and_check_cursed():
         return False
 
-    if branch_number >= 0 and (DISTANCE_COVERED + 1) % LIGHT_SEPARATION == 0:
+    if branch_number >= 0 and DISTANCE_COVERED % LIGHT_SEPARATION == 0:
         place_light_from_inventory()
 
     check_valueable_left_right(branch_number)
@@ -448,6 +458,22 @@ def deposit_valueables():
 branch_number = 0
 failed_branches = 0
 latest_branch = 0
+
+# check if need torches
+target_light_count = int(math.ceil(MOVE_DISTANCE / LIGHT_SEPARATION)) * BRANCH_COUNT
+for lighting_type in LIGHTING_TYPES:
+    light_slot = find_item(lighting_type)
+    if light_slot:
+        if turtle.getItemCount(light_slot) < target_light_count:
+            lights_needed = target_light_count - turtle.getItemCount(light_slot)
+            print(f"Need lights - getting {lights_needed}")
+            turtle.turnLeft()
+            if not get_items_from_in_front(lights_needed):
+                print("Couldn't get enought lights")
+                notify("Not enough lights", "Prepare for mobs")
+            turtle.turnRight()
+
+exit()
 
 try:
     with fs.open(LAST_BRANCH_FILE, "r") as f:
