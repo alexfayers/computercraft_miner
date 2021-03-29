@@ -125,7 +125,6 @@ def refuel_from_inventory():
     refueled = False
 
     while doRefuel:
-
         foundFuel = False
         for fuel_type in FUEL_TYPES:
             fuel_slot = find_item(fuel_type)
@@ -472,8 +471,8 @@ def deposit_valueables():
 
     return False
 
-def mine():
 
+def mine():
     branch_number = 0
     failed_branches = 0
     latest_branch = 0
@@ -521,7 +520,9 @@ def mine():
     while branch_number < BRANCH_COUNT:
         print(f"STARTING BRANCH {branch_number + failed_branches + 1}!")
 
-        notify("Branch update", f"Starting branch {branch_number + failed_branches + 1}")
+        notify(
+            "Branch update", f"Starting branch {branch_number + failed_branches + 1}"
+        )
 
         if create_branch(branch_number + failed_branches):
             print(f"BRANCH {branch_number + failed_branches + 1} COMPLETE!")
@@ -565,5 +566,6 @@ def mine():
 
     print("Back!")
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     mine()
