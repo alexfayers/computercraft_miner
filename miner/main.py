@@ -292,7 +292,7 @@ def throw_away_trash():
                 prevSlot = turtle.getSelectedSlot()
                 turtle.select(block_slot)
 
-                if block == 'cobble' and turtle.getItemCount() > 32:
+                if 'cobble' in block and turtle.getItemCount() > 32:
                     print("Keeping some cobble for placing")
                     turtle.dropUp(turtle.getItemCount() - 32)
                 else:
