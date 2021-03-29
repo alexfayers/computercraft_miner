@@ -81,6 +81,24 @@ def refuel_from_inventory():
     return refueled
 
 
+def sort_inventory():
+    print("Sorting inventory")
+
+    prevSlot = turtle.getSelectedSlot()
+
+    for slot_number in range(TURTLE_SLOTS, 0, -1):
+        turtle.select(slot_number)
+
+        if not turtle.getItemCount():
+            continue
+
+        for new_slot_number in range(1, TURTLE_SLOTS, 1):
+            if turtle.transferTo(new_slot_number):
+                break
+
+    turtle.select(prevSlot)
+
+
 def check_fuel():
     level = turtle.getFuelLevel()
 
