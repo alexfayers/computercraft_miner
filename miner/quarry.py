@@ -24,7 +24,8 @@ VALUEABLE_BLOCKS = [
 
 # Const type things
 TURTLE_SLOTS = 16
-CHUNK_SIZE = 16
+CHUNK_SIZE = 4
+QUARRY_DEPTH = 4
 
 REFUEL_THRESH = 20
 FUEL_REQUIREMENT = 20
@@ -121,7 +122,9 @@ def throw_away_trash():
     for slot in range(1, TURTLE_SLOTS + 1):
         slotinfo = turtle.getItemDetail(slot)
 
-        if slotinfo is not None and not any(search in slotinfo["name"] for search in VALUEABLE_BLOCKS+FUEL_TYPES): # if not valuable or fuel, drop it
+        if slotinfo is not None and not any(
+            search in slotinfo["name"] for search in VALUEABLE_BLOCKS + FUEL_TYPES
+        ):  # if not valuable or fuel, drop it
             prevSlot = turtle.getSelectedSlot()
             turtle.select(slot)
 
@@ -218,8 +221,15 @@ def dig_step():
     if turtle.detect():
         turtle.dig()
 
-    #if turtle.detectDown():
+    # if turtle.detectDown():
     #    turtle.digDown()
+
+
+def down_layer():
+    if turtle.detectDown():
+        turtle.digDown()
+
+    turtle.down()
 
 
 def mine_line(current_line_number):
@@ -244,11 +254,20 @@ def next_line(current_line_number):
         turtle.forward()
         turtle.turnLeft()
 
+
 def mine_layer():
-    for line_number in range(CHUNK_SIZE - 1):
+    for line_number in range(CHUNK_SIZE):
         status_check()
         mine_line(line_number)
         next_line(line_number)
+
+
+def mine_several_layers():
+    for layer in range(QUARRY_DEPTH):
+        mine_layer()
+        down_layer()
+
+        turtle.turnRight()
 
 
 def mine():
@@ -257,4 +276,3 @@ def mine():
         if not refuel_from_inventory():
             print("Ran out of fuel in chest probs")
             break  # used up da fuel
-    mine_layer()
