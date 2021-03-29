@@ -218,8 +218,8 @@ def dig_step():
     if turtle.detect():
         turtle.dig()
 
-    if turtle.detectDown():
-        turtle.digDown()
+    #if turtle.detectDown():
+    #    turtle.digDown()
 
 
 def mine_line(current_line_number):
