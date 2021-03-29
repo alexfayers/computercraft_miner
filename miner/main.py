@@ -1,6 +1,6 @@
 from cc import is_turtle, turtle
 
-from turtle import mine as turtle_mine
+from miner import mine as turtle_mine
 from station import init as station_init
 
 if not is_turtle():
