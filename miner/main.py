@@ -10,7 +10,7 @@ import math
 MOVE_DISTANCE = 40
 REFUEL_THRESH = 20
 FUEL_SATISFIED_THRESH = 300
-LIGHT_SEPARATION = 14
+LIGHT_SEPARATION = 15
 
 BRANCH_COUNT = 4
 BRANCH_SEPARATION = 2
@@ -337,9 +337,6 @@ def mine_step(branch_number):
     if not forward_and_check_cursed():
         return False
 
-    if branch_number >= 0 and DISTANCE_COVERED % LIGHT_SEPARATION == 0:
-        place_light_from_inventory()
-
     check_valueable_left_right(branch_number)
     check_valueable_down(branch_number)
 
@@ -365,7 +362,7 @@ def mine_step(branch_number):
     check_valueable_left_right(branch_number)
     check_valueable_down(branch_number)
 
-    if branch_number >= 0 and DISTANCE_COVERED == 2:
+    if branch_number >= 0 and (DISTANCE_COVERED == 2 or DISTANCE_COVERED % LIGHT_SEPARATION == 0):
         place_light_from_inventory()
 
     return True
