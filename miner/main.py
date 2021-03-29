@@ -112,6 +112,7 @@ def place_light_from_inventory():  # place a light behind us
             print("Light placed!")
 
             return True
+    notify("Ran out of lights", "Prepare for mobs")
     print("Light place failed :/")
     return False
 
