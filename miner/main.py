@@ -48,7 +48,7 @@ TURTLE_SLOTS = 16
 # Global updated tings
 
 DISTANCE_COVERED = 0
-PREVIOUS_VALUEABLE = ''
+PREVIOUS_VALUEABLE = ""
 
 
 term.clear()
@@ -231,7 +231,7 @@ def block_log(branch_number, block_name):
 
     print(f"Got valueable block ({block_name}) in branch {branch_number}!")
 
-    if block_name != PREVIOUS_VALUEABLE: # dont notify is its the same
+    if block_name != PREVIOUS_VALUEABLE:  # dont notify is its the same
         notify(f"Found {block_name}", f"Found in branch {branch_number}")
 
     with fs.open(BLOCK_LOG_FILENAME, "a") as f:
@@ -241,7 +241,7 @@ def block_log(branch_number, block_name):
 
 
 def place_cobble_under():
-    block_slot = find_item('cobble')
+    block_slot = find_item("cobble")
     if block_slot:
         prevSlot = turtle.getSelectedSlot()
         turtle.select(block_slot)
@@ -269,6 +269,7 @@ def check_valueable_down(branch_number):
             place_cobble_under()
             block_log(branch_number, info["name"])
 
+
 def sort_inventory():
     print("Sorting inventory")
 
@@ -283,8 +284,9 @@ def sort_inventory():
         for new_slot_number in range(1, TURTLE_SLOTS, 1):
             if turtle.transferTo(new_slot_number):
                 break
-    
+
     turtle.select(prevSlot)
+
 
 def throw_away_trash():
     threw_away = False
@@ -295,7 +297,7 @@ def throw_away_trash():
                 prevSlot = turtle.getSelectedSlot()
                 turtle.select(block_slot)
 
-                if 'cobble' in block:
+                if "cobble" in block:
                     if turtle.getItemCount() > 32:
                         print("Keeping some cobble for placing")
                         turtle.dropUp(turtle.getItemCount() - 32)
@@ -368,7 +370,9 @@ def mine_step(branch_number):
     check_valueable_left_right(branch_number)
     check_valueable_down(branch_number)
 
-    if branch_number >= 0 and (DISTANCE_COVERED == 2 or DISTANCE_COVERED % LIGHT_SEPARATION == 0):
+    if branch_number >= 0 and (
+        DISTANCE_COVERED == 2 or DISTANCE_COVERED % LIGHT_SEPARATION == 0
+    ):
         place_light_from_inventory()
 
     return True
@@ -510,9 +514,7 @@ if latest_branch:
 while branch_number < BRANCH_COUNT:
     print(f"STARTING BRANCH {branch_number + failed_branches + 1}!")
 
-    notify(
-        "Branch update", f"Starting branch {branch_number + failed_branches + 1}"
-    )
+    notify("Branch update", f"Starting branch {branch_number + failed_branches + 1}")
 
     if create_branch(branch_number + failed_branches):
         print(f"BRANCH {branch_number + failed_branches + 1} COMPLETE!")
