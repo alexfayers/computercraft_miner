@@ -463,15 +463,18 @@ latest_branch = 0
 target_light_count = int(math.ceil(MOVE_DISTANCE / LIGHT_SEPARATION)) * BRANCH_COUNT
 for lighting_type in LIGHTING_TYPES:
     light_slot = find_item(lighting_type)
+    item_count = 0
     if light_slot:
-        if turtle.getItemCount(light_slot) < target_light_count:
-            lights_needed = target_light_count - turtle.getItemCount(light_slot)
-            print(f"Need lights - getting {lights_needed}")
-            turtle.turnLeft()
-            if not get_items_from_in_front(lights_needed):
-                print("Couldn't get enought lights")
-                notify("Not enough lights", "Prepare for mobs")
-            turtle.turnRight()
+        item_count = turtle.getItemCount(light_slot)
+
+    if item_count < target_light_count:
+        lights_needed = target_light_count - item_count
+        print(f"Need lights - getting {lights_needed}")
+        turtle.turnLeft()
+        if not get_items_from_in_front(lights_needed):
+            print("Couldn't get enought lights")
+            notify("Not enough lights", "Prepare for mobs")
+        turtle.turnRight()
 
 exit()
 
