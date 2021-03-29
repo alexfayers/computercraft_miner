@@ -47,6 +47,7 @@ TURTLE_SLOTS = 16
 # Global updated tings
 
 DISTANCE_COVERED = 0
+PREVIOUS_VALUEABLE = ''
 
 
 term.clear()
@@ -208,14 +209,20 @@ def check_if_gravity_block():
 
 
 def block_log(branch_number, block_name):
+    global PREVIOUS_VALUEABLE
+
     branch_number += 1
 
     print(f"Got valueable block ({block_name}) in branch {branch_number}!")
 
-    notify(f"Miner found {block_name}", f"Found in branch {branch_number}")
+    if block_name != PREVIOUS_VALUEABLE: # dont notify is its the same
+        notify(f"Miner found {block_name}", f"Found in branch {branch_number}")
 
     with fs.open(BLOCK_LOG_FILENAME, "a") as f:
         f.writeLine(f"{branch_number}, {block_name}")
+
+    PREVIOUS_VALUEABLE = block_name
+
 
 
 def check_valueable_up(branch_number):
