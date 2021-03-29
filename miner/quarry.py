@@ -276,3 +276,5 @@ def mine():
         if not refuel_from_inventory():
             print("Ran out of fuel in chest probs")
             break  # used up da fuel
+
+    mine_several_layers()
