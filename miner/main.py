@@ -190,6 +190,8 @@ def check_if_cursed_block():
         if info is not None and block in info["name"]:
             print("CURSED BLOCK, ABANDON BRANCH!!!")
 
+            notify("Cursed block!", "Found a cursed block, abandoning current branch")
+
             with fs.open(BLOCK_LOG_FILENAME, "a") as f:
                 f.writeLine(f"{branch_number}, abandoned")
 
@@ -216,13 +218,23 @@ def block_log(branch_number, block_name):
     print(f"Got valueable block ({block_name}) in branch {branch_number}!")
 
     if block_name != PREVIOUS_VALUEABLE: # dont notify is its the same
-        notify(f"Miner found {block_name}", f"Found in branch {branch_number}")
+        notify(f"Found {block_name}", f"Found in branch {branch_number}")
 
     with fs.open(BLOCK_LOG_FILENAME, "a") as f:
         f.writeLine(f"{branch_number}, {block_name}")
 
     PREVIOUS_VALUEABLE = block_name
 
+
+def place_cobble_under():
+    block_slot = find_item('cobble')
+    if block_slot:
+        prevSlot = turtle.getSelectedSlot()
+        turtle.select(block_slot)
+
+        turtle.placeDown()
+
+        turtle.select(prevSlot)
 
 
 def check_valueable_up(branch_number):
@@ -240,8 +252,25 @@ def check_valueable_down(branch_number):
 
         if info is not None and block in info["name"]:
             turtle.digDown()
+            place_cobble_under()
             block_log(branch_number, info["name"])
 
+def sort_inventory():
+    print("Sorting inventory")
+
+    prevSlot = turtle.getSelectedSlot()
+
+    for slot_number in range(TURTLE_SLOTS, 0, -1):
+        turtle.select(slot_number)
+
+        if not turtle.getItemCount():
+            continue
+
+        for new_slot_number in range(1, TURTLE_SLOTS, 1):
+            if turtle.transferTo(new_slot_number):
+                break
+    
+    turtle.select(prevSlot)
 
 def throw_away_trash():
     threw_away = False
@@ -252,7 +281,11 @@ def throw_away_trash():
                 prevSlot = turtle.getSelectedSlot()
                 turtle.select(block_slot)
 
-                turtle.dropUp()
+                if block == 'cobble' and turtle.getItemCount() > 32:
+                    print("Keeping some cobble for placing")
+                    turtle.dropUp(turtle.getItemCount() - 32)
+                else:
+                    turtle.dropUp()
 
                 turtle.select(prevSlot)
 
@@ -394,7 +427,7 @@ def deposit_valueables():
 
                     print(f"Deposited some {block} into storage")
 
-                    notify("Miner deposit", f"Miner deposited {block} into storage")
+                    notify("Deposit", f"Deposited {block} into storage")
 
                     deposit_count += 1
 
@@ -443,7 +476,7 @@ while branch_number < BRANCH_COUNT:
     print(f"STARTING BRANCH {branch_number + failed_branches + 1}!")
 
     notify(
-        "Branch update", f"Miner starting branch {branch_number + failed_branches + 1}"
+        "Branch update", f"Starting branch {branch_number + failed_branches + 1}"
     )
 
     if create_branch(branch_number + failed_branches):
@@ -451,7 +484,7 @@ while branch_number < BRANCH_COUNT:
 
         notify(
             "Branch update",
-            f"Miner finished branch {branch_number + failed_branches + 1}",
+            f"Finished branch {branch_number + failed_branches + 1}",
         )
 
         branch_number += 1
@@ -470,9 +503,11 @@ while branch_number < BRANCH_COUNT:
 
     turtle.turnLeft()
 
+    sort_inventory()
+
 print("Returning home!")
 
-notify("Miner finished", "Miner returning home")
+notify("Finished run", "Returning home now!")
 
 turtle.turnLeft()
 
