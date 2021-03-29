@@ -22,6 +22,5 @@ if paste:
         readme_file.write(readme_text)
 else:
     print()
-    print("rm bootloader.lua")
     print("wget http://127.0.0.1:8000/bootloader.lua")
     print("bootloader")
