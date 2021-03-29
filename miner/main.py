@@ -1,13 +1,13 @@
 from cc import is_turtle, turtle
 
-import station
-import turtle
+from turtle import mine as turtle_mine
+from station import init as station_init
 
 if not is_turtle():
     print("Running on a turtle - starting miner script!")
-    turtle.mine()
+    turtle_mine()
 else:
     print("Running on a computer - starting station script!")
-    station.init()
+    station_init()
 
 print("Python exit!")
