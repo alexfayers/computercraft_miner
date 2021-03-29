@@ -476,8 +476,6 @@ for lighting_type in LIGHTING_TYPES:
             notify("Not enough lights", "Prepare for mobs")
         turtle.turnRight()
 
-exit()
-
 try:
     with fs.open(LAST_BRANCH_FILE, "r") as f:
         for line in f:
