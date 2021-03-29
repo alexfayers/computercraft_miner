@@ -10,7 +10,7 @@ import math
 MOVE_DISTANCE = 40
 REFUEL_THRESH = 20
 FUEL_SATISFIED_THRESH = 300
-LIGHT_SEPARATION = 14
+LIGHT_SEPARATION = 13
 
 BRANCH_COUNT = 4
 BRANCH_SEPARATION = 2
@@ -95,7 +95,7 @@ def get_items_from_in_front(number):
     return success
 
 
-def place_light_from_inventory():  # place a light behind us
+def place_light_from_inventory(down=False):  # place a light behind us
     print("Attemping to place a light...")
     for lighting_type in LIGHTING_TYPES:
         light_slot = find_item(lighting_type)
@@ -104,7 +104,10 @@ def place_light_from_inventory():  # place a light behind us
             turtle.select(light_slot)
 
             turn_around()
-            turtle.place()
+            if down == True:
+                turtle.placeDown()
+            else:
+                turtle.place()
             turn_around()
 
             turtle.select(prevSlot)
@@ -127,6 +130,7 @@ def refuel_from_inventory():
         for fuel_type in FUEL_TYPES:
             fuel_slot = find_item(fuel_type)
             if fuel_slot:
+                doRefuel = False
                 print(f"Found fuel in slot {fuel_slot}")
 
                 foundFuel = True
@@ -140,12 +144,11 @@ def refuel_from_inventory():
                         print(
                             "Run out of fuel in this slot, rescanning inventory for more."
                         )
+                        doRefuel = True
                         break
 
                 turtle.select(prevSlot)
-
                 refueled = True
-                doRefuel = False
                 break
 
         # give up
@@ -292,9 +295,12 @@ def throw_away_trash():
                 prevSlot = turtle.getSelectedSlot()
                 turtle.select(block_slot)
 
-                if 'cobble' in block and turtle.getItemCount() > 32:
-                    print("Keeping some cobble for placing")
-                    turtle.dropUp(turtle.getItemCount() - 32)
+                if 'cobble' in block:
+                    if turtle.getItemCount() > 32:
+                        print("Keeping some cobble for placing")
+                        turtle.dropUp(turtle.getItemCount() - 32)
+                    else:
+                        print("Accumulating cobble so not dropping yet")
                 else:
                     turtle.dropUp()
 
@@ -397,7 +403,9 @@ def create_branch(branch_number):
     turtle.up()
     turn_around()
 
-    for _ in range(DISTANCE_COVERED):  # come back the distance that we came
+    place_light_from_inventory(down=True)
+
+    for count in range(DISTANCE_COVERED):  # come back the distance that we came
         return_step()
 
     turn_around()
@@ -443,6 +451,8 @@ def deposit_valueables():
 
             if not deposited:
                 print("Didn't deposit anything this run, breaking.")
+
+                sort_inventory()
                 break
 
         return True
