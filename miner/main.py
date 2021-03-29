@@ -1,12 +1,14 @@
 from cc import is_turtle, turtle
 from cc import term
 from cc import fs
+from cc import os
 
 import requests
+import urllib
 
-MOVE_DISTANCE = 20
+MOVE_DISTANCE = 40
 REFUEL_THRESH = 20
-FUEL_SATISFIED_THRESH = 200
+FUEL_SATISFIED_THRESH = 300
 LIGHT_SEPARATION = 14
 
 BRANCH_COUNT = 4
@@ -15,7 +17,7 @@ BRANCH_SEPARATION = 2
 BLOCK_LOG_FILENAME = "block_log.csv"
 LAST_BRANCH_FILE = "last_branch.txt"
 
-JOIN_KEY = requests.get('http://192.168.1.54:8000/join.key').text
+JOIN_KEY = requests.get("http://192.168.1.54:8000/join.key").text
 
 FUEL_TYPES = ["lava", "blaze", "coal", "wood"]
 LIGHTING_TYPES = ["torch"]
@@ -34,7 +36,7 @@ VALUEABLE_BLOCKS = [
     "gold",
     "lapis",
     "emerald",
-    "flint"
+    "flint",
 ]  # not coal, we wanna keep that
 
 TRASH_BLOCKS = ["diorite", "granite", "andesite", "dirt", "cobble", "gravel", "sand"]
@@ -52,6 +54,20 @@ term.clear()
 if not is_turtle():
     print("Turtle required!")
     exit()
+else:
+    if not os.getComputerLabel():
+        os.setComputerLabel(f"Miner #{os.getComputerID()}")
+
+
+def notify(title, text):
+    title = f"{os.getComputerLabel()}: {title}"
+
+    title = urllib.parse.quote_plus(title)
+    text = urllib.parse.quote_plus(text)
+
+    res = requests.get(
+        f"https://joinjoaomgcd.appspot.com/_ah/api/messaging/v1/sendPush?deviceId=group.all&text={text}&title={title}&apikey={JOIN_KEY}"
+    )
 
 
 def turn_around():
@@ -196,7 +212,7 @@ def block_log(branch_number, block_name):
 
     print(f"Got valueable block ({block_name}) in branch {branch_number}!")
 
-    requests.get(f'https://joinjoaomgcd.appspot.com/_ah/api/messaging/v1/sendPush?deviceId=group.all&text=Found%20in%20branch%20{branch_number}&title=Miner%20found%20{block_name}&apikey={JOIN_KEY}')
+    notify(f"Miner found {block_name}", f"Found in branch {branch_number}")
 
     with fs.open(BLOCK_LOG_FILENAME, "a") as f:
         f.writeLine(f"{branch_number}, {block_name}")
@@ -238,7 +254,7 @@ def throw_away_trash():
                 threw_away = True
             else:
                 break
-    
+
     return threw_away
 
 
@@ -300,7 +316,6 @@ def mine_step(branch_number):
 
     if branch_number >= 0 and DISTANCE_COVERED == 2:
         place_light_from_inventory()
-    
 
     return True
 
@@ -372,7 +387,7 @@ def deposit_valueables():
 
                     print(f"Deposited some {block} into storage")
 
-                    requests.get(f'https://joinjoaomgcd.appspot.com/_ah/api/messaging/v1/sendPush?deviceId=group.all&text=Miner%20deposited%20{block}%20into%20storage&title=Miner%20deposit&apikey={JOIN_KEY}')
+                    notify("Miner deposit", f"Miner deposited {block} into storage")
 
                     deposit_count += 1
 
@@ -420,12 +435,17 @@ if latest_branch:
 while branch_number < BRANCH_COUNT:
     print(f"STARTING BRANCH {branch_number + failed_branches + 1}!")
 
-    requests.get(f'https://joinjoaomgcd.appspot.com/_ah/api/messaging/v1/sendPush?deviceId=group.all&text=Miner%20starting%20branch%20{branch_number + failed_branches + 1}&title=Branch%20update&apikey={JOIN_KEY}')
+    notify(
+        "Branch update", f"Miner starting branch {branch_number + failed_branches + 1}"
+    )
 
     if create_branch(branch_number + failed_branches):
         print(f"BRANCH {branch_number + failed_branches + 1} COMPLETE!")
 
-        requests.get(f'https://joinjoaomgcd.appspot.com/_ah/api/messaging/v1/sendPush?deviceId=group.all&text=Miner%20finished%20branch%20{branch_number + failed_branches + 1}&title=Branch%20update&apikey={JOIN_KEY}')
+        notify(
+            "Branch update",
+            f"Miner finished branch {branch_number + failed_branches + 1}",
+        )
 
         branch_number += 1
     else:
@@ -445,7 +465,7 @@ while branch_number < BRANCH_COUNT:
 
 print("Returning home!")
 
-requests.get(f'https://joinjoaomgcd.appspot.com/_ah/api/messaging/v1/sendPush?deviceId=group.all&text=Miner%20returning%20home&title=Miner%20finished&apikey={JOIN_KEY}')
+notify("Miner finished", "Miner returning home")
 
 turtle.turnLeft()
 
