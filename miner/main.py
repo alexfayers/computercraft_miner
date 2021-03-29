@@ -10,7 +10,7 @@ import math
 MOVE_DISTANCE = 40
 REFUEL_THRESH = 20
 FUEL_SATISFIED_THRESH = 300
-LIGHT_SEPARATION = 13
+LIGHT_SEPARATION = 12
 
 BRANCH_COUNT = 4
 BRANCH_SEPARATION = 2
@@ -302,9 +302,11 @@ def throw_away_trash():
                     if turtle.getItemCount() > 32:
                         print("Keeping some cobble for placing, dropping the rest")
                         turtle.dropUp(turtle.getItemCount() - 32)
+                        turtle.select(prevSlot)
                         break
                     else:
                         print("Accumulating cobble so not dropping yet")
+                        turtle.select(prevSlot)
                         break
 
                 else:
