@@ -247,13 +247,14 @@ def mine_line(current_line_number):
 
 def next_line(current_line_number):
     if current_line_number % 2 == 0:
-        turtle.turnLeft()
+        turtle.turnRight()
         turtle.forward()
-        turtle.turnLeft()
+        turtle.turnRight()
     else:
-        turtle.turnRight()
+        turtle.turnLeft()
         turtle.forward()
-        turtle.turnRight()
+        turtle.turnLeft()
+
 
 
 def mine_layer():
