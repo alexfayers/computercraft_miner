@@ -59,22 +59,24 @@ def refuel_from_inventory():
 
     foundFuel = False
     for fuel_type in FUEL_TYPES:
-        fuel_slot = find_item(fuel_type)
-        if fuel_slot:
-            print(f"Found fuel in slot {fuel_slot}")
+        fuel_slot = 1
+        while fuel_slot:
+            fuel_slot = find_item(fuel_type)
+            if fuel_slot:
+                print(f"Found fuel in slot {fuel_slot}")
 
-            foundFuel = True
+                foundFuel = True
 
-            prevSlot = turtle.getSelectedSlot()
-            turtle.select(fuel_slot)
+                prevSlot = turtle.getSelectedSlot()
+                turtle.select(fuel_slot)
 
-            print(f"Refueling from slot {fuel_slot}...")
-            if not turtle.refuel():
+                print(f"Refueling from slot {fuel_slot}...")
+                if not turtle.refuel():
+                    break
+
+                turtle.select(prevSlot)
+                refueled = True
                 break
-
-            turtle.select(prevSlot)
-            refueled = True
-            break
 
     # give up
     if not foundFuel:
@@ -318,7 +320,7 @@ def return_to_start():
 
 def mine():
     print(f"Require {FUEL_REQUIREMENT} fuel for this job. I have {turtle.getFuelLevel()}...")
-    if turtle.getFuelLevel() < FUEL_REQUIREMENT:
+    while turtle.getFuelLevel() < FUEL_REQUIREMENT:
         print("REFUELING!!!")
         get_fuel_from_chest()
         if not refuel_from_inventory():
