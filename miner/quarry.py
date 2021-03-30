@@ -290,8 +290,13 @@ def mine():
 
     corner = QUARRY_DEPTH // 2
 
-    if QUARRY_DEPTH % 2 != 0:
+    if corner == 1:
         travel_line()
+    elif corner == 2:
+        travel_line()
+        turtle.turnRight()
+        travel_line()
+    elif corner == 3:
         turtle.turnRight()
         travel_line()
 
