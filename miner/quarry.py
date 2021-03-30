@@ -333,7 +333,9 @@ def skip_layers():
 
 
 def locate_item_in_network():
-    for device in peripheral.getNames():
+    network = peripheral.wrap('right')
+
+    for device in network.getNames():
         print(device)
 
 
