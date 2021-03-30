@@ -28,9 +28,9 @@ VALUEABLE_BLOCKS = [
 
 # CONFIG
 CHUNK_SIZE = 8
-QUARRY_DEPTH = 60
+QUARRY_DEPTH = 30
 REFUEL_THRESH = 20
-QUARRY_DEPTH_SKIP = 30
+QUARRY_DEPTH_SKIP = 0
 
 # Const type things
 TURTLE_SLOTS = 16
@@ -234,6 +234,7 @@ def get_fuel_from_chest():
 def status_check():
     # checks to make sure everytjing is going well
     throw_away_trash()
+    sort_inventory()
     check_fuel()
 
 
@@ -288,8 +289,6 @@ def mine_layer():
 def mine_several_layers():
     for layer in range(QUARRY_DEPTH):
         mine_layer()
-
-        sort_inventory()
 
         if CHUNK_SIZE % 2 == 0:
             turtle.turnRight()
