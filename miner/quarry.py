@@ -288,7 +288,7 @@ def mine():
 
     mine_several_layers()
 
-    corner = QUARRY_DEPTH // 2
+    corner = QUARRY_DEPTH % 4
 
     if corner == 1:
         travel_line()
