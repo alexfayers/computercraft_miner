@@ -283,7 +283,7 @@ def mine():
     while turtle.getFuelLevel() < FUEL_REQUIREMENT:
         get_fuel_from_chest()
         if not refuel_from_inventory():
-            print("Ran out of fuel in chest probs")
+            print("Couldn't refuel!")
             break  # used up da fuel
 
     mine_several_layers()
