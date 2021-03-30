@@ -30,7 +30,7 @@ CHUNK_SIZE = 8
 QUARRY_DEPTH = 30
 
 REFUEL_THRESH = 20
-FUEL_REQUIREMENT = CHUNK_SIZE * QUARRY_DEPTH
+FUEL_REQUIREMENT = CHUNK_SIZE * QUARRY_DEPTH + QUARRY_DEPTH + CHUNK_SIZE * 2
 
 term.clear()
 
@@ -205,7 +205,7 @@ def get_items_from_in_front(number):
 
 
 def get_fuel_from_chest():
-    target_fuel_count = math.ceil(FUEL_REQUIREMENT // 80) # 80 is coal amount
+    target_fuel_count = math.ceil(FUEL_REQUIREMENT // 80)  # 80 is coal amount
 
     for fuel_type in LIGHTING_TYPES:
         fuel_slot = find_item(fuel_type)
@@ -243,6 +243,7 @@ def down_layer():
 
     turtle.down()
 
+
 def travel_line():
     for block in range(CHUNK_SIZE - 1):
         turtle.forward()
@@ -252,7 +253,7 @@ def mine_line(current_line_number):
     for block in range(CHUNK_SIZE - 1):
         dig_step()
         turtle.forward()
-    
+
     print(f"Finished line {current_line_number}")
 
 
@@ -288,18 +289,10 @@ def mine_several_layers():
             turtle.turnLeft()
 
         if layer < QUARRY_DEPTH - 1:
-            down_layer()    
+            down_layer()
 
 
-def mine():
-    while turtle.getFuelLevel() < FUEL_REQUIREMENT:
-        get_fuel_from_chest()
-        if not refuel_from_inventory():
-            print("Couldn't refuel!")
-            break  # used up da fuel
-
-    mine_several_layers()
-
+def return_to_start():
     corner = QUARRY_DEPTH % 4
 
     if corner == 1:
@@ -314,10 +307,27 @@ def mine():
 
     for layer in range(QUARRY_DEPTH - 1):
         turtle.up()
-    
+
     if corner == 1:
         turtle.turnRight()
     elif corner == 2:
         turtle.turnRight()
     elif corner == 3:
         turn_around()
+
+
+def mine():
+    fuel_level = turtle.getFuelLevel()
+    print(f"Require {FUEL_REQUIREMENT} fuel for this job. I have {fuel_level}...")
+    while fuel_level < FUEL_REQUIREMENT:
+        print("REFUELING!!!")
+        get_fuel_from_chest()
+        if not refuel_from_inventory():
+            print("Couldn't refuel!")
+            exit()
+
+    print("Got enough fuel, we're off!")
+
+    mine_several_layers()
+
+    return_to_start()
