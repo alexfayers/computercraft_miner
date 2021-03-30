@@ -231,6 +231,10 @@ def down_layer():
 
     turtle.down()
 
+def travel_line():
+    for block in range(CHUNK_SIZE - 1):
+        turtle.forward()
+
 
 def mine_line(current_line_number):
     for block in range(CHUNK_SIZE - 1):
@@ -254,24 +258,25 @@ def next_line(current_line_number):
 
 
 def mine_layer():
-    for line_number in range(CHUNK_SIZE - 1):
+    for line_number in range(CHUNK_SIZE):
         status_check()
         mine_line(line_number)
-        next_line(line_number)
-    
-    status_check()
-    mine_line(line_number)
+
+        if line_number < CHUNK_SIZE - 1:
+            next_line(line_number)
 
 
 def mine_several_layers():
     for layer in range(QUARRY_DEPTH):
         mine_layer()
-        down_layer()
 
         if CHUNK_SIZE % 2 == 0:
             turtle.turnRight()
         else:
             turtle.turnLeft()
+
+        if layer < QUARRY_DEPTH - 1:
+            down_layer()    
 
 
 def mine():
@@ -282,3 +287,13 @@ def mine():
             break  # used up da fuel
 
     mine_several_layers()
+
+    corner = QUARRY_DEPTH // 2
+
+    if QUARRY_DEPTH // 2 != 0:
+        travel_line()
+        turtle.turnRight()
+        travel_line()
+
+    for layer in range(QUARRY_DEPTH):
+        turtle.up()
