@@ -302,3 +302,10 @@ def mine():
 
     for layer in range(QUARRY_DEPTH - 1):
         turtle.up()
+    
+    if corner == 1:
+        turtle.turnRight()
+    elif corner == 2:
+        turtle.turnRight()
+    elif corner == 3:
+        turn_around()
