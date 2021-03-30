@@ -5,7 +5,7 @@ from cc import import_file
 if is_turtle():
     print("Running on a turtle - starting miner script!")
 
-    if input("quarry or strip? (q/s): ").lower() == "s":
+    if 1==2 and input("quarry or strip? (q/s): ").lower() == "s":
         miner = import_file("miner.py", __file__)
         miner.mine()
     else:

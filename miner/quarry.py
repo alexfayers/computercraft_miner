@@ -269,9 +269,9 @@ def mine_several_layers():
         down_layer()
 
         if CHUNK_SIZE % 2 == 0:
-            turtle.turnLeft()
-        else:
             turtle.turnRight()
+        else:
+            turtle.turnLeft()
 
 
 def mine():
