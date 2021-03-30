@@ -3,6 +3,7 @@
 from cc import is_turtle, turtle
 from cc import term
 from cc import os
+from cc import peripheral
 
 import math
 
@@ -331,7 +332,17 @@ def skip_layers():
         down_layer()
 
 
+def locate_item_in_network():
+    for device in peripheral.getNames():
+        print(device)
+
+
 def mine():
+
+    locate_item_in_network()
+
+    exit()
+
     print(
         f"Require {FUEL_REQUIREMENT} fuel for this job. I have {turtle.getFuelLevel()}..."
     )
