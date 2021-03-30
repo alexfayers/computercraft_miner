@@ -21,16 +21,24 @@ VALUEABLE_BLOCKS = [
     "lapis",
     "emerald",
     "flint",
+    "clay",
+    "root",
 ]  # not coal, we wanna keep that
 
 
+# CONFIG
+CHUNK_SIZE = 8
+QUARRY_DEPTH = 60
+REFUEL_THRESH = 20
+QUARRY_DEPTH_SKIP = 30
+
 # Const type things
 TURTLE_SLOTS = 16
-CHUNK_SIZE = 8
-QUARRY_DEPTH = 30
-
-REFUEL_THRESH = 20
-FUEL_REQUIREMENT = CHUNK_SIZE * CHUNK_SIZE * QUARRY_DEPTH + QUARRY_DEPTH + CHUNK_SIZE * 2
+FUEL_REQUIREMENT = (
+    CHUNK_SIZE * CHUNK_SIZE * (QUARRY_DEPTH - QUARRY_DEPTH_SKIP)
+    + QUARRY_DEPTH
+    + CHUNK_SIZE * 2
+)
 
 term.clear()
 
@@ -63,8 +71,6 @@ def refuel_from_inventory():
         while fuel_slot:
             fuel_slot = find_item(fuel_type)
             if fuel_slot:
-                print(f"Found fuel in slot {fuel_slot}")
-
                 foundFuel = True
 
                 prevSlot = turtle.getSelectedSlot()
@@ -135,7 +141,7 @@ def throw_away_trash():
             turtle.dropUp()
 
             turtle.select(prevSlot)
-            print(f"Dropped some {slotinfo['name']} (non-valuable block)")
+            # print(f"Dropped some {slotinfo['name']} (non-valuable block)")
 
 
 def deposit_valueables():
@@ -144,7 +150,7 @@ def deposit_valueables():
         info = turtle.inspect()
 
         if info is not None and block in info["name"]:
-            print(f"found deposit block!")
+            print(f"Found deposit block!")
             canDeposit = True
             break
 
@@ -256,8 +262,6 @@ def mine_line(current_line_number):
         dig_step()
         turtle.forward()
 
-    print(f"Finished line {current_line_number}")
-
 
 def next_line(current_line_number):
     if current_line_number % 2 == 0:
@@ -285,6 +289,8 @@ def mine_several_layers():
     for layer in range(QUARRY_DEPTH):
         mine_layer()
 
+        sort_inventory()
+
         if CHUNK_SIZE % 2 == 0:
             turtle.turnRight()
         else:
@@ -292,6 +298,8 @@ def mine_several_layers():
 
         if layer < QUARRY_DEPTH - 1:
             down_layer()
+
+        print(f"Layer {layer} complete")
 
 
 def return_to_start():
@@ -318,8 +326,15 @@ def return_to_start():
         turn_around()
 
 
+def skip_layers():
+    for _ in range(QUARRY_DEPTH_SKIP):
+        down_layer()
+
+
 def mine():
-    print(f"Require {FUEL_REQUIREMENT} fuel for this job. I have {turtle.getFuelLevel()}...")
+    print(
+        f"Require {FUEL_REQUIREMENT} fuel for this job. I have {turtle.getFuelLevel()}..."
+    )
     while turtle.getFuelLevel() < FUEL_REQUIREMENT:
         print("REFUELING!!!")
         get_fuel_from_chest()
@@ -329,6 +344,18 @@ def mine():
 
     print("Got enough fuel, we're off!")
 
+    if QUARRY_DEPTH_SKIP > 0:
+        print("Skipping some layers...")
+        skip_layers()
+        print("Starting properly!")
+
     mine_several_layers()
 
+    print("Returning to start...")
     return_to_start()
+
+    turn_around()
+    deposit_valueables()
+    turn_around()
+
+    print("Run complete")
