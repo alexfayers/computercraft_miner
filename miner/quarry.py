@@ -335,10 +335,10 @@ def skip_layers():
 def locate_item_in_network():
     network = peripheral.wrap('right')
 
-    print(network)
-
-    #for device in network.getNames():
-    #    print(device)
+    for device in network.getNamesRemote():
+        if 'chest' in device:
+            chest = peripheral.wrapRemote(device)
+            print(chest.list)
 
 
 def mine():
