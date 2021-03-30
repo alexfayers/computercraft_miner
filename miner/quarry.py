@@ -25,7 +25,7 @@ VALUEABLE_BLOCKS = [
 # Const type things
 TURTLE_SLOTS = 16
 CHUNK_SIZE = 4
-QUARRY_DEPTH = 4
+QUARRY_DEPTH = 3
 
 REFUEL_THRESH = 20
 FUEL_REQUIREMENT = 20
@@ -290,10 +290,10 @@ def mine():
 
     corner = QUARRY_DEPTH // 2
 
-    if QUARRY_DEPTH // 2 != 0:
+    if QUARRY_DEPTH % 2 != 0:
         travel_line()
         turtle.turnRight()
         travel_line()
 
-    for layer in range(QUARRY_DEPTH):
+    for layer in range(QUARRY_DEPTH - 1):
         turtle.up()
