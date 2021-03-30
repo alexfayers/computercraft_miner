@@ -343,7 +343,7 @@ def locate_item_in_network():
 
 def mine():
 
-    locate_item_in_network()
+    #locate_item_in_network()
 
     exit()
 
