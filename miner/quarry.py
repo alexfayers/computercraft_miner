@@ -4,6 +4,8 @@ from cc import is_turtle, turtle
 from cc import term
 from cc import os
 
+import math
+
 FUEL_TYPES = ["lava", "blaze", "coal", "wood"]
 LIGHTING_TYPES = ["torch"]
 CURSED_BLOCKS = ["lava", "water"]
@@ -28,7 +30,7 @@ CHUNK_SIZE = 4
 QUARRY_DEPTH = 5
 
 REFUEL_THRESH = 20
-FUEL_REQUIREMENT = 20
+FUEL_REQUIREMENT = CHUNK_SIZE * QUARRY_DEPTH
 
 term.clear()
 
@@ -185,15 +187,25 @@ def deposit_valueables():
 
 def get_items_from_in_front(number):
     success = False
-    if turtle.suck(number):
-        success = True
+
+    if number >= 255:
+        for _ in range(number // 255 + number % 255):
+            if turtle.suck(number):
+                success = True
+            else:
+                success = False
+                break
+    else:
+        if turtle.suck(number):
+            success = True
+
     sort_inventory()
 
     return success
 
 
 def get_fuel_from_chest():
-    target_fuel_count = FUEL_REQUIREMENT
+    target_fuel_count = math.ceil(FUEL_REQUIREMENT // 80) # 80 is coal amount
 
     for fuel_type in LIGHTING_TYPES:
         fuel_slot = find_item(fuel_type)
