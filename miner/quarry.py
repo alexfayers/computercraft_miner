@@ -215,7 +215,7 @@ def get_fuel_from_chest():
 
         if item_count < target_fuel_count:
             fuel_needed = target_fuel_count - item_count
-            print(f"Need fuel - getting {fuel_needed}")
+            print(f"Getting {fuel_needed} items")
             turtle.turnLeft()
             if not get_items_from_in_front(fuel_needed):
                 print("Couldn't get enought fuel")
@@ -318,7 +318,7 @@ def return_to_start():
 
 def mine():
     print(f"Require {FUEL_REQUIREMENT} fuel for this job. I have {turtle.getFuelLevel()}...")
-    while turtle.getFuelLevel() < FUEL_REQUIREMENT:
+    if turtle.getFuelLevel() < FUEL_REQUIREMENT:
         print("REFUELING!!!")
         get_fuel_from_chest()
         if not refuel_from_inventory():
