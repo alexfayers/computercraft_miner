@@ -30,7 +30,7 @@ CHUNK_SIZE = 8
 QUARRY_DEPTH = 30
 
 REFUEL_THRESH = 20
-FUEL_REQUIREMENT = CHUNK_SIZE * QUARRY_DEPTH + QUARRY_DEPTH + CHUNK_SIZE * 2
+FUEL_REQUIREMENT = CHUNK_SIZE * CHUNK_SIZE * QUARRY_DEPTH + QUARRY_DEPTH + CHUNK_SIZE * 2
 
 term.clear()
 
@@ -317,9 +317,8 @@ def return_to_start():
 
 
 def mine():
-    fuel_level = turtle.getFuelLevel()
-    print(f"Require {FUEL_REQUIREMENT} fuel for this job. I have {fuel_level}...")
-    while fuel_level < FUEL_REQUIREMENT:
+    print(f"Require {FUEL_REQUIREMENT} fuel for this job. I have {turtle.getFuelLevel()}...")
+    while turtle.getFuelLevel() < FUEL_REQUIREMENT:
         print("REFUELING!!!")
         get_fuel_from_chest()
         if not refuel_from_inventory():
