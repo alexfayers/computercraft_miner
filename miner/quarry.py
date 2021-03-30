@@ -335,7 +335,11 @@ def skip_layers():
 def locate_item_in_network():
     network = peripheral.wrap('right')
 
+    print("periph wrapped")
+
     for device in network.getNamesRemote():
+        print("found device")
+
         if 'chest' in device:
             chest = peripheral.wrapRemote(device)
             print(chest.list)
