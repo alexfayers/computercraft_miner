@@ -11,7 +11,7 @@ FUEL_TYPES = ["lava", "blaze", "coal", "wood"]
 LIGHTING_TYPES = ["torch"]
 CURSED_BLOCKS = ["lava", "water"]
 GRAVITY_BLOCKS = ["gravel", "sand"]
-DEPOSIT_BLOCKS = ["chest", "hopper"]
+DEPOSIT_BLOCKS = ["modem"] # "chest", "hopper"
 
 VALUEABLE_BLOCKS = [
     "ore",
@@ -385,7 +385,7 @@ def skip_layers():
 
 def locate_item_in_network(search):
     try:
-        network = peripheral.wrap("right")
+        network = peripheral.wrap("front")
     except:
         print("No modem to the right of the turtle!")
         return ()
@@ -408,7 +408,7 @@ def locate_item_in_network(search):
 
 def locate_empty_storage_in_network(search):
     try:
-        network = peripheral.wrap("right")
+        network = peripheral.wrap("front")
     except:
         print("No modem to the right of the turtle!")
         return ()
@@ -426,7 +426,7 @@ def locate_empty_storage_in_network(search):
 
 def get_from_network(storage_name, from_slot, count=64):
     try:
-        network = peripheral.wrap("right")
+        network = peripheral.wrap("front")
     except:
         print("No modem to the right of the turtle!")
         return 0
@@ -450,7 +450,7 @@ def get_from_network(storage_name, from_slot, count=64):
 
 def put_in_network(storage_name, from_slot, count=64):
     try:
-        network = peripheral.wrap("right")
+        network = peripheral.wrap("front")
     except:
         print("No modem to the right of the turtle!")
         return 0
@@ -507,7 +507,7 @@ def locate_space_and_put_in_network(from_slot):
     storage_names = []
     transferred = 0
     try:
-        network = peripheral.wrap("right")
+        network = peripheral.wrap("front")
     except:
         print("No modem to the right of the turtle!")
         return ()
@@ -553,7 +553,7 @@ def mine():
     return_to_start()
 
     turn_around()
-    deposit_valueables()
+    deposit_valueables_into_network()
     turn_around()
 
     print("Run complete")
