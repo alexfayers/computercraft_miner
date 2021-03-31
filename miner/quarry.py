@@ -341,7 +341,7 @@ def locate_item_in_network():
         print("found device")
 
         if 'chest' in device:
-            chest = peripheral.wrapRemote(device)
+            chest = peripheral.wrap(device)
             print(chest.list)
 
 
