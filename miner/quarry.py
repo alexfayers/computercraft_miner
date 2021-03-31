@@ -196,6 +196,9 @@ def deposit_valueables():
 
 
 def deposit_valueables_into_network():
+    throw_away_trash()
+    sort_inventory()
+    
     while True:
         deposited = False
 
@@ -497,6 +500,7 @@ def locate_space_and_put_in_network(from_slot):
 
     for device in network.getNamesRemote():
         if "chest" in device:
+            input("enter to contine")
             transferred += put_in_network(device, from_slot)
 
     print(f"Tranferred {transferred} items into storage")
