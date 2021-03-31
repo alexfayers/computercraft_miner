@@ -332,23 +332,37 @@ def skip_layers():
         down_layer()
 
 
-def locate_item_in_network():
+def locate_item_in_network(search):
     network = peripheral.wrap('right')
 
-    print("periph wrapped")
-
     for device in network.getNamesRemote():
-        print("found device")
+        print("Found storage device")
 
         if 'chest' in device:
             chest = peripheral.wrap(device)
-            print(chest.list())
-            print(chest.size())
+
+            for slot, item in chest.list().items():
+                if search in item['name']:
+                    return (device, slot, item['count'])
+            
+            return ()
+
+def get_from_network(storage_name, from_slot, count):
+    network = peripheral.wrap('right')
+    
+    return pullItems(storage_name, from_slot, limit=count)
+
+
+def locate_and_get_from_network(search):
+    item_location = locate_item_in_network('coal')
+    if item_location:
+        storage_name, fuel_slot, fuel_amount = *item_location
+        print(get_from_network(storage_name, fuel_slot, fuel_amount))
+
 
 
 def mine():
-
-    locate_item_in_network()
+    locate_and_get_from_network('coal')
 
     exit()
 
