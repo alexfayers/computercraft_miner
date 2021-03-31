@@ -362,6 +362,7 @@ def locate_empty_storage_in_network():
         print("No modem to the right of the turtle!")
         return ()
 
+    print("AAAAAAAAAAAAAAAAAAAAA")
     for device in network.getNamesRemote():
         print("Found storage device")
 
@@ -455,11 +456,11 @@ def locate_and_get_from_network(search, target_count=64):
 def locate_space_and_put_in_network(from_slot):
     storage_name = locate_empty_storage_in_network()
 
-    print(f"Found {storage_name}")
-
     if storage_name:
+        print(f"Found {storage_name}")
         return put_in_network(storage_name, from_slot)
     else:
+        print("Couldn't find storage")
         return 0
 
 
