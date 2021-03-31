@@ -31,7 +31,7 @@ VALUEABLE_BLOCKS = [
 CHUNK_SIZE = 8
 QUARRY_DEPTH = 2
 REFUEL_THRESH = 20
-QUARRY_DEPTH_SKIP = 0
+QUARRY_DEPTH_SKIP = 30
 
 # Const type things
 TURTLE_SLOTS = 16
@@ -97,13 +97,14 @@ def sort_inventory():
 
     prevSlot = turtle.getSelectedSlot()
 
-    for slot_number in range(TURTLE_SLOTS, 1, -1):
-        turtle.select(slot_number)
-
-        if not turtle.getItemCount():
+    for slot_number in range(TURTLE_SLOTS, 0, -1):
+        
+        if turtle.getItemCount(slot_number):
+            turtle.select(slot_number)
+        else:
             continue
 
-        for new_slot_number in range(2, TURTLE_SLOTS, 1):
+        for new_slot_number in range(1, TURTLE_SLOTS + 1):
             if turtle.transferTo(new_slot_number):
                 break
 
