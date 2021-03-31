@@ -353,6 +353,8 @@ def get_from_network(storage_name, from_slot, count=64):
 
     turtle_name = network.getNameLocal()
 
+    print(turtle_name, from_slot, count)
+
     storage = peripheral.wrap(storage_name)
 
     import time
