@@ -492,7 +492,6 @@ def locate_and_get_from_network(search, target_count=64):
 
 def locate_space_and_put_in_network(from_slot):
     # storage_name = locate_empty_storage_in_network(item_name)
-    storage_names = []
     transferred = 0
     try:
         network = peripheral.wrap("left")
@@ -501,6 +500,7 @@ def locate_space_and_put_in_network(from_slot):
         return ()
 
     for device in network.getNamesRemote():
+        print(device)
         if "chest" in device:
             input("enter to contine")
             transferred += put_in_network(device, from_slot)
