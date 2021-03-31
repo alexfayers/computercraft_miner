@@ -196,52 +196,35 @@ def deposit_valueables():
 
 
 def deposit_valueables_into_network():
-    canDeposit = False
-    for block in DEPOSIT_BLOCKS:
-        info = turtle.inspect()
+    while True:
+        deposited = False
 
-        if info is not None and block.encode() in info[b"name"]:
-            print(f"Found deposit block!")
-            canDeposit = True
+        for block in VALUEABLE_BLOCKS:
+            block_slot = find_item(block)
+
+            if block_slot:
+                amount = locate_space_and_put_in_network(
+                    block_slot
+                )  # drop the items into the chest or whatever
+
+                if amount <= 0:
+                    print("Couldn't deposit anything")
+                    deposited = False
+                    break
+
+                print(f"Deposited {amount} {block} into storage")
+
+                # notify("Deposit", f"Deposited {block} into storage")
+
+                deposited = True
+
+        if not deposited:
+            print("Didn't deposit anything this run, breaking.")
+
+            sort_inventory()
             break
 
-    if canDeposit:
-        deposit_count = 0
-
-        while True:
-            deposited = False
-
-            for block in VALUEABLE_BLOCKS:
-                block_slot = find_item(block)
-
-                if block_slot:
-                    amount = locate_space_and_put_in_network(
-                        block_slot
-                    )  # drop the items into the chest or whatever
-
-                    if amount <= 0:
-                        print("Couldn't deposit anything")
-                        deposited = False
-                        break
-
-                    print(f"Deposited {amount} {block} into storage")
-
-                    # notify("Deposit", f"Deposited {block} into storage")
-
-                    deposit_count += 1
-
-                    deposited = True
-
-            if not deposited:
-                print("Didn't deposit anything this run, breaking.")
-
-                sort_inventory()
-                break
-
-        return True
-
-    else:
-        print("Can't deposit in this block!")
+    return True
 
     return False
 
@@ -385,7 +368,7 @@ def skip_layers():
 
 def locate_item_in_network(search):
     try:
-        network = peripheral.wrap("front")
+        network = peripheral.wrap("left")
     except:
         print("No modem to the right of the turtle!")
         return ()
@@ -408,7 +391,7 @@ def locate_item_in_network(search):
 
 def locate_empty_storage_in_network(search):
     try:
-        network = peripheral.wrap("front")
+        network = peripheral.wrap("left")
     except:
         print("No modem to the right of the turtle!")
         return ()
@@ -426,7 +409,7 @@ def locate_empty_storage_in_network(search):
 
 def get_from_network(storage_name, from_slot, count=64):
     try:
-        network = peripheral.wrap("front")
+        network = peripheral.wrap("left")
     except:
         print("No modem to the right of the turtle!")
         return 0
@@ -450,7 +433,7 @@ def get_from_network(storage_name, from_slot, count=64):
 
 def put_in_network(storage_name, from_slot, count=64):
     try:
-        network = peripheral.wrap("front")
+        network = peripheral.wrap("left")
     except:
         print("No modem to the right of the turtle!")
         return 0
@@ -507,7 +490,7 @@ def locate_space_and_put_in_network(from_slot):
     storage_names = []
     transferred = 0
     try:
-        network = peripheral.wrap("front")
+        network = peripheral.wrap("left")
     except:
         print("No modem to the right of the turtle!")
         return ()
@@ -531,14 +514,14 @@ def mine():
     while turtle.getFuelLevel() < FUEL_REQUIREMENT:
         print("REFUELING!!!")
         if not locate_and_get_from_network("coal", target_fuel_count):
-            refuel_from_inventory()
-            break
+            print("Not enough fuel")
+            exit()
         refuel_from_inventory()
 
-    while turtle.getFuelLevel() < FUEL_REQUIREMENT:
-        print("REFUELING!!!")
-        get_fuel_from_chest(target_fuel_count)
-        refuel_from_inventory()
+    #while turtle.getFuelLevel() < FUEL_REQUIREMENT:
+    #    print("REFUELING!!!")
+    #    get_fuel_from_chest(target_fuel_count)
+    #    refuel_from_inventory()
 
     print("Got enough fuel, we're off!")
 
@@ -552,8 +535,8 @@ def mine():
     print("Returning to start...")
     return_to_start()
 
-    turn_around()
+    #turn_around()
     deposit_valueables_into_network()
-    turn_around()
+    #turn_around()
 
     print("Run complete")
