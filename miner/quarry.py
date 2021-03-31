@@ -333,7 +333,11 @@ def skip_layers():
 
 
 def locate_item_in_network(search):
-    network = peripheral.wrap("right")
+    try:
+        network = peripheral.wrap("right")
+    except:
+        print("No modem to the right of the turtle!")
+        return ()
 
     for device in network.getNamesRemote():
         print("Found storage device")
@@ -349,17 +353,21 @@ def locate_item_in_network(search):
 
 
 def get_from_network(storage_name, from_slot, count=64):
-    network = peripheral.wrap("right")
+    try:
+        network = peripheral.wrap("right")
+    except:
+        print("No modem to the right of the turtle!")
+        return 0
 
-    #turtle_name = network.getNameLocal()
-    #print(turtle_name, from_slot, count)
+    try:
+        turtle_name = network.getNameLocal()
+    except:
+        print("Turtle is not connected to network!")
+        return 0
 
     storage = peripheral.wrap(storage_name)
 
-    import time
-    time.sleep(5)
-
-    return storage.pullItems("turtle_0", from_slot, count)
+    return storage.pullItems(turtle_name, from_slot, count)
 
 
 def locate_and_get_from_network(search):
