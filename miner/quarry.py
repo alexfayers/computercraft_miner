@@ -397,14 +397,14 @@ def locate_and_get_from_network(search, target_count=64):
                 return False
             
             got_count += fetch_amount
-            
+
     return True
 
 
 def mine():
 
 
-    locate_and_get_from_network("coal", item_count)
+    locate_and_get_from_network("coal", 64)
     exit()
 
     target_fuel_count = math.ceil(FUEL_REQUIREMENT // 80)  # 80 is coal amount
