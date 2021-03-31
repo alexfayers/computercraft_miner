@@ -24,3 +24,5 @@ print("Lua exit!")
 
 print("Run the following to start again without pulling updates:")
 print("py {{REPO_NAME}}/miner/main.py")
+
+print(string.format("%s", gittoken))
