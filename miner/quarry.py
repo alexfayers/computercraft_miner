@@ -58,7 +58,7 @@ def find_item(search):
     for slot in range(1, TURTLE_SLOTS + 1):
         info = turtle.getItemDetail(slot)
 
-        if info is not None and search in info["name"]:
+        if info is not None and search.encode() in info[b"name"]:
             return slot
     return False
 
@@ -134,7 +134,7 @@ def throw_away_trash():
         slotinfo = turtle.getItemDetail(slot)
 
         if slotinfo is not None and not any(
-            search in slotinfo["name"] for search in VALUEABLE_BLOCKS + FUEL_TYPES
+            search.encode() in slotinfo[b"name"] for search in VALUEABLE_BLOCKS + FUEL_TYPES
         ):  # if not valuable or fuel, drop it
             prevSlot = turtle.getSelectedSlot()
             turtle.select(slot)
@@ -150,7 +150,7 @@ def deposit_valueables():
     for block in DEPOSIT_BLOCKS:
         info = turtle.inspect()
 
-        if info is not None and block in info["name"]:
+        if info is not None and block.encode() in info[b"name"]:
             print(f"Found deposit block!")
             canDeposit = True
             break
