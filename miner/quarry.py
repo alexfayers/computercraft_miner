@@ -342,7 +342,8 @@ def locate_item_in_network():
 
         if 'chest' in device:
             chest = peripheral.wrap(device)
-            print(chest.list)
+            print(chest.list())
+            print(chest.size())
 
 
 def mine():
