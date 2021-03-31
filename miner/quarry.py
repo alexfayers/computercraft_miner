@@ -352,7 +352,7 @@ def get_from_network(storage_name, from_slot, count):
 
     storage = peripheral.wrap(storage_name)
     
-    return storage.pullItems(storage_name, from_slot, limit=count)
+    return storage.pullItems(storage_name, from_slot, limit=count, toSlot=16)
 
 
 def locate_and_get_from_network(search):
