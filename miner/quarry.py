@@ -354,15 +354,15 @@ def get_from_network(storage_name, from_slot, count=64):
 
     print(storage_name, from_slot, count, 16)
     
-    return storage.pullItems(storage_name, from_slot, count)
+    return storage.pullItems(network.getNameLocal(), from_slot, count)
 
 
 def locate_and_get_from_network(search):
     item_location = locate_item_in_network(search)
     if item_location:
         storage_name, fuel_slot, fuel_amount = item_location
-        print(get_from_network(storage_name, fuel_slot, fuel_amount))
-
+        if get_from_network(storage_name, fuel_slot, fuel_amount, 1):
+            
 
 
 def mine():
