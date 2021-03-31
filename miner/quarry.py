@@ -389,7 +389,7 @@ def locate_and_get_from_network(search, target_count=64):
         if item_location:
             storage_name, fuel_slot, fuel_amount = item_location
 
-            fetch_amount = (got_count-target_count) // 64 + (got_count-target_count) % 64
+            fetch_amount = (target_count-got_count) // 64 + (target_count-got_count) % 64
 
             if fetch_amount > fuel_amount:
                 fetch_amount = fuel_amount
