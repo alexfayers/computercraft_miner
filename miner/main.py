@@ -2,7 +2,6 @@ from cc import is_turtle, turtle
 from cc import import_file
 
 
-
 if is_turtle():
     print("Running on a turtle - starting miner script!")
 

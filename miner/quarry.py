@@ -362,7 +362,7 @@ def locate_and_get_from_network(search):
     if item_location:
         storage_name, fuel_slot, fuel_amount = item_location
         if get_from_network(storage_name, fuel_slot, fuel_amount, 1):
-            
+            print("yes")
 
 
 def mine():
