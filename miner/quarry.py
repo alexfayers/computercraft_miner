@@ -213,8 +213,7 @@ def get_items_from_in_front(number):
     return success
 
 
-def get_fuel_from_chest():
-    target_fuel_count = math.ceil(FUEL_REQUIREMENT // 80)  # 80 is coal amount
+def get_fuel_from_chest(target_fuel_count):
 
     for fuel_type in LIGHTING_TYPES:
         fuel_slot = find_item(fuel_type)
@@ -371,25 +370,38 @@ def get_from_network(storage_name, from_slot, count=64):
     return storage.pushItems(turtle_name, from_slot, count)
 
 
-def locate_and_get_from_network(search):
-    item_location = locate_item_in_network(search)
-    if item_location:
-        storage_name, fuel_slot, fuel_amount = item_location
+def locate_and_get_from_network(search, target_count=64):
+    fuel_amount = 0
 
-        print(get_from_network(storage_name, fuel_slot, count=fuel_amount))
+    while fuel_amount < target_count:
+        item_location = locate_item_in_network(search)
+        if item_location:
+            storage_name, fuel_slot, fuel_amount = item_location
+
+            if not get_from_network(storage_name, fuel_slot, count=fuel_amount):
+                return False
+    return True
 
 
 def mine():
-    locate_and_get_from_network("coal")
+    target_fuel_count = math.ceil(FUEL_REQUIREMENT // 80)  # 80 is coal amount
+
+    print(
+        f"Require {FUEL_REQUIREMENT} fuel for this job ({target_fuel_count} coal total). I have {turtle.getFuelLevel()} fuel..."
+    )
+
+    while turtle.getFuelLevel() < FUEL_REQUIREMENT:
+        print("REFUELING!!!")
+        if not locate_and_get_from_network("coal", target_fuel_count):
+            refuel_from_inventory()
+            break
+        refuel_from_inventory()
 
     exit()
 
-    print(
-        f"Require {FUEL_REQUIREMENT} fuel for this job. I have {turtle.getFuelLevel()}..."
-    )
     while turtle.getFuelLevel() < FUEL_REQUIREMENT:
         print("REFUELING!!!")
-        get_fuel_from_chest()
+        get_fuel_from_chest(target_fuel_count)
         refuel_from_inventory()
 
     print("Got enough fuel, we're off!")
