@@ -2,23 +2,23 @@
 
 -- cleanup
 print("Clearing up previous py install if exists...")
-shell.run('rm /py')
+shell.run("rm /py")
 
 print("Installing github module...")
-shell.run('pastebin run p8PJVxC4')
+shell.run("pastebin run p8PJVxC4")
 
 print("Cloning repo...")
 
-local gittoken = http.get({{git_token_url}})
+local gittoken = http.get("{{GIT_TOKEN_URL}}")
 
-shell.run(string.format('github auth {{git_username}} %s', gittoken))
-shell.run(string.format('github clone {{REPO_PATH}} -b main -a %s', gituser))
+shell.run(string.format("github auth {{GIT_USERNAME}} %s", gittoken))
+shell.run(string.format("github clone {{REPO_PATH}} -b main -a %s", gituser))
 
 print("Fetching python...")
-shell.run('wget {{PYTHON_URL}} py')
+shell.run("wget {{PYTHON_URL}} py")
 
 print("Running miner via python API!")
-shell.run('py {{REPO_NAME}}/miner/main.py')
+shell.run("py {{REPO_NAME}}/miner/main.py")
 
 print("Lua exit!")
 

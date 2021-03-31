@@ -8,7 +8,7 @@ import getpass
 
 def populate_template(config_data, **kwargs):
 
-    required_args = ["repo_path", "repo_name", "python_url"]
+    required_args = ["repo_path", "repo_name", "python_url", "git_token_url", "git_username"]
 
     for arg in required_args:
         if arg not in kwargs.keys():
@@ -81,6 +81,8 @@ def create_paste(cc_config, secrets_config):
         config_data,
         repo_path=config_data["github"]["repo_path"],
         repo_name=config_data["github"]["repo_path"].split("/")[-1],
+        git_token_url=config_data["github"]["git_token_url"],
+        git_username=config_data["github"]["git_username"],
         python_url=config_data["python"]["interpreter_url"],
     )
 
