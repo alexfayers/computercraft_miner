@@ -417,7 +417,7 @@ def put_in_network(storage_name, from_slot, count=64):
         print(f"peripheral {storage_name} doesn't exist!")
         return 0
 
-    print(f"Fetching {count} items from slot {from_slot}!")
+    print(f"Putting {count} items from slot {from_slot}!")
 
     return storage.pullItems(turtle_name, from_slot, count)
 
@@ -455,6 +455,8 @@ def locate_and_get_from_network(search, target_count=64):
 def locate_space_and_put_in_network(from_slot):
     storage_name = locate_empty_storage_in_network()
 
+    print(f"Found {storage_name}")
+
     if storage_name:
         return put_in_network(storage_name, from_slot)
     else:
@@ -463,7 +465,7 @@ def locate_space_and_put_in_network(from_slot):
 
 def mine():
     locate_and_get_from_network("coal", 64)
-    locate_space_and_put_in_network(find_item('coal'))
+    print(locate_space_and_put_in_network(find_item('coal')))
     exit()
 
     target_fuel_count = math.ceil(FUEL_REQUIREMENT // 80)  # 80 is coal amount
