@@ -97,8 +97,15 @@ def sort_inventory():
 
     prevSlot = turtle.getSelectedSlot()
 
+    usedSlots = 0
     for slot_number in range(TURTLE_SLOTS, 0, -1):
-        
+        usedSlots += 1
+
+    if usedSlots <= TURTLE_SLOTS//2:
+        print("No need to sort, not half yet")
+        return False
+
+    for slot_number in range(TURTLE_SLOTS, 0, -1):
         if turtle.getItemCount(slot_number):
             turtle.select(slot_number)
         else:
@@ -110,8 +117,11 @@ def sort_inventory():
 
     turtle.select(prevSlot)
 
+    return True
+
 
 def check_fuel():
+    print("Checking fuel")
     level = turtle.getFuelLevel()
 
     if level <= REFUEL_THRESH:
@@ -122,8 +132,7 @@ def check_fuel():
         else:
             print("Couldn't refuel! Uh oh...")
     else:
-        pass
-        # print("No need to refuel.")
+        print("No need to refuel.")
 
     return level
 
