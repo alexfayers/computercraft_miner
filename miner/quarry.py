@@ -362,6 +362,9 @@ def locate_and_get_from_network(search):
     item_location = locate_item_in_network(search)
     if item_location:
         storage_name, fuel_slot, fuel_amount = item_location
+
+        import time
+        time.sleep(5)
         if get_from_network(storage_name, fuel_slot, count=fuel_amount):
             print("yes")
 
