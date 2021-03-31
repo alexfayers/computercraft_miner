@@ -342,8 +342,8 @@ def locate_item_in_network(search):
             chest = peripheral.wrap(device)
 
             for slot, item in chest.list().items():
-                if search in item['name']:
-                    return (device, slot, item['count'])
+                if search in item[b'name']:
+                    return (device, slot, item[b'count'])
             
             return ()
 
