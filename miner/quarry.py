@@ -351,11 +351,11 @@ def locate_item_in_network(search):
 def get_from_network(storage_name, from_slot, count=64):
     network = peripheral.wrap("right")
 
+    turtle_name = network.getNameLocal()
+
     storage = peripheral.wrap(storage_name)
 
-    print(storage_name, from_slot, count, 16)
-
-    return storage.pullItems(network.getNameLocal(), from_slot, count)
+    return storage.pullItems(turtle_name, from_slot, count)
 
 
 def locate_and_get_from_network(search):
