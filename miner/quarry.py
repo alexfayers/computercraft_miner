@@ -367,7 +367,7 @@ def locate_empty_storage_in_network():
         if "chest" in device:
             chest = peripheral.wrap(device)
 
-            if len(chest.list() < chest.size()):
+            if len(chest.list()) < chest.size():
                 return device
             else:
                 return None
