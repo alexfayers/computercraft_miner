@@ -398,6 +398,8 @@ def locate_and_get_from_network(search, target_count=64):
                 return False
             
             got_count += fetch_amount
+        else:
+            return False
 
     return True
 
