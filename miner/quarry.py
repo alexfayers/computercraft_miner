@@ -347,6 +347,7 @@ def locate_item_in_network(search):
 
             for slot, item in chest.list().items():
                 if search.encode() in item[b"name"]:
+                    print(f"Found {item[b'count']} {search} in slot {slot} in {device}!")
                     return (device, slot, item[b"count"])
 
             return ()
@@ -375,8 +376,7 @@ def locate_and_get_from_network(search):
     if item_location:
         storage_name, fuel_slot, fuel_amount = item_location
 
-        if get_from_network(storage_name, fuel_slot, count=fuel_amount):
-            print("yes")
+        print(get_from_network(storage_name, fuel_slot, count=fuel_amount))
 
 
 def mine():
