@@ -195,6 +195,57 @@ def deposit_valueables():
     return False
 
 
+def deposit_valueables_into_network():
+    canDeposit = False
+    for block in DEPOSIT_BLOCKS:
+        info = turtle.inspect()
+
+        if info is not None and block.encode() in info[b"name"]:
+            print(f"Found deposit block!")
+            canDeposit = True
+            break
+
+    if canDeposit:
+        deposit_count = 0
+
+        while True:
+            deposited = False
+
+            for block in VALUEABLE_BLOCKS:
+                block_slot = find_item(block)
+
+                if block_slot:
+                    amount = locate_space_and_put_in_network(
+                        block_slot
+                    )  # drop the items into the chest or whatever
+
+                    if amount <= 0:
+                        print("Couldn't deposit anything")
+                        deposited = False
+                        break
+
+                    print(f"Deposited {amount} {block} into storage")
+
+                    # notify("Deposit", f"Deposited {block} into storage")
+
+                    deposit_count += 1
+
+                    deposited = True
+
+            if not deposited:
+                print("Didn't deposit anything this run, breaking.")
+
+                sort_inventory()
+                break
+
+        return True
+
+    else:
+        print("Can't deposit in this block!")
+
+    return False
+
+
 def get_items_from_in_front(number):
     success = False
 
@@ -416,7 +467,7 @@ def put_in_network(storage_name, from_slot, count=64):
         print(f"peripheral {storage_name} doesn't exist!")
         return 0
 
-    print(f"Putting {count} items from slot {from_slot}!")
+    print(f"Attempting to put {count} items from slot {from_slot}!")
 
     return storage.pullItems(turtle_name, from_slot, count)
 
@@ -452,7 +503,7 @@ def locate_and_get_from_network(search, target_count=64):
 
 
 def locate_space_and_put_in_network(from_slot):
-    #storage_name = locate_empty_storage_in_network(item_name)
+    # storage_name = locate_empty_storage_in_network(item_name)
     storage_names = []
     transferred = 0
     try:
@@ -464,24 +515,13 @@ def locate_space_and_put_in_network(from_slot):
     for device in network.getNamesRemote():
         if "chest" in device:
             transferred += put_in_network(device, from_slot)
-    
-    print(f"tranferred {transferred}")
+
+    print(f"Tranferred {transferred} items into storage")
 
     return transferred
-    if storage_name:
-        print(f"Found {storage_name} with space")
-        return put_in_network(storage_name, from_slot)
-    else:
-        print("Couldn't find storage with space")
-        return 0
 
 
 def mine():
-    locate_and_get_from_network("coal", 64)
-    print("----------------")
-    print(locate_space_and_put_in_network(find_item('coal')))
-    exit()
-
     target_fuel_count = math.ceil(FUEL_REQUIREMENT // 80)  # 80 is coal amount
 
     print(
