@@ -8,7 +8,13 @@ import getpass
 
 def populate_template(config_data, **kwargs):
 
-    required_args = ["repo_path", "repo_name", "python_url", "git_token_url", "git_username"]
+    required_args = [
+        "repo_path",
+        "repo_name",
+        "python_url",
+        "git_token_url",
+        "git_username",
+    ]
 
     for arg in required_args:
         if arg not in kwargs.keys():

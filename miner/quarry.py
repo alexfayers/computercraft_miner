@@ -134,7 +134,8 @@ def throw_away_trash():
         slotinfo = turtle.getItemDetail(slot)
 
         if slotinfo is not None and not any(
-            search.encode() in slotinfo[b"name"] for search in VALUEABLE_BLOCKS + FUEL_TYPES
+            search.encode() in slotinfo[b"name"]
+            for search in VALUEABLE_BLOCKS + FUEL_TYPES
         ):  # if not valuable or fuel, drop it
             prevSlot = turtle.getSelectedSlot()
             turtle.select(slot)
@@ -346,10 +347,31 @@ def locate_item_in_network(search):
 
             for slot, item in chest.list().items():
                 if search.encode() in item[b"name"]:
-                    print(f"Found {item[b'count']} {search} in slot {slot} in {device}!")
+                    print(
+                        f"Found {item[b'count']} {search} in slot {slot} in {device}!"
+                    )
                     return (device, slot, item[b"count"])
 
             return ()
+
+
+def locate_empty_storage_in_network():
+    try:
+        network = peripheral.wrap("right")
+    except:
+        print("No modem to the right of the turtle!")
+        return ()
+
+    for device in network.getNamesRemote():
+        print("Found storage device")
+
+        if "chest" in device:
+            chest = peripheral.wrap(device)
+
+            if chest.size() < len(chest.list()):
+                return device
+            else:
+                return None
 
 
 def get_from_network(storage_name, from_slot, count=64):
@@ -376,8 +398,32 @@ def get_from_network(storage_name, from_slot, count=64):
     return storage.pushItems(turtle_name, from_slot, count)
 
 
+def put_in_network(storage_name, from_slot, count=64):
+    try:
+        network = peripheral.wrap("right")
+    except:
+        print("No modem to the right of the turtle!")
+        return 0
+
+    try:
+        turtle_name = network.getNameLocal()
+    except:
+        print("Turtle is not connected to network!")
+        return 0
+
+    try:
+        storage = peripheral.wrap(storage_name)
+    except:
+        print(f"peripheral {storage_name} doesn't exist!")
+        return 0
+
+    print(f"Fetching {count} items from slot {from_slot}!")
+
+    return storage.pullItems(turtle_name, from_slot, count)
+
+
 def locate_and_get_from_network(search, target_count=64):
-    
+
     got_count = 0
     fuel_slot = find_item(search)
     if fuel_slot:
@@ -389,14 +435,16 @@ def locate_and_get_from_network(search, target_count=64):
         if item_location:
             storage_name, fuel_slot, fuel_amount = item_location
 
-            fetch_amount = (target_count-got_count) // 64 + (target_count-got_count) % 64
+            fetch_amount = (target_count - got_count) // 64 + (
+                target_count - got_count
+            ) % 64
 
             if fetch_amount > fuel_amount:
                 fetch_amount = fuel_amount
 
             if not get_from_network(storage_name, fuel_slot, count=fetch_amount):
                 return False
-            
+
             got_count += fetch_amount
         else:
             return False
@@ -404,10 +452,18 @@ def locate_and_get_from_network(search, target_count=64):
     return True
 
 
+def locate_space_and_put_in_network(from_slot):
+    storage_name = locate_empty_storage_in_network()
+
+    if storage_name:
+        return put_in_network(storage_name, from_slot)
+    else:
+        return 0
+
+
 def mine():
-
-
     locate_and_get_from_network("coal", 64)
+    locate_space_and_put_in_network(find_item('coal'))
     exit()
 
     target_fuel_count = math.ceil(FUEL_REQUIREMENT // 80)  # 80 is coal amount
