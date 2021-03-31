@@ -514,9 +514,6 @@ def locate_space_and_put_in_network(from_slot):
 
 def mine():
 
-    deposit_valueables_into_network()
-    exit()
-
     target_fuel_count = math.ceil(FUEL_REQUIREMENT // 80)  # 80 is coal amount
 
     print(
