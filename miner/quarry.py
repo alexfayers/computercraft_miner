@@ -377,21 +377,34 @@ def get_from_network(storage_name, from_slot, count=64):
 
 
 def locate_and_get_from_network(search, target_count=64):
-    fuel_amount = 0
+    
+    fuel_slot = find_item(fuel_type)
+    got_count = 0
+    if fuel_slot:
+        got_count = turtle.getItemCount(fuel_slot)
 
-    while fuel_amount < target_count:
+    while got_count < target_count:
         item_location = locate_item_in_network(search)
         if item_location:
             storage_name, fuel_slot, fuel_amount = item_location
 
-            if not get_from_network(storage_name, fuel_slot, count=fuel_amount):
+            fetch_amount = (got_count-target_count) // 64 + (got_count-target_count) % 64
+
+            if fetch_amount < fuel_amount:
+                fetch_amount = fuel_amount
+
+            if not get_from_network(storage_name, fuel_slot, count=fetch_amount):
                 return False
+            
+            got_count += fetch_amount
+            
     return True
 
 
 def mine():
 
-    locate_and_get_from_network("coal", 64)
+
+    locate_and_get_from_network("coal", item_count)
     exit()
 
     target_fuel_count = math.ceil(FUEL_REQUIREMENT // 80)  # 80 is coal amount
