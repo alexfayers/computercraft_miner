@@ -355,7 +355,7 @@ def locate_item_in_network(search):
             return ()
 
 
-def locate_empty_storage_in_network():
+def locate_empty_storage_in_network(search):
     try:
         network = peripheral.wrap("right")
     except:
@@ -452,8 +452,22 @@ def locate_and_get_from_network(search, target_count=64):
 
 
 def locate_space_and_put_in_network(from_slot):
-    storage_name = locate_empty_storage_in_network()
+    #storage_name = locate_empty_storage_in_network(item_name)
+    storage_names = []
+    transferred = 0
+    try:
+        network = peripheral.wrap("right")
+    except:
+        print("No modem to the right of the turtle!")
+        return ()
 
+    for device in network.getNamesRemote():
+        if "chest" in device:
+            transferred += put_in_network(device, from_slot)
+    
+    print(f"tranferred {transferred}")
+
+    return transferred
     if storage_name:
         print(f"Found {storage_name} with space")
         return put_in_network(storage_name, from_slot)
