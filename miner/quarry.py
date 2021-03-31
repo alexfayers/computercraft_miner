@@ -378,7 +378,7 @@ def get_from_network(storage_name, from_slot, count=64):
 
 def locate_and_get_from_network(search, target_count=64):
     
-    fuel_slot = find_item(fuel_type)
+    fuel_slot = find_item(search)
     got_count = 0
     if fuel_slot:
         got_count = turtle.getItemCount(fuel_slot)
