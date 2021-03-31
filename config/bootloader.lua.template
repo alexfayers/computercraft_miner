@@ -1,7 +1,10 @@
 -- Bootloader to fetch latest data from github and run it
 
-print("Installing github module...")
+-- cleanup
+print("Clearing up previous py install if exists...")
+shell.run('rm /py')
 
+print("Installing github module...")
 shell.run('pastebin run p8PJVxC4')
 
 print("Cloning repo...")
@@ -9,11 +12,9 @@ print("Cloning repo...")
 shell.run('github clone {{REPO_PATH}} -b main')
 
 print("Fetching python...")
-
 shell.run('wget {{PYTHON_URL}} py')
 
-print("Running miner!")
-
+print("Running miner via python API!")
 shell.run('py {{REPO_NAME}}/miner/main.py')
 
 print("Lua exit!")
