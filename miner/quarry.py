@@ -97,13 +97,13 @@ def sort_inventory():
 
     prevSlot = turtle.getSelectedSlot()
 
-    for slot_number in range(TURTLE_SLOTS, 0, -1):
+    for slot_number in range(TURTLE_SLOTS, 1, -1):
         turtle.select(slot_number)
 
         if not turtle.getItemCount():
             continue
 
-        for new_slot_number in range(1, TURTLE_SLOTS, 1):
+        for new_slot_number in range(2, TURTLE_SLOTS, 1):
             if turtle.transferTo(new_slot_number):
                 break
 
