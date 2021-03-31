@@ -29,9 +29,9 @@ VALUEABLE_BLOCKS = [
 
 # CONFIG
 CHUNK_SIZE = 8
-QUARRY_DEPTH = 25
+QUARRY_DEPTH = 26
 REFUEL_THRESH = 20
-QUARRY_DEPTH_SKIP = 10
+QUARRY_DEPTH_SKIP = 25
 
 # Const type things
 TURTLE_SLOTS = 16
@@ -458,11 +458,11 @@ def put_in_network(storage_name, from_slot, count=64):
         print("Turtle is not connected to network!")
         return 0
 
-    #try:
-    storage = peripheral.wrap(storage_name)
-    #except:
-    #    print(f"peripheral {storage_name} doesn't exist!")
-    #    return 0
+    try:
+        storage = peripheral.wrap(storage_name)
+    except:
+        print(f"peripheral {storage_name} doesn't exist!")
+        return 0
 
     print(f"Attempting to put {count} items from slot {from_slot}!")
 
