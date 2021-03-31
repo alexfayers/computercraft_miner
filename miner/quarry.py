@@ -362,14 +362,12 @@ def locate_empty_storage_in_network():
         print("No modem to the right of the turtle!")
         return ()
 
-    print("AAAAAAAAAAAAAAAAAAAAA")
     for device in network.getNamesRemote():
-        print("Found storage device")
 
         if "chest" in device:
             chest = peripheral.wrap(device)
 
-            if chest.size() < len(chest.list()):
+            if len(chest.list() < chest.size()):
                 return device
             else:
                 return None
@@ -457,15 +455,16 @@ def locate_space_and_put_in_network(from_slot):
     storage_name = locate_empty_storage_in_network()
 
     if storage_name:
-        print(f"Found {storage_name}")
+        print(f"Found {storage_name} with space")
         return put_in_network(storage_name, from_slot)
     else:
-        print("Couldn't find storage")
+        print("Couldn't find storage with space")
         return 0
 
 
 def mine():
     locate_and_get_from_network("coal", 64)
+    print("----------------")
     print(locate_space_and_put_in_network(find_item('coal')))
     exit()
 
