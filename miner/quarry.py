@@ -423,12 +423,12 @@ def get_from_network(storage_name, from_slot, count=64):
         print("Turtle is not connected to network!")
         return 0
 
-    try:
-        storage = peripheral.wrap(storage_name)
-    except Exception as e:
-        print(f"peripheral {storage_name} doesn't exist!")
-        print(e)
-        return 0
+    #try:
+    storage = peripheral.wrap(storage_name)
+    #except Exception as e:
+    #    print(f"peripheral {storage_name} doesn't exist!")
+    #    print(e)
+    #    return 0
 
     print(f"Fetching {count} items from slot {from_slot}!")
 
