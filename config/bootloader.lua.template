@@ -9,10 +9,10 @@ shell.run("pastebin run p8PJVxC4")
 
 print("Cloning repo...")
 
-local gittoken = http.get("{{GIT_TOKEN_URL}}").readAll()
+gittoken = http.get("{{GIT_TOKEN_URL}}").readAll()
 
 shell.run(string.format("github auth {{GIT_USERNAME}} %s", gittoken))
-shell.run(string.format("github clone {{REPO_PATH}} -b main -a %s", gituser))
+shell.run("github clone {{REPO_PATH}} -b main -a {{GIT_USERNAME}}")
 
 print("Fetching python...")
 shell.run("wget {{PYTHON_URL}} py")
