@@ -468,6 +468,8 @@ def locate_and_get_from_network(search, target_count=64):
     while got_count < target_count:
         print(got_count)
         item_location = locate_item_in_network(search)
+
+        print(item_location)
         if item_location:
             storage_name, fuel_slot, fuel_amount = item_location
 
