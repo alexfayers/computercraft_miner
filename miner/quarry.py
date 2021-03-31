@@ -384,6 +384,10 @@ def locate_and_get_from_network(search, target_count=64):
 
 
 def mine():
+
+    locate_and_get_from_network("coal", 64)
+    exit()
+
     target_fuel_count = math.ceil(FUEL_REQUIREMENT // 80)  # 80 is coal amount
 
     print(
@@ -396,8 +400,6 @@ def mine():
             refuel_from_inventory()
             break
         refuel_from_inventory()
-
-    exit()
 
     while turtle.getFuelLevel() < FUEL_REQUIREMENT:
         print("REFUELING!!!")
