@@ -371,7 +371,7 @@ def mine_several_layers():
         else:
             turtle.turnLeft()
 
-        if layer < QUARRY_DEPTH - 1:
+        if layer < (QUARRY_DEPTH - QUARRY_DEPTH_SKIP) - 1:
             down_layer()
 
         print(f"Layer {layer} complete")
