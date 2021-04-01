@@ -321,6 +321,9 @@ def mine_several_layers():
         print(f"y={CURRENT_Y} complete")
         notify("Mining", f"y={CURRENT_Y} complete (mining until y={END_Y})")
 
+        if CURRENT_Y >= END_Y:
+            break
+
 
 def return_to_start(skipped_layers, straight_up_override=False):
     global CURRENT_Y
