@@ -259,7 +259,7 @@ def deposit_valueables_into_network():
                 deposited = True
 
         if not deposited:
-            print("Didn't deposit anything this run, breaking.")
+            # print("Didn't deposit anything this run, breaking.")
 
             sort_inventory()
             break
