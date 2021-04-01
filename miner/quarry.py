@@ -315,7 +315,7 @@ def mine_several_layers():
         else:
             turtle.turnLeft()
 
-        if END_Y < CURRENT_Y:
+        if END_Y + 1 < CURRENT_Y:
             down_layer()
 
         print(f"y={CURRENT_Y} complete")
