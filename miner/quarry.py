@@ -328,7 +328,7 @@ def mine_several_layers():
 def return_to_start(skipped_layers, straight_up_override=False):
     global CURRENT_Y
 
-    corner = (START_Y - CURRENT_Y + skipped_layers) % 4
+    corner = (START_Y - CURRENT_Y - skipped_layers) % 4
     notify("Mining", f"Returning home from y={CURRENT_Y}")
 
 
@@ -554,7 +554,6 @@ def mine():
     print("Starting floor detection...")
     hit_block, skipped_layers = skip_layers()
 
-    notify("Debug", skipped_layers)
     if hit_block:
         print(f"Starting properly at y={CURRENT_Y}!")
         notify("Mining", f"Starting mining at y={CURRENT_Y}!")
