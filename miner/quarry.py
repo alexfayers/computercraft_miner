@@ -13,7 +13,7 @@ FUEL_TYPES = ["lava", "blaze", "coal", "wood"]
 LIGHTING_TYPES = ["torch"]
 CURSED_BLOCKS = ["lava", "water"]
 GRAVITY_BLOCKS = ["gravel", "sand"]
-DEPOSIT_BLOCKS = ["modem"] # "chest", "hopper"
+DEPOSIT_BLOCKS = ["modem"]  # "chest", "hopper"
 
 VALUEABLE_BLOCKS = [
     "ore",
@@ -63,7 +63,6 @@ def notify(title, text):
     res = requests.get(
         f"https://joinjoaomgcd.appspot.com/_ah/api/messaging/v1/sendPush?deviceId=group.all&text={text}&title={title}&apikey={JOIN_KEY}"
     )
-
 
 
 def turn_around():
@@ -128,11 +127,11 @@ def sort_inventory():
             turtle.select(slot_number)
             old_slot_details = turtle.getItemDetail(slot_number)
             if old_slot_details:
-                if old_slot_details[b'count'] > 32:
+                if old_slot_details[b"count"] > 32:
                     print(f"not enough items to sort slot {slot_number} yet")
                     continue
                 else:
-                    item_name = old_slot_details[b'name']
+                    item_name = old_slot_details[b"name"]
             print(f"sorting {item_name} in slot {slot_number}")
         else:
             print("next slot")
@@ -141,7 +140,11 @@ def sort_inventory():
         print("finding slot")
         for new_slot_number in range(1, TURTLE_SLOTS + 1):
             slot_details = turtle.getItemDetail(new_slot_number)
-            if slot_details and slot_details[b'name'] == item_name and turtle.transferTo(new_slot_number):
+            if (
+                slot_details
+                and slot_details[b"name"] == item_name
+                and turtle.transferTo(new_slot_number)
+            ):
                 break
 
     turtle.select(prevSlot)
@@ -239,7 +242,7 @@ def deposit_valueables_into_network():
 
     throw_away_trash()
     sort_inventory()
-    
+
     while True:
         deposited = False
 
@@ -331,7 +334,6 @@ def dig_step():
 
     if turtle.detect():
         turtle.dig()
-    
 
     # if turtle.detectDown():
     #    turtle.digDown()
@@ -395,7 +397,7 @@ def mine_several_layers():
 
 
 def return_to_start():
-    notify("Mining",  "All completed, returning home")
+    notify("Mining", "All completed, returning home")
     corner = (QUARRY_DEPTH - QUARRY_DEPTH_SKIP) % 4
 
     if corner == 1:
@@ -587,7 +589,7 @@ def mine():
         refuel_from_inventory()
         cur_fuel = turtle.getFuelLevel()
 
-    #while turtle.getFuelLevel() < FUEL_REQUIREMENT:
+    # while turtle.getFuelLevel() < FUEL_REQUIREMENT:
     #    print("REFUELING!!!")
     #    get_fuel_from_chest(target_fuel_count)
     #    refuel_from_inventory()
@@ -600,7 +602,7 @@ def mine():
         print("Skipping some layers...")
         skip_layers()
         print("Starting properly!")
-    
+
     notify("Mining", "Starting mining!")
 
     mine_several_layers()
@@ -608,9 +610,9 @@ def mine():
     print("Returning to start...")
     return_to_start()
 
-    #turn_around()
+    # turn_around()
     if not deposit_valueables_into_network():
         notify("Depositing valuables", "Didn't deposit anything")
-    #turn_around()
+    # turn_around()
 
     print("Run complete")
