@@ -29,9 +29,9 @@ VALUEABLE_BLOCKS = [
 
 # CONFIG
 CHUNK_SIZE = 8
-QUARRY_DEPTH = 26
+QUARRY_DEPTH = 21
 REFUEL_THRESH = 20
-QUARRY_DEPTH_SKIP = 25
+QUARRY_DEPTH_SKIP = 20
 
 # Const type things
 TURTLE_SLOTS = 16
@@ -102,17 +102,26 @@ def sort_inventory():
         usedSlots += 1
 
     if usedSlots <= TURTLE_SLOTS//2:
-        print("No need to sort, not half yet")
+        print("No need to sort, not half full/empty yet")
         return False
 
     for slot_number in range(TURTLE_SLOTS, 0, -1):
         if turtle.getItemCount(slot_number):
             turtle.select(slot_number)
+            old_slot_details = getItemDetail(new_slot_number)
+            if old_slot_details:
+                if old_slot_details[b'count'] > 32:
+                    print(f"not enough items to sort slot {slot_number} yet")
+                    continue
+                else:
+                    item_name = old_slot_details[b'name']
+            print(f"sorting {item_name} in slot {slot_number}")
         else:
             continue
 
         for new_slot_number in range(1, TURTLE_SLOTS + 1):
-            if turtle.transferTo(new_slot_number):
+            slot_details = getItemDetail(new_slot_number)
+            if slot_details and slot_details[b'name'] and turtle.transferTo(new_slot_number):
                 break
 
     turtle.select(prevSlot)
