@@ -576,7 +576,7 @@ def mine():
     cur_fuel = turtle.getFuelLevel()
     while cur_fuel < FUEL_REQUIREMENT:
         print(f"REFUELING ({cur_fuel})!!!")
-        notify("Refueling", f"Current fuel is {cur_fuel}"
+        notify("Refueling", f"Current fuel is {cur_fuel}")
         if not locate_and_get_from_network("coal", target_fuel_count):
             notify("Refueling", f"Not enough fuel, exiting")
             print("Not enough fuel")
