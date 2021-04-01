@@ -102,7 +102,7 @@ def sort_inventory():
     #    if turtle.getItemCount(slot_number):
     #        usedSlots += 1
 
-    if usedSlots <= TURTLE_SLOTS // 2 or 1==1:
+    if usedSlots <= TURTLE_SLOTS // 2 and 1==2:
         print("No need to sort, not half full/empty yet")
         return False
 
