@@ -98,14 +98,15 @@ def sort_inventory():
     prevSlot = turtle.getSelectedSlot()
 
     usedSlots = 0
-    for slot_number in range(TURTLE_SLOTS, 0, -1):
-        usedSlots += 1
+    #for slot_number in range(TURTLE_SLOTS, 0, -1):
+    #    if turtle.getItemCount(slot_number):
+    #        usedSlots += 1
 
-    if usedSlots <= TURTLE_SLOTS//2:
+    if usedSlots <= TURTLE_SLOTS // 2:
         print("No need to sort, not half full/empty yet")
         return False
 
-    for slot_number in range(TURTLE_SLOTS, 2, -1):
+    for slot_number in reversed(range(1, TURTLE_SLOTS)):
         if turtle.getItemCount(slot_number):
             turtle.select(slot_number)
             old_slot_details = turtle.getItemDetail(slot_number)
@@ -117,8 +118,10 @@ def sort_inventory():
                     item_name = old_slot_details[b'name']
             print(f"sorting {item_name} in slot {slot_number}")
         else:
+            print("next slot")
             continue
 
+        print("finding slot")
         for new_slot_number in range(1, TURTLE_SLOTS):
             slot_details = turtle.getItemDetail(new_slot_number)
             if slot_details and slot_details[b'name'] and turtle.transferTo(new_slot_number):
