@@ -41,12 +41,26 @@ FUEL_REQUIREMENT = (
     + CHUNK_SIZE * 2
 )
 
+JOIN_KEY = requests.get("http://192.168.1.54:8000/join.key").text
+
 term.clear()
 
 if not os.getComputerLabel():
     os.setComputerLabel(f"Quarrybot #{os.getComputerID()}")
 
 ## functions
+
+
+def notify(title, text):
+    title = f"{os.getComputerLabel()}: {title}"
+
+    title = urllib.parse.quote_plus(title)
+    text = urllib.parse.quote_plus(text)
+
+    res = requests.get(
+        f"https://joinjoaomgcd.appspot.com/_ah/api/messaging/v1/sendPush?deviceId=group.all&text={text}&title={title}&apikey={JOIN_KEY}"
+    )
+
 
 
 def turn_around():
@@ -218,6 +232,8 @@ def deposit_valueables():
 
 
 def deposit_valueables_into_network():
+    notify("Depositing valuables", "Lets goooooo")
+
     throw_away_trash()
     sort_inventory()
     
@@ -238,8 +254,7 @@ def deposit_valueables_into_network():
                     break
 
                 print(f"Deposited {amount} {block} into storage")
-
-                # notify("Deposit", f"Deposited {block} into storage")
+                notify("Depositing valuables", f"Deposited {amount} {block}")
 
                 deposited = True
 
@@ -249,9 +264,7 @@ def deposit_valueables_into_network():
             sort_inventory()
             break
 
-    return True
-
-    return False
+    return deposited
 
 
 def get_items_from_in_front(number):
@@ -375,9 +388,11 @@ def mine_several_layers():
             down_layer()
 
         print(f"Layer {layer} complete")
+        notify("Mining", f"Layer {layer}/{QUARRY_DEPTH - QUARRY_DEPTH_SKIP} complete")
 
 
 def return_to_start():
+    notify("Mining",  "All completed, returning home")
     corner = (QUARRY_DEPTH - QUARRY_DEPTH_SKIP) % 4
 
     if corner == 1:
@@ -558,12 +573,16 @@ def mine():
         f"Require {FUEL_REQUIREMENT} fuel for this job ({target_fuel_count} coal total). I have {turtle.getFuelLevel()} fuel..."
     )
 
-    while turtle.getFuelLevel() < FUEL_REQUIREMENT:
-        print("REFUELING!!!")
+    cur_fuel = turtle.getFuelLevel()
+    while cur_fuel < FUEL_REQUIREMENT:
+        print(f"REFUELING ({cur_fuel})!!!")
+        notify("Refueling", f"Current fuel is {cur_fuel}"
         if not locate_and_get_from_network("coal", target_fuel_count):
+            notify("Refueling", f"Not enough fuel, exiting")
             print("Not enough fuel")
             exit()
         refuel_from_inventory()
+        cur_fuel = turtle.getFuelLevel()
 
     #while turtle.getFuelLevel() < FUEL_REQUIREMENT:
     #    print("REFUELING!!!")
@@ -571,11 +590,15 @@ def mine():
     #    refuel_from_inventory()
 
     print("Got enough fuel, we're off!")
+    notify("Refueling", "Refueling done!")
 
     if QUARRY_DEPTH_SKIP > 0:
+        notify("Mining", "Skipping some layers")
         print("Skipping some layers...")
         skip_layers()
         print("Starting properly!")
+    
+    notify("Mining", "Starting mining!")
 
     mine_several_layers()
 
@@ -583,7 +606,8 @@ def mine():
     return_to_start()
 
     #turn_around()
-    deposit_valueables_into_network()
+    if not deposit_valueables_into_network():
+        notify("Depositing valuables", "Didn't deposit anything")
     #turn_around()
 
     print("Run complete")
