@@ -378,7 +378,7 @@ def mine_several_layers():
 
 
 def return_to_start():
-    corner = QUARRY_DEPTH % 4
+    corner = (QUARRY_DEPTH - QUARRY_DEPTH_SKIP) % 4
 
     if corner == 1:
         travel_line()
@@ -534,14 +534,18 @@ def locate_space_and_put_in_network(from_slot):
     try:
         network = peripheral.wrap("left")
     except:
-        print("No modem to the right of the turtle!")
+        print("No modem to the left of the turtle!")
         return ()
 
-    for device in network.getNamesRemote():
-        print(device)
-        if "chest" in device:
-            input("enter to contine")
-            transferred += put_in_network(device, from_slot)
+    try:
+        for device in network.getNamesRemote():
+            print(device)
+            if "chest" in device:
+                input("enter to contine")
+                transferred += put_in_network(device, from_slot)
+    except:
+        print("Error - probably no modem to the left")
+        return 0
 
     print(f"Tranferred {transferred} items into storage")
 
