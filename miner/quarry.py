@@ -541,7 +541,6 @@ def locate_space_and_put_in_network(from_slot):
         for device in network.getNamesRemote():
             print(device)
             if "chest" in device:
-                input("enter to contine")
                 transferred += put_in_network(device, from_slot)
     except:
         print("Error - probably no modem to the left")
