@@ -7,6 +7,7 @@ from cc import peripheral
 
 import math
 import requests
+import urllib
 
 FUEL_TYPES = ["lava", "blaze", "coal", "wood"]
 LIGHTING_TYPES = ["torch"]
