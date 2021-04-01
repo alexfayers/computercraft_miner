@@ -33,8 +33,8 @@ VALUEABLE_BLOCKS = [
 CHUNK_SIZE = 8
 REFUEL_THRESH = 20
 
-START_Y = 64
-END_Y = 61
+START_Y = 64 # inclusive
+END_Y = 60 # non inclusive
 
 # Const type things
 QUARRY_DEPTH = START_Y - END_Y
@@ -366,7 +366,7 @@ def return_to_start(skipped_layers, straight_up_override=False):
 def skip_layers():
     hit_block = False
     skipped = 0
-    while CURRENT_Y >= END_Y:
+    while END_Y <= CURRENT_Y:
         hit_block = down_layer()
         if hit_block:
             print("Hit block, stopping layer skip")
