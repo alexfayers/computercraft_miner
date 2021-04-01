@@ -29,9 +29,9 @@ VALUEABLE_BLOCKS = [
 
 # CONFIG
 CHUNK_SIZE = 8
-QUARRY_DEPTH = 21
+QUARRY_DEPTH = 16
 REFUEL_THRESH = 20
-QUARRY_DEPTH_SKIP = 20
+QUARRY_DEPTH_SKIP = 15
 
 # Const type things
 TURTLE_SLOTS = 16
@@ -360,7 +360,7 @@ def mine_layer():
 
 
 def mine_several_layers():
-    for layer in range(QUARRY_DEPTH):
+    for layer in range(QUARRY_DEPTH - QUARRY_DEPTH_SKIP):
         mine_layer()
 
         if CHUNK_SIZE % 2 == 0:
