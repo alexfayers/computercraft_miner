@@ -125,7 +125,7 @@ def sort_inventory():
             print("finding slot")
             for new_slot_number in range(1, TURTLE_SLOTS):
                 slot_details = turtle.getItemDetail(new_slot_number)
-                if slot_details and slot_details[b'name'] and turtle.transferTo(new_slot_number):
+                if slot_details and slot_details[b'name'] == item_name and turtle.transferTo(new_slot_number):
                     break
     except Exception as e:
         print(e)
