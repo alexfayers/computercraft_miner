@@ -240,7 +240,7 @@ def deposit_valueables_into_network():
     while True:
         deposited = False
 
-        for block in VALUEABLE_BLOCKS:
+        for block in VALUEABLE_BLOCKS + FUEL_TYPES:
             block_slot = find_item(block)
 
             if block_slot:
