@@ -300,7 +300,7 @@ def check_if_gravity_block():
     for block in GRAVITY_BLOCKS:
         info = turtle.inspect()
 
-        if info is not None and block in info["name"]:
+        if info is not None and block.encode() in info[b"name"]:
             print("Gravity block!")
 
             return True
