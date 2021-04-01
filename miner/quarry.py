@@ -266,8 +266,9 @@ def down_layer():
         turtle.digDown()
         hit_block = True
 
-    if turtle.down():
-        CURRENT_Y = CURRENT_Y - 1
+    turtle.down()
+    
+    CURRENT_Y = CURRENT_Y - 1
 
     return hit_block
 
@@ -341,12 +342,12 @@ def return_to_start():
         travel_line()
 
     while CURRENT_Y < START_Y:
-        if turtle.up():
-            CURRENT_Y = CURRENT_Y + 1
-        else:
-            print("Failed to go upwards!")
-            notify("Mining", "Failed returning because of an obstruction, exiting!")
-            exit()
+        #if turtle.up():
+        CURRENT_Y = CURRENT_Y + 1
+        #else:
+        #    print("Failed to go upwards!")
+        #    notify("Mining", "Failed returning because of an obstruction, exiting!")
+        #    exit()
 
     if corner == 1:
         turtle.turnRight()
@@ -514,7 +515,7 @@ def locate_space_and_put_in_network(from_slot):
 
 def mine():
     global CURRENT_Y
-    
+
     target_fuel_count = math.ceil(FUEL_REQUIREMENT // 80)  # 80 is coal amount
 
     print(
