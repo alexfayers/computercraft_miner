@@ -34,7 +34,7 @@ CHUNK_SIZE = 8
 REFUEL_THRESH = 20
 
 START_Y = 64
-END_Y = 62
+END_Y = 61
 
 # Const type things
 QUARRY_DEPTH = START_Y - END_Y
