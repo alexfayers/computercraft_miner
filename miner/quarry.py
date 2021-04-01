@@ -105,7 +105,7 @@ def sort_inventory():
         print("No need to sort, not half full/empty yet")
         return False
 
-    for slot_number in range(TURTLE_SLOTS, 1, -1):
+    for slot_number in range(TURTLE_SLOTS, 2, -1):
         if turtle.getItemCount(slot_number):
             turtle.select(slot_number)
             old_slot_details = turtle.getItemDetail(slot_number)
@@ -546,7 +546,9 @@ def locate_space_and_put_in_network(from_slot):
 
 
 def mine():
+    sort_inventory()
 
+    exit()
     target_fuel_count = math.ceil(FUEL_REQUIREMENT // 80)  # 80 is coal amount
 
     print(
