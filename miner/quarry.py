@@ -98,38 +98,34 @@ def sort_inventory():
     prevSlot = turtle.getSelectedSlot()
 
     usedSlots = 0
-    #for slot_number in range(TURTLE_SLOTS, 0, -1):
-    #    if turtle.getItemCount(slot_number):
-    #        usedSlots += 1
+    for slot_number in range(TURTLE_SLOTS, 0, -1):
+        if turtle.getItemCount(slot_number):
+            usedSlots += 1
 
-    if usedSlots <= TURTLE_SLOTS // 2 and 1==2:
+    if usedSlots <= TURTLE_SLOTS // 2:
         print("No need to sort, not half full/empty yet")
         return False
 
-    try:
-        for slot_number in reversed(range(1, TURTLE_SLOTS)):
-            if turtle.getItemCount(slot_number):
-                turtle.select(slot_number)
-                old_slot_details = turtle.getItemDetail(slot_number)
-                if old_slot_details:
-                    if old_slot_details[b'count'] > 32:
-                        print(f"not enough items to sort slot {slot_number} yet")
-                        continue
-                    else:
-                        item_name = old_slot_details[b'name']
-                print(f"sorting {item_name} in slot {slot_number}")
-            else:
-                print("next slot")
-                continue
+    for slot_number in reversed(range(1, TURTLE_SLOTS + 1)):
+        if turtle.getItemCount(slot_number):
+            turtle.select(slot_number)
+            old_slot_details = turtle.getItemDetail(slot_number)
+            if old_slot_details:
+                if old_slot_details[b'count'] > 32:
+                    print(f"not enough items to sort slot {slot_number} yet")
+                    continue
+                else:
+                    item_name = old_slot_details[b'name']
+            print(f"sorting {item_name} in slot {slot_number}")
+        else:
+            print("next slot")
+            continue
 
-            print("finding slot")
-            for new_slot_number in range(1, TURTLE_SLOTS):
-                slot_details = turtle.getItemDetail(new_slot_number)
-                if slot_details and slot_details[b'name'] == item_name and turtle.transferTo(new_slot_number):
-                    break
-    except Exception as e:
-        print(e)
-        exit()
+        print("finding slot")
+        for new_slot_number in range(1, TURTLE_SLOTS + 1):
+            slot_details = turtle.getItemDetail(new_slot_number)
+            if slot_details and slot_details[b'name'] == item_name and turtle.transferTo(new_slot_number):
+                break
 
     turtle.select(prevSlot)
 
@@ -299,7 +295,6 @@ def get_fuel_from_chest(target_fuel_count):
 def status_check():
     # checks to make sure everytjing is going well
     throw_away_trash()
-    sort_inventory()
     check_fuel()
 
 
@@ -364,6 +359,7 @@ def mine_layer():
 
         if line_number < CHUNK_SIZE - 1:
             next_line(line_number)
+    sort_inventory()
 
 
 def mine_several_layers():
