@@ -368,10 +368,10 @@ def skip_layers():
     skipped = 0
     while CURRENT_Y >= END_Y:
         hit_block = down_layer()
-        skipped += 1
         if hit_block:
             print("Hit block, stopping layer skip")
             break
+        skipped += 1
     return hit_block, skipped
 
 
@@ -553,6 +553,8 @@ def mine():
     notify("Mining", "Starting floor detection")
     print("Starting floor detection...")
     hit_block, skipped_layers = skip_layers()
+
+    notify("Debug", skipped_layers)
     if hit_block:
         print(f"Starting properly at y={CURRENT_Y}!")
         notify("Mining", f"Starting mining at y={CURRENT_Y}!")
