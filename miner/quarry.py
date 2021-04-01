@@ -34,7 +34,7 @@ CHUNK_SIZE = 8
 REFUEL_THRESH = 20
 
 START_Y = 64
-END_Y = 62
+END_Y = 63
 
 # Const type things
 QUARRY_DEPTH = START_Y - END_Y
@@ -60,10 +60,10 @@ if not os.getComputerLabel():
 
 
 def notify(title, text):
-    name = f"{os.getComputerLabel()}"
-    text = f"{title}: {title}"
+    text = f"{title}: {text}"
+    title = f"{os.getComputerLabel()}"
 
-    title = urllib.parse.quote_plus(name)
+    title = urllib.parse.quote_plus(title)
     text = urllib.parse.quote_plus(text)
 
     res = requests.get(
@@ -307,6 +307,7 @@ def mine_layer():
 
 
 def mine_several_layers():
+    global CURRENT_Y
     while CURRENT_Y > END_Y:
         mine_layer()
 
@@ -356,6 +357,8 @@ def return_to_start():
 
 
 def skip_layers():
+    global CURRENT_Y
+
     while CURRENT_Y > END_Y:
         hit_block = down_layer()
         if hit_block:
@@ -510,6 +513,8 @@ def locate_space_and_put_in_network(from_slot):
 
 
 def mine():
+    global CURRENT_Y
+    
     target_fuel_count = math.ceil(FUEL_REQUIREMENT // 80)  # 80 is coal amount
 
     print(
