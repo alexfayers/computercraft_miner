@@ -267,7 +267,6 @@ def down_layer():
         hit_block = True
 
     turtle.down()
-    
     CURRENT_Y = CURRENT_Y - 1
 
     return hit_block
@@ -308,8 +307,7 @@ def mine_layer():
 
 
 def mine_several_layers():
-    global CURRENT_Y
-    while CURRENT_Y > END_Y:
+    while CURRENT_Y >= END_Y:
         mine_layer()
 
         if CHUNK_SIZE % 2 == 0:
@@ -317,7 +315,7 @@ def mine_several_layers():
         else:
             turtle.turnLeft()
 
-        if CURRENT_Y > END_Y + 1:
+        if CURRENT_Y > END_Y:
             down_layer()
 
         print(f"y={CURRENT_Y} complete")
@@ -343,6 +341,7 @@ def return_to_start():
 
     while CURRENT_Y < START_Y:
         #if turtle.up():
+        turtle.up()
         CURRENT_Y = CURRENT_Y + 1
         #else:
         #    print("Failed to go upwards!")
@@ -360,7 +359,7 @@ def return_to_start():
 def skip_layers():
     global CURRENT_Y
 
-    while CURRENT_Y > END_Y:
+    while CURRENT_Y >= END_Y:
         hit_block = down_layer()
         if hit_block:
             print("Hit block, stopping layer skip")
@@ -514,8 +513,6 @@ def locate_space_and_put_in_network(from_slot):
 
 
 def mine():
-    global CURRENT_Y
-
     target_fuel_count = math.ceil(FUEL_REQUIREMENT // 80)  # 80 is coal amount
 
     print(
