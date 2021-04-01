@@ -108,7 +108,7 @@ def sort_inventory():
     for slot_number in range(TURTLE_SLOTS, 0, -1):
         if turtle.getItemCount(slot_number):
             turtle.select(slot_number)
-            old_slot_details = getItemDetail(new_slot_number)
+            old_slot_details = turtle.getItemDetail(new_slot_number)
             if old_slot_details:
                 if old_slot_details[b'count'] > 32:
                     print(f"not enough items to sort slot {slot_number} yet")
@@ -120,7 +120,7 @@ def sort_inventory():
             continue
 
         for new_slot_number in range(1, TURTLE_SLOTS + 1):
-            slot_details = getItemDetail(new_slot_number)
+            slot_details = turtle.getItemDetail(new_slot_number)
             if slot_details and slot_details[b'name'] and turtle.transferTo(new_slot_number):
                 break
 
