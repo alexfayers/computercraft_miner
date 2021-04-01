@@ -296,9 +296,24 @@ def status_check():
     check_fuel()
 
 
+def check_if_gravity_block():
+    for block in GRAVITY_BLOCKS:
+        info = turtle.inspect()
+
+        if info is not None and block in info["name"]:
+            print("Gravity block!")
+
+            return True
+    return False
+
+
 def dig_step():
+    while check_if_gravity_block():
+        turtle.dig()
+
     if turtle.detect():
         turtle.dig()
+    
 
     # if turtle.detectDown():
     #    turtle.digDown()
