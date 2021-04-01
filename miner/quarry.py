@@ -322,14 +322,16 @@ def mine_several_layers():
         notify("Mining", f"y={CURRENT_Y} complete (mining until y={END_Y})")
 
 
-def return_to_start():
+def return_to_start(straight_up_override=False):
     global CURRENT_Y
 
     corner = (START_Y - CURRENT_Y) % 4
     notify("Mining", f"Returning home from y={CURRENT_Y}")
 
 
-    if corner == 1:
+    if straight_up_override:
+        pass
+    elif corner == 1:
         travel_line()
     elif corner == 2:
         travel_line()
@@ -348,7 +350,9 @@ def return_to_start():
         #    notify("Mining", "Failed returning because of an obstruction, exiting!")
         #    exit()
 
-    if corner == 1:
+    if straight_up_override:
+        pass
+    elif corner == 1:
         turtle.turnRight()
     elif corner == 2:
         turtle.turnRight()
@@ -357,13 +361,13 @@ def return_to_start():
 
 
 def skip_layers():
-    global CURRENT_Y
-
+    hit_block = False
     while CURRENT_Y >= END_Y:
         hit_block = down_layer()
         if hit_block:
             print("Hit block, stopping layer skip")
             break
+    return hit_block
 
 
 
@@ -543,15 +547,17 @@ def mine():
 
     notify("Mining", "Starting floor detection")
     print("Starting floor detection...")
-    skip_layers()
+    hit_block = skip_layers()
+    if hit_block:
+        print(f"Starting properly at y={CURRENT_Y}!")
+        notify("Mining", f"Starting mining at y={CURRENT_Y}!")
 
-    print(f"Starting properly at y={CURRENT_Y}!")
-    notify("Mining", f"Starting mining at y={CURRENT_Y}!")
-
-    mine_several_layers()
+        mine_several_layers()
+    else:
+        print("Didn't hit any blocks - all of this area is already mined")
 
     print("Returning to start...")
-    return_to_start()
+    return_to_start(straight_up_override=not hit_block)
 
     # turn_around()
     if not deposit_valueables_into_network():
