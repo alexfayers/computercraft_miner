@@ -6,6 +6,7 @@ from cc import os
 from cc import peripheral
 
 import math
+import requests
 
 FUEL_TYPES = ["lava", "blaze", "coal", "wood"]
 LIGHTING_TYPES = ["torch"]
