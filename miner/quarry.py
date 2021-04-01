@@ -54,9 +54,10 @@ if not os.getComputerLabel():
 
 
 def notify(title, text):
-    title = f"{os.getComputerLabel()}: {title}"
+    name = f"{os.getComputerLabel()}"
+    text = f"{title}: {title}"
 
-    title = urllib.parse.quote_plus(title)
+    title = urllib.parse.quote_plus(name)
     text = urllib.parse.quote_plus(text)
 
     res = requests.get(
