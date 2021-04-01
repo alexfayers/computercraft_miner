@@ -105,7 +105,7 @@ def sort_inventory():
         print("No need to sort, not half full/empty yet")
         return False
 
-    for slot_number in range(TURTLE_SLOTS, 0, -1):
+    for slot_number in range(TURTLE_SLOTS, 1, -1):
         if turtle.getItemCount(slot_number):
             turtle.select(slot_number)
             old_slot_details = turtle.getItemDetail(slot_number)
@@ -119,7 +119,7 @@ def sort_inventory():
         else:
             continue
 
-        for new_slot_number in range(1, TURTLE_SLOTS + 1):
+        for new_slot_number in range(1, TURTLE_SLOTS):
             slot_details = turtle.getItemDetail(new_slot_number)
             if slot_details and slot_details[b'name'] and turtle.transferTo(new_slot_number):
                 break
