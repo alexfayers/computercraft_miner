@@ -31,14 +31,20 @@ VALUEABLE_BLOCKS = [
 
 # CONFIG
 CHUNK_SIZE = 8
-QUARRY_DEPTH = 40
 REFUEL_THRESH = 20
-QUARRY_DEPTH_SKIP = 30
+
+START_Y = 64
+END_Y = 62
 
 # Const type things
+QUARRY_DEPTH = START_Y - END_Y
+
+CURRENT_Y = START_Y
+
 TURTLE_SLOTS = 16
+
 FUEL_REQUIREMENT = (
-    CHUNK_SIZE * CHUNK_SIZE * (QUARRY_DEPTH - QUARRY_DEPTH_SKIP)
+    CHUNK_SIZE * CHUNK_SIZE * (QUARRY_DEPTH)
     + QUARRY_DEPTH
     + CHUNK_SIZE * 2
 )
@@ -188,55 +194,6 @@ def throw_away_trash():
             # print(f"Dropped some {slotinfo['name']} (non-valuable block)")
 
 
-def deposit_valueables():
-    canDeposit = False
-    for block in DEPOSIT_BLOCKS:
-        info = turtle.inspect()
-
-        if info is not None and block.encode() in info[b"name"]:
-            print(f"Found deposit block!")
-            canDeposit = True
-            break
-
-    if canDeposit:
-        deposit_count = 0
-
-        while True:
-            deposited = False
-
-            for block in VALUEABLE_BLOCKS:
-                block_slot = find_item(block)
-
-                if block_slot:
-                    prevSlot = turtle.getSelectedSlot()
-                    turtle.select(block_slot)
-
-                    turtle.drop()  # drop the items into the chest or whatever
-
-                    turtle.select(prevSlot)
-
-                    print(f"Deposited some {block} into storage")
-
-                    # notify("Deposit", f"Deposited {block} into storage")
-
-                    deposit_count += 1
-
-                    deposited = True
-
-            if not deposited:
-                print("Didn't deposit anything this run, breaking.")
-
-                sort_inventory()
-                break
-
-        return True
-
-    else:
-        print("Can't deposit in this block!")
-
-    return False
-
-
 def deposit_valueables_into_network():
     notify("Depositing valuables", "Lets goooooo")
 
@@ -273,44 +230,6 @@ def deposit_valueables_into_network():
     return deposited
 
 
-def get_items_from_in_front(number):
-    success = False
-
-    if number >= 255:
-        for _ in range(number // 255 + number % 255):
-            if turtle.suck(number):
-                success = True
-            else:
-                success = False
-                break
-    else:
-        if turtle.suck(number):
-            success = True
-
-    sort_inventory()
-
-    return success
-
-
-def get_fuel_from_chest(target_fuel_count):
-
-    for fuel_type in LIGHTING_TYPES:
-        fuel_slot = find_item(fuel_type)
-        item_count = 0
-        if fuel_slot:
-            item_count = turtle.getItemCount(fuel_slot)
-
-        if item_count < target_fuel_count:
-            fuel_needed = target_fuel_count - item_count
-            print(f"Getting {fuel_needed} items")
-            turtle.turnLeft()
-            if not get_items_from_in_front(fuel_needed):
-                print("Couldn't get enought fuel")
-                exit()
-                # notify("Not enough fuel", "Uh oh")
-            turtle.turnRight()
-
-
 def status_check():
     # checks to make sure everytjing is going well
     throw_away_trash()
@@ -340,10 +259,17 @@ def dig_step():
 
 
 def down_layer():
+    global CURRENT_Y
+    hit_block = False
+    
     if turtle.detectDown():
         turtle.digDown()
+        hit_block = True
 
-    turtle.down()
+    if turtle.down():
+        CURRENT_Y = CURRENT_Y - 1
+
+    return hit_block
 
 
 def travel_line():
@@ -381,7 +307,7 @@ def mine_layer():
 
 
 def mine_several_layers():
-    for layer in range(QUARRY_DEPTH - QUARRY_DEPTH_SKIP):
+    while CURRENT_Y > END_Y:
         mine_layer()
 
         if CHUNK_SIZE % 2 == 0:
@@ -389,16 +315,19 @@ def mine_several_layers():
         else:
             turtle.turnLeft()
 
-        if layer < (QUARRY_DEPTH - QUARRY_DEPTH_SKIP) - 1:
+        if CURRENT_Y > END_Y + 1:
             down_layer()
 
-        print(f"Layer {layer} complete")
-        notify("Mining", f"Layer {layer}/{QUARRY_DEPTH - QUARRY_DEPTH_SKIP} complete")
+        print(f"y={CURRENT_Y} complete")
+        notify("Mining", f"y={CURRENT_Y} complete (mining until y={END_Y})")
 
 
 def return_to_start():
-    notify("Mining", "All completed, returning home")
-    corner = (QUARRY_DEPTH - QUARRY_DEPTH_SKIP) % 4
+    global CURRENT_Y
+
+    corner = (START_Y - CURRENT_Y) % 4
+    notify("Mining", f"Returning home from y={CURRENT_Y}")
+
 
     if corner == 1:
         travel_line()
@@ -410,8 +339,13 @@ def return_to_start():
         turtle.turnRight()
         travel_line()
 
-    for layer in range(QUARRY_DEPTH - 1):
-        turtle.up()
+    while CURRENT_Y < START_Y:
+        if turtle.up():
+            CURRENT_Y = CURRENT_Y + 1
+        else:
+            print("Failed to go upwards!")
+            notify("Mining", "Failed returning because of an obstruction, exiting!")
+            exit()
 
     if corner == 1:
         turtle.turnRight()
@@ -422,8 +356,12 @@ def return_to_start():
 
 
 def skip_layers():
-    for _ in range(QUARRY_DEPTH_SKIP):
-        down_layer()
+    while CURRENT_Y > END_Y:
+        hit_block = down_layer()
+        if hit_block:
+            print("Hit block, stopping layer skip")
+            break
+
 
 
 def locate_item_in_network(search):
@@ -579,31 +517,33 @@ def mine():
     )
 
     cur_fuel = turtle.getFuelLevel()
+    prev_fuel = -1
     while cur_fuel < FUEL_REQUIREMENT:
         print(f"REFUELING ({cur_fuel})!!!")
         notify("Refueling", f"Current fuel is {cur_fuel}")
         if not locate_and_get_from_network("coal", target_fuel_count):
-            notify("Refueling", f"Not enough fuel, exiting")
+            notify("Refueling", f"Not enough fuel in network to reach requirement, exiting!")
             print("Not enough fuel")
             exit()
         refuel_from_inventory()
         cur_fuel = turtle.getFuelLevel()
 
-    # while turtle.getFuelLevel() < FUEL_REQUIREMENT:
-    #    print("REFUELING!!!")
-    #    get_fuel_from_chest(target_fuel_count)
-    #    refuel_from_inventory()
+        if prev_fuel == cur_fuel and cur_fuel < FUEL_REQUIREMENT:
+            # couldnt refuel
+            print("Failed to refuel")
+            notify("Refueling", "Failed to refuel to requirement, exiting!")
+            exit()
+        prev_fuel = cur_fuel
 
     print("Got enough fuel, we're off!")
     notify("Refueling", "Refueling done!")
 
-    if QUARRY_DEPTH_SKIP > 0:
-        notify("Mining", "Skipping some layers")
-        print("Skipping some layers...")
-        skip_layers()
-        print("Starting properly!")
+    notify("Mining", "Starting floor detection")
+    print("Starting floor detection...")
+    skip_layers()
 
-    notify("Mining", "Starting mining!")
+    print(f"Starting properly at y={CURRENT_Y}!")
+    notify("Mining", f"Starting mining at y={CURRENT_Y}!")
 
     mine_several_layers()
 
