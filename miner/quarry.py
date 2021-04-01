@@ -34,7 +34,7 @@ CHUNK_SIZE = 8
 REFUEL_THRESH = 20
 
 START_Y = 64
-END_Y = 63
+END_Y = 62
 
 # Const type things
 QUARRY_DEPTH = START_Y - END_Y
@@ -322,10 +322,10 @@ def mine_several_layers():
         notify("Mining", f"y={CURRENT_Y} complete (mining until y={END_Y})")
 
 
-def return_to_start(straight_up_override=False):
+def return_to_start(skipped_layers, straight_up_override=False):
     global CURRENT_Y
 
-    corner = (START_Y - CURRENT_Y) % 4
+    corner = (START_Y - CURRENT_Y + skipped_layers) % 4
     notify("Mining", f"Returning home from y={CURRENT_Y}")
 
 
@@ -362,12 +362,14 @@ def return_to_start(straight_up_override=False):
 
 def skip_layers():
     hit_block = False
+    skipped = 0
     while CURRENT_Y >= END_Y:
         hit_block = down_layer()
+        skipped += 1
         if hit_block:
             print("Hit block, stopping layer skip")
             break
-    return hit_block
+    return hit_block, skipped
 
 
 
@@ -547,7 +549,7 @@ def mine():
 
     notify("Mining", "Starting floor detection")
     print("Starting floor detection...")
-    hit_block = skip_layers()
+    hit_block, skipped_layers = skip_layers()
     if hit_block:
         print(f"Starting properly at y={CURRENT_Y}!")
         notify("Mining", f"Starting mining at y={CURRENT_Y}!")
@@ -557,7 +559,7 @@ def mine():
         print("Didn't hit any blocks - all of this area is already mined")
 
     print("Returning to start...")
-    return_to_start(straight_up_override=not hit_block)
+    return_to_start(skipped_layers, straight_up_override=not hit_block)
 
     # turn_around()
     if hit_block:
