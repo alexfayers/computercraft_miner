@@ -307,7 +307,7 @@ def mine_layer():
 
 
 def mine_several_layers():
-    while CURRENT_Y >= END_Y:
+    while CURRENT_Y > END_Y:
         mine_layer()
 
         if CHUNK_SIZE % 2 == 0:
@@ -315,7 +315,7 @@ def mine_several_layers():
         else:
             turtle.turnLeft()
 
-        if CURRENT_Y > END_Y:
+        if CURRENT_Y > END_Y - 1:
             down_layer()
 
         print(f"y={CURRENT_Y} complete")
