@@ -560,8 +560,9 @@ def mine():
     return_to_start(straight_up_override=not hit_block)
 
     # turn_around()
-    if not deposit_valueables_into_network():
-        notify("Depositing valuables", "Didn't deposit anything")
+    if hit_block:
+        if not deposit_valueables_into_network():
+            notify("Depositing valuables", "Didn't deposit anything")
     # turn_around()
 
     print("Run complete")
