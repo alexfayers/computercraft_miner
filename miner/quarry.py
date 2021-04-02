@@ -584,7 +584,7 @@ def client_send_broadcast(message):
 def client_receive_broadcast():
     while True:
         for message in rednet.receive("QuarryControl"):
-            print(repr(msg))
+            print(repr(message))
 
 
 def init():
