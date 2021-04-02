@@ -10,6 +10,7 @@ from cc import rednet
 import math
 import requests
 import urllib
+import time
 
 FUEL_TYPES = ["lava", "blaze", "coal", "wood"]
 LIGHTING_TYPES = ["torch"]
@@ -522,6 +523,7 @@ def locate_space_and_put_in_network(from_slot):
 
 def mine():
     while not DO_MINE:
+        time.sleep(1)
         pass
 
     print("Received mine signal!")
@@ -598,6 +600,8 @@ def client_receive_broadcast():
             computer_id, message, _ = message
         
             message = message.decode()
+
+            print(f"Received {message}")
 
             client_send_broadcast(f"{os.getComputerLabel()}: Received {message}")
 
