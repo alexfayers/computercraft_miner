@@ -39,7 +39,7 @@ def server_command_control():
             clients = rednet.lookup("QuarryMiner")
 
             if clients:
-                print(f"Got response from {client} clients:")
+                print(f"Got response from {len(clients)} clients:")
                 for client in clients:
                     print(f">  {client}")
             else:
