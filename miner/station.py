@@ -28,10 +28,11 @@ def init():
         rednet.broadcast(command, "QuarryControl")
 
         if command == b"ping":
-            for message in rednet.receive("QuarryMiner", 5):
+            response = rednet.receive("QuarryMiner", 5):
                 if message == None:
                     break
                 else:
-                    print(repr(msg))
+                    for message in response:
+                        print(repr(msg))
 
     rednet.close(modem_name)
