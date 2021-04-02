@@ -599,7 +599,10 @@ def client_receive_broadcast():
     while True:
         print("Receiving messages...")
         for message in rednet.receive("QuarryControl"):
-            computer_id, message, _ = message
+            print(message)
+            print(type(message))
+            computer_id = message[0]
+            message = message[1]
         
             message = message.decode()
 
