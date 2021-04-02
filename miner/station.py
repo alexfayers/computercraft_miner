@@ -27,7 +27,7 @@ def init():
 
         rednet.broadcast(command, "QuarryControl")
 
-        if command == 'ping':
+        if command == b"ping":
             for message in rednet.receive("QuarryMiner", 5):
                 if message == None:
                     break
