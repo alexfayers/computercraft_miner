@@ -9,7 +9,7 @@ JOIN_KEY = requests.get("http://192.168.1.54:8000/join.key").text
 
 def listen_for_response(modem_name):
     while True:
-        response = rednet.receive("QuarryMiner"):
+        response = rednet.receive("QuarryMiner")
         if message == None:
             break
         else:
