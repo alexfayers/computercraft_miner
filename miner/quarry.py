@@ -334,6 +334,10 @@ def mine_several_layers():
         else:
             turtle.turnLeft()
 
+        if not DO_MINE:
+            print("Stop signal was received, returing to start!")
+            break
+
         print(f"y={CURRENT_Y} complete")
         notify("Mining", f"y={CURRENT_Y} complete (mining until y={END_Y})")
 
@@ -538,72 +542,79 @@ def locate_space_and_put_in_network(from_slot):
 
 
 def mine():
+    global DO_MINE
+
     calc_globals()
 
-    while not DO_MINE:
-        print("Waiting for start signal...")
-        time.sleep(1)
-        pass
+    while True:
+        notify("Ready", "Waiting for start signal")
 
-    print("Received mine signal!")
+        while not DO_MINE:
+            print("Waiting for start signal...")
+            time.sleep(1)
+            pass
 
-    target_fuel_count = math.ceil(FUEL_REQUIREMENT // 80)  # 80 is coal amount
+        print("Received mine signal!")
 
-    print(
-        f"Require {FUEL_REQUIREMENT} fuel for this job ({target_fuel_count} coal total). I have {turtle.getFuelLevel()} fuel..."
-    )
+        target_fuel_count = math.ceil(FUEL_REQUIREMENT // 80)  # 80 is coal amount
 
-    cur_fuel = turtle.getFuelLevel()
-    prev_fuel = -1
+        print(
+            f"Require {FUEL_REQUIREMENT} fuel for this job ({target_fuel_count} coal total). I have {turtle.getFuelLevel()} fuel..."
+        )
 
-    if cur_fuel < FUEL_REQUIREMENT:
-        notify("Refueling", f"Need to refuel - current fuel is {cur_fuel} and requirement is {FUEL_REQUIREMENT}")
-
-    while cur_fuel < FUEL_REQUIREMENT:
-        print(f"REFUELING ({cur_fuel})!!!")
-        if not locate_and_get_from_network("coal", target_fuel_count):
-            notify(
-                "Refueling",
-                f"Not enough fuel in network to reach requirement (have {cur_fuel}), exiting!",
-            )
-            print("Not enough fuel")
-            exit()
-        refuel_from_inventory()
         cur_fuel = turtle.getFuelLevel()
+        prev_fuel = -1
 
-        if prev_fuel == cur_fuel and cur_fuel < FUEL_REQUIREMENT:
-            # couldnt refuel
-            print("Failed to refuel")
-            notify("Refueling", "Failed to refuel to requirement, exiting!")
-            exit()
-        prev_fuel = cur_fuel
+        if cur_fuel < FUEL_REQUIREMENT:
+            notify("Refueling", f"Need to refuel - current fuel is {cur_fuel} and requirement is {FUEL_REQUIREMENT}")
 
-    print("Got enough fuel, we're off!")
-    # notify("Refueling", "Refueling done!")
+        while cur_fuel < FUEL_REQUIREMENT:
+            print(f"REFUELING ({cur_fuel})!!!")
+            if not locate_and_get_from_network("coal", target_fuel_count):
+                notify(
+                    "Refueling",
+                    f"Not enough fuel in network to reach requirement (have {cur_fuel}), exiting!",
+                )
+                print("Not enough fuel")
+                exit()
+            refuel_from_inventory()
+            cur_fuel = turtle.getFuelLevel()
 
-    # notify("Mining", "Starting floor detection")
-    print("Starting floor detection...")
-    hit_block, skipped_layers = skip_layers()
+            if prev_fuel == cur_fuel and cur_fuel < FUEL_REQUIREMENT:
+                # couldnt refuel
+                print("Failed to refuel")
+                notify("Refueling", "Failed to refuel to requirement, exiting!")
+                exit()
+            prev_fuel = cur_fuel
 
-    if hit_block:
-        print(f"Starting properly at y={CURRENT_Y}!")
-        notify("Mining", f"Starting mining at y={CURRENT_Y}!")
+        print("Got enough fuel, we're off!")
+        # notify("Refueling", "Refueling done!")
 
-        mine_several_layers()
-    else:
-        print("Didn't hit any blocks - all of this area is already mined")
-        notify("Mining", "Didn't mine - didn't hit any blocks")
+        # notify("Mining", "Starting floor detection")
+        print("Starting floor detection...")
+        hit_block, skipped_layers = skip_layers()
 
-    print("Returning to start...")
-    return_to_start(skipped_layers, straight_up_override=not hit_block)
+        if hit_block:
+            print(f"Starting properly at y={CURRENT_Y}!")
+            notify("Mining", f"Starting mining at y={CURRENT_Y}!")
 
-    # turn_around()
-    if hit_block:
-        if not deposit_valueables_into_network():
-            notify("Depositing valuables", "Didn't deposit anything")
-    # turn_around()
+            mine_several_layers()
+        else:
+            print("Didn't hit any blocks - all of this area is already mined")
+            notify("Mining", "Didn't mine - didn't hit any blocks")
 
-    print("Run complete")
+        print("Returning to start...")
+        return_to_start(skipped_layers, straight_up_override=not hit_block)
+
+        # turn_around()
+        if hit_block:
+            if not deposit_valueables_into_network():
+                notify("Depositing valuables", "Didn't deposit anything")
+        # turn_around()
+
+        print("Run complete")
+
+        DO_MINE = False
 
 
 # networking stuff
@@ -649,6 +660,8 @@ def client_receive_broadcast():
         elif message == "start":
             DO_MINE = True
         elif message == "stop":
+            if DO_MINE:
+                notify("Mining", "Stop received, returning after this layer")
             DO_MINE = False
         else:
             print("Received a non-valid command")
