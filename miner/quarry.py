@@ -598,22 +598,19 @@ def client_receive_broadcast():
 
     while True:
         print("Receiving messages...")
-        for message in rednet.receive("QuarryControl"):
-            print(message)
-            print(type(message))
-            computer_id = message[0]
-            message = message[1]
         
-            message = message.decode()
+        computer_id, message, _ = rednet.receive("QuarryControl")
+    
+        message = message.decode()
 
-            print(f"Received {message}")
+        print(f"Received {message}")
 
-            client_send_broadcast(f"{os.getComputerLabel()}: Received {message}")
+        client_send_broadcast(f"{os.getComputerLabel()}: Received {message}")
 
-            if message == "start":
-                DO_MINE = True
-            elif message == "stop":
-                DO_MINE = False
+        if message == "start":
+            DO_MINE = True
+        elif message == "stop":
+            DO_MINE = False
 
 
 def init():
