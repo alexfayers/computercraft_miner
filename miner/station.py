@@ -10,7 +10,7 @@ def server_receive_broadcast():
 
         message = message.decode()
 
-        print(message)
+        print(f"\n> {message}\n")
 
 
 def server_send_broadcast(message):
