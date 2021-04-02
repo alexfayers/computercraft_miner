@@ -20,14 +20,26 @@ def server_send_broadcast(message):
 
 
 def server_command_control():
+    valid_commands = [
+        "ping",
+        "start",
+        "stop"
+    ]
     while True:
         command = input("QuarryControl> ")
 
         if command == "exit":
             print("Bye")
             break
-
-        server_send_broadcast(command)
+        
+        elif command in valid_commands:
+            server_send_broadcast(command)
+        
+        else:
+            print("Invalid command. Valid commands are:")
+            for command in valid_commands:
+                print(f" - {command}")
+            print()
 
 
 def init():
