@@ -600,7 +600,8 @@ def init():
     else:
         print("Modem is open")
 
-    parallel.waitForAll(mine, client_receive_broadcast)
+    client_receive_broadcast()
+    #parallel.waitForAll(mine, client_receive_broadcast)
 
     print("Closing modem")
 
