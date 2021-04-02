@@ -33,8 +33,8 @@ VALUEABLE_BLOCKS = [
 CHUNK_SIZE = 8
 REFUEL_THRESH = 20
 
-START_Y = 64 # inclusive
-END_Y = 60 # non inclusive
+START_Y = 64  # inclusive
+END_Y = 60  # non inclusive
 
 # Const type things
 QUARRY_DEPTH = START_Y - END_Y
@@ -44,9 +44,7 @@ CURRENT_Y = START_Y
 TURTLE_SLOTS = 16
 
 FUEL_REQUIREMENT = (
-    CHUNK_SIZE * CHUNK_SIZE * (QUARRY_DEPTH)
-    + QUARRY_DEPTH
-    + CHUNK_SIZE * 2
+    CHUNK_SIZE * CHUNK_SIZE * (QUARRY_DEPTH) + QUARRY_DEPTH + CHUNK_SIZE * 2
 )
 
 JOIN_KEY = requests.get("http://192.168.1.54:8000/join.key").text
@@ -261,7 +259,7 @@ def dig_step():
 def down_layer():
     global CURRENT_Y
     hit_block = False
-    
+
     if turtle.detectDown():
         turtle.digDown()
         hit_block = True
@@ -324,13 +322,11 @@ def mine_several_layers():
             down_layer()
 
 
-
 def return_to_start(skipped_layers, straight_up_override=False):
     global CURRENT_Y
 
     corner = (START_Y - CURRENT_Y - skipped_layers) % 4
     notify("Mining", f"Returning home from y={CURRENT_Y}")
-
 
     if straight_up_override:
         pass
@@ -345,10 +341,10 @@ def return_to_start(skipped_layers, straight_up_override=False):
         travel_line()
 
     while CURRENT_Y < START_Y:
-        #if turtle.up():
+        # if turtle.up():
         turtle.up()
         CURRENT_Y = CURRENT_Y + 1
-        #else:
+        # else:
         #    print("Failed to go upwards!")
         #    notify("Mining", "Failed returning because of an obstruction, exiting!")
         #    exit()
@@ -373,7 +369,6 @@ def skip_layers():
             break
         skipped += 1
     return hit_block, skipped
-
 
 
 def locate_item_in_network(search):
@@ -534,7 +529,10 @@ def mine():
         print(f"REFUELING ({cur_fuel})!!!")
         notify("Refueling", f"Current fuel is {cur_fuel}")
         if not locate_and_get_from_network("coal", target_fuel_count):
-            notify("Refueling", f"Not enough fuel in network to reach requirement, exiting!")
+            notify(
+                "Refueling",
+                f"Not enough fuel in network to reach requirement, exiting!",
+            )
             print("Not enough fuel")
             exit()
         refuel_from_inventory()
