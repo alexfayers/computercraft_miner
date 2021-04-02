@@ -36,7 +36,7 @@ def server_command_control():
         if not first_loop:
             command = input("QuarryControl> ")
         else:
-            first_loop = "ping"
+            command = "ping"
             first_loop = False
 
         if command == "help":
