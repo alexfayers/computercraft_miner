@@ -6,9 +6,6 @@ from cc import os
 from cc import peripheral
 from cc import parallel
 from cc import rednet
-from cc import import_file
-
-communication = import_file("quarry_comms.py", __file__)
 
 import math
 import requests
@@ -595,7 +592,7 @@ def client_receive_broadcast():
 
 
 def init():
-    MODEM_SIDE = "back"
+    MODEM_SIDE = "right"
 
     if not rednet.isOpen(MODEM_SIDE):
         rednet.open(MODEM_SIDE)
