@@ -523,6 +523,7 @@ def locate_space_and_put_in_network(from_slot):
 
 def mine():
     while not DO_MINE:
+        print(DO_MINE)
         time.sleep(1)
         pass
 
@@ -596,6 +597,7 @@ def client_receive_broadcast():
     global DO_MINE
 
     while True:
+        print("Receiving messages...")
         for message in rednet.receive("QuarryControl"):
             computer_id, message, _ = message
         
