@@ -6,6 +6,8 @@ import requests
 JOIN_KEY = requests.get("http://192.168.1.54:8000/join.key").text
 
 
+
+
 def init():
     MODEM_SIDE = "back"
 
@@ -24,5 +26,12 @@ def init():
             break
 
         rednet.broadcast(command, "QuarryControl")
+
+        if command == 'ping':
+            for message in rednet.receive("QuarryMiner", 5):
+                if message == None:
+                    break
+                else:
+                    print(repr(msg))
 
     rednet.close(modem_name)
