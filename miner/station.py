@@ -23,6 +23,6 @@ def init():
             print("Bye")
             break
 
-        rednet.broadcast(command, b"QuarryControl")
+        rednet.broadcast(command, "QuarryControl")
 
     rednet.close(modem_name)
