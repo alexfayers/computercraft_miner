@@ -590,7 +590,7 @@ def mine():
 
 
 def client_send_broadcast(message):
-    rednet.broadcast(message, "QuarryMiner")
+    rednet.broadcast(message.encode(), "QuarryMiner")
 
 
 def client_receive_broadcast():

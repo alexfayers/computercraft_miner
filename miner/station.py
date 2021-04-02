@@ -14,7 +14,7 @@ def server_receive_broadcast():
 
 
 def server_send_broadcast(message):
-    rednet.broadcast(message, "QuarryControl")
+    rednet.broadcast(message.encode(), "QuarryControl")
 
 
 def server_command_control():
