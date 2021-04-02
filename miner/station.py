@@ -25,7 +25,6 @@ def server_send_broadcast(message):
 
 def server_command_control():
     valid_commands = [
-        "ping",
         "start",
         "stop"
     ]
@@ -36,6 +35,16 @@ def server_command_control():
             print("Bye")
             break
         
+        if command == "ping":
+            clients = rednet.lookup("QuarryMiner")
+
+            if clients:
+                print(f"Got response from {client} clients:")
+                for client in clients:
+                    print(f">  {client}")
+            else:
+                print("No clients available")
+
         elif command in valid_commands:
             server_send_broadcast(command)
         
@@ -55,7 +64,11 @@ def init():
     else:
         print("Modem is open")
 
+    rednet.host("QuarryControl", "QuarryControl_C2")
+
     parallel.waitForAny(server_command_control, server_receive_broadcast)
+
+    rednet.unhost("QuarryControl")
 
     print("Closing modem")
 

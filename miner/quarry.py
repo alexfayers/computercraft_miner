@@ -57,7 +57,7 @@ JOIN_KEY = requests.get("http://192.168.1.54:8000/join.key").text
 term.clear()
 
 if not os.getComputerLabel():
-    os.setComputerLabel(f"Quarrybot #{os.getComputerID()}")
+    os.setComputerLabel(f"Quarrybot_{os.getComputerID()}")
 
 ## functions
 
@@ -597,8 +597,6 @@ def client_send_broadcast(message):
 def client_receive_broadcast():
     global DO_MINE
 
-    comp_id = os.getComputerID()
-
     while True:
         print("Receiving messages...")
         
@@ -610,9 +608,9 @@ def client_receive_broadcast():
 
         valid_command = True
 
-        if message == "ping":
-            pass
-        elif message == "start":
+        #if message == "ping":
+        #    pass
+        if message == "start":
             DO_MINE = True
         elif message == "stop":
             DO_MINE = False
@@ -620,8 +618,6 @@ def client_receive_broadcast():
             valid_command = False
         
         if valid_command:
-            print(f"Sleeping {comp_id} seconds before responding...")
-            time.sleep(comp_id)
             client_send_broadcast(f"{os.getComputerLabel()}: Received {message}")
         else:
             print("Received a non-valid command")
@@ -637,7 +633,11 @@ def init():
     else:
         print("Modem is open")
 
+    rednet.host("QuarryMiner", os.getComputerLabel())
+
     parallel.waitForAny(mine, client_receive_broadcast)
+
+    rednet.unhost("QuarryControl")
 
     print("Closing modem")
 
