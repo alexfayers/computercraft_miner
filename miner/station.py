@@ -17,7 +17,7 @@ def init():
         rednet.open(modem_name)
 
     while True:
-        command = input("QuarryControl> ")
+        command = input("QuarryControl> ").encode()
 
         if command == "exit":
             print("Bye")
