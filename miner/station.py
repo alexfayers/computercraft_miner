@@ -6,11 +6,15 @@ from cc import import_file
 
 def server_receive_broadcast():
     while True:
-        computer_id, message, _ = rednet.receive("QuarryMiner")
+        info = rednet.receive("QuarryMiner")
 
-        message = message.decode()
+        for each in range(len(info) // 3):
+            each = each * 3
+            computer_id, message, _ = info[each:each + 3]
 
-        print(f"\n> {message}\n")
+            message = message.decode()
+
+            print(f"\n> {message}")
 
         print("QuarryControl> ", end='')
 
