@@ -49,6 +49,8 @@ FUEL_REQUIREMENT = (
     CHUNK_SIZE * CHUNK_SIZE * (QUARRY_DEPTH) + QUARRY_DEPTH + CHUNK_SIZE * 2
 )
 
+DO_MINE = False
+
 JOIN_KEY = requests.get("http://192.168.1.54:8000/join.key").text
 
 term.clear()
@@ -519,6 +521,13 @@ def locate_space_and_put_in_network(from_slot):
 
 
 def mine():
+    while not DO_MINE:
+        pass
+
+    print("Received mine signal!")
+
+    exit()
+
     target_fuel_count = math.ceil(FUEL_REQUIREMENT // 80)  # 80 is coal amount
 
     print(
@@ -582,9 +591,20 @@ def client_send_broadcast(message):
 
 
 def client_receive_broadcast():
+    global DO_MINE
+
     while True:
         for message in rednet.receive("QuarryControl"):
-            print(repr(message))
+            computer_id, message, _ = message
+        
+            message = message.decode()
+
+            client_send_broadcast(f"{os.getComputerLabel()}: Received {message}")
+
+            if message == "start":
+                DO_MINE = True
+            elif message == "stop":
+                DO_MINE = False
 
 
 def init():
@@ -596,8 +616,7 @@ def init():
     else:
         print("Modem is open")
 
-    client_receive_broadcast()
-    #parallel.waitForAll(mine, client_receive_broadcast)
+    parallel.waitForAny(mine, client_receive_broadcast)
 
     print("Closing modem")
 
