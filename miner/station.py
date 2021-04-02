@@ -29,8 +29,15 @@ def server_command_control():
         "start_opts",
         "stop"
     ]
+
+    first_loop = True
+
     while True:
-        command = input("QuarryControl> ")
+        if not first_loop:
+            command = input("QuarryControl> ")
+        else:
+            first_loop = "ping"
+            first_loop = False
 
         if command == "help":
             print("start - Start all miners with default params")
@@ -54,7 +61,7 @@ def server_command_control():
             else:
                 print("No clients available")
 
-        elif any(command in valid for valid in valid_commands): # if input is a substring in any of the valids
+        elif any(valid in command for valid in valid_commands): # if any of the valids are a substring of the input
             server_send_broadcast(command)
         
         else:
