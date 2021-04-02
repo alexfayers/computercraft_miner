@@ -26,12 +26,21 @@ def server_send_broadcast(message):
 def server_command_control():
     valid_commands = [
         "start",
+        "start_opts"
         "stop"
     ]
     while True:
         command = input("QuarryControl> ")
 
-        if command == "exit":
+        if command == "help":
+            print("start - Start all miners with default params")
+            print("start_opts {START_Y} {END_Y} {CHUNK_SIZE} - Start with params you specify")
+            print("stop - Stop all miners and make them return home (WIP)")
+            print("ping - Query which miners are on the network and available for commands")
+            print("help - This message")
+            print("exit - Exit the C2 (clients are unaffected)")
+
+        elif command == "exit":
             print("Bye")
             break
         
@@ -45,7 +54,7 @@ def server_command_control():
             else:
                 print("No clients available")
 
-        elif command in valid_commands:
+        elif any(command in valid for valid in valid_commands): # if input is a substring in any of the valids
             server_send_broadcast(command)
         
         else:

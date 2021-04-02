@@ -39,16 +39,9 @@ REFUEL_THRESH = 20
 START_Y = 64  # inclusive
 END_Y = 60  # non inclusive
 
-# Const type things
-QUARRY_DEPTH = START_Y - END_Y
-
-CURRENT_Y = START_Y
-
 TURTLE_SLOTS = 16
 
-FUEL_REQUIREMENT = (
-    CHUNK_SIZE * CHUNK_SIZE * (QUARRY_DEPTH) + QUARRY_DEPTH + CHUNK_SIZE * 2
-)
+# Const type things
 
 DO_MINE = False
 
@@ -60,6 +53,19 @@ if not os.getComputerLabel():
     os.setComputerLabel(f"Quarrybot_{os.getComputerID()}")
 
 ## functions
+
+def calc_globals():
+    global QUARRY_DEPTH
+    global CURRENT_Y
+    global FUEL_REQUIREMENT
+
+    QUARRY_DEPTH = START_Y - END_Y
+
+    CURRENT_Y = START_Y
+
+    FUEL_REQUIREMENT = (
+        CHUNK_SIZE * CHUNK_SIZE * (QUARRY_DEPTH) + QUARRY_DEPTH + CHUNK_SIZE * 2
+    )
 
 
 def notify(title, text):
@@ -532,6 +538,8 @@ def locate_space_and_put_in_network(from_slot):
 
 
 def mine():
+    calc_globals()
+
     while not DO_MINE:
         print("Waiting for start signal...")
         time.sleep(1)
@@ -608,6 +616,9 @@ def client_send_broadcast(message):
 
 def client_receive_broadcast():
     global DO_MINE
+    global CHUNK_SIZE
+    global START_Y
+    global END_Y
 
     while True:
         print("Receiving messages...")
@@ -620,7 +631,22 @@ def client_receive_broadcast():
 
         #if message == "ping":
         #    pass
-        if message == "start":
+        if "start_opts" in message:
+            message = message.split(' ')
+
+            if type(message) == list and len(message) >= 4:
+                if all(item.isdigit() for item in message[1:4]):
+                    START_Y = int(message[1])
+                    END_Y = int(message[2])
+                    CHUNK_SIZE = int(message[3])
+
+                    calc_globals()
+                    DO_MINE = True
+                    notify("Config", f"Mining from {START_Y} to {END_Y} with a size of {CHUNK_SIZE}")
+                    continue
+                
+            notify("Config", "Got start_opts but incorrect number of options or invalid options.")
+        elif message == "start":
             DO_MINE = True
         elif message == "stop":
             DO_MINE = False
