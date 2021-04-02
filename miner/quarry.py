@@ -605,12 +605,22 @@ def client_receive_broadcast():
 
         print(f"\nReceived {message}\n")
 
-        client_send_broadcast(f"{os.getComputerLabel()}: Received {message}")
+        valid_command = True
 
-        if message == "start":
+        if message == "ping":
+            pass
+        elif message == "start":
             DO_MINE = True
         elif message == "stop":
             DO_MINE = False
+        else:
+            valid_command = False
+        
+        if valid_command:
+            client_send_broadcast(f"{os.getComputerLabel()}: Received {message}")
+        else:
+            print("Received a non-valid command")
+
 
 
 def init():

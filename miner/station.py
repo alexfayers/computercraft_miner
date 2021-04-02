@@ -12,6 +12,8 @@ def server_receive_broadcast():
 
         print(f"\n> {message}\n")
 
+        print("QuarryControl> ")
+
 
 def server_send_broadcast(message):
     rednet.broadcast(message.encode(), "QuarryControl")
