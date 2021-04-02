@@ -203,6 +203,8 @@ def deposit_valueables_into_network():
     throw_away_trash()
     sort_inventory()
 
+    desposits = []
+
     while True:
         deposited = False
 
@@ -219,8 +221,9 @@ def deposit_valueables_into_network():
                     deposited = False
                     break
 
-                print(f"Deposited {amount} {block} into storage")
-                notify("Depositing valuables", f"Deposited {amount} {block}")
+                desposits.append([amount, block])
+
+                print(f"Deposited {amount} {block}")
 
                 deposited = True
 
@@ -229,6 +232,13 @@ def deposit_valueables_into_network():
 
             sort_inventory()
             break
+
+    desposit_list = ''
+    for deposit in desposits:
+        desposit_list += f"{deposit[0]} - {deposit[1]}\n"
+    
+    if desposit_list:
+        notify("Depositing valuables", f"Deposited the following:\n\n{desposit_list}")
 
     return deposited
 
@@ -537,13 +547,16 @@ def mine():
 
     cur_fuel = turtle.getFuelLevel()
     prev_fuel = -1
+
+    if cur_fuel < FUEL_REQUIREMENT:
+        notify("Refueling", f"Need to refuel - current fuel is {cur_fuel} and requirement is {FUEL_REQUIREMENT}")
+
     while cur_fuel < FUEL_REQUIREMENT:
         print(f"REFUELING ({cur_fuel})!!!")
-        notify("Refueling", f"Current fuel is {cur_fuel}")
         if not locate_and_get_from_network("coal", target_fuel_count):
             notify(
                 "Refueling",
-                f"Not enough fuel in network to reach requirement, exiting!",
+                f"Not enough fuel in network to reach requirement (have {cur_fuel}), exiting!",
             )
             print("Not enough fuel")
             exit()
@@ -558,9 +571,9 @@ def mine():
         prev_fuel = cur_fuel
 
     print("Got enough fuel, we're off!")
-    notify("Refueling", "Refueling done!")
+    # notify("Refueling", "Refueling done!")
 
-    notify("Mining", "Starting floor detection")
+    # notify("Mining", "Starting floor detection")
     print("Starting floor detection...")
     hit_block, skipped_layers = skip_layers()
 
@@ -571,6 +584,7 @@ def mine():
         mine_several_layers()
     else:
         print("Didn't hit any blocks - all of this area is already mined")
+        notify("Mining", "Didn't mine - didn't hit any blocks")
 
     print("Returning to start...")
     return_to_start(skipped_layers, straight_up_override=not hit_block)
