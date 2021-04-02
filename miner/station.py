@@ -19,9 +19,9 @@ def server_send_broadcast(message):
 
 def server_command_control():
     while True:
-        command = input("QuarryControl> ").encode()
+        command = input("QuarryControl> ")
 
-        if command == b"exit":
+        if command == "exit":
             print("Bye")
             break
 
