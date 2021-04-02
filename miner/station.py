@@ -26,7 +26,7 @@ def server_send_broadcast(message):
 def server_command_control():
     valid_commands = [
         "start",
-        "start_opts"
+        "start_opts",
         "stop"
     ]
     while True:
