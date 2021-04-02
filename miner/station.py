@@ -7,7 +7,7 @@ import requests
 JOIN_KEY = requests.get("http://192.168.1.54:8000/join.key").text
 
 
-def listen_for_response(modem_name):
+def listen_for_response():
     while True:
         response = rednet.receive("QuarryMiner")
         if message == None:
@@ -17,7 +17,7 @@ def listen_for_response(modem_name):
                 print(repr(msg))
 
 
-def command_control(modem_name):
+def command_control():
     while True:
         command = input("QuarryControl> ").encode()
 
