@@ -10,7 +10,7 @@ if is_turtle():
         miner.mine()
     else:
         miner = import_file("quarry.py", __file__)
-        miner.mine()
+        miner.init()
 else:
     print("Running on a computer - starting station script!")
     station = import_file("station.py", __file__)

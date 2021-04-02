@@ -4,6 +4,11 @@ from cc import is_turtle, turtle
 from cc import term
 from cc import os
 from cc import peripheral
+from cc import parallel
+from cc import rednet
+from cc import import_file
+
+communication = import_file("quarry_comms.py", __file__)
 
 import math
 import requests
@@ -570,3 +575,36 @@ def mine():
     # turn_around()
 
     print("Run complete")
+
+
+# networking stuff
+
+
+def client_send_broadcast(message):
+    rednet.broadcast(message, "QuarryMiner")
+
+
+def client_receive_broadcast():
+    while True:
+        response = rednet.receive("QuarryMiner")
+        if message == None:
+            break
+        else:
+            for message in response:
+                print(repr(msg))
+
+
+def init():
+    MODEM_SIDE = "back"
+
+    if not rednet.isOpen(MODEM_SIDE):
+        rednet.open(MODEM_SIDE)
+        print("Opening modem")
+    else:
+        print("Modem is open")
+
+    parallel.waitForAll(mine, client_receive_broadcast)
+
+    print("Closing modem")
+
+    rednet.close(MODEM_SIDE)
