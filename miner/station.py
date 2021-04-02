@@ -9,8 +9,7 @@ JOIN_KEY = requests.get("http://192.168.1.54:8000/join.key").text
 def init():
     MODEM_SIDE = "back"
 
-    modem = peripheral.wrap(MODEM_SIDE)
-    modem_name = modem.getName()
+    modem_name = "modem_0"
 
     if not rednet.isOpen(modem_name):
         rednet.open(modem_name)
