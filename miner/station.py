@@ -19,10 +19,10 @@ def init():
     while True:
         command = input("QuarryControl> ").encode()
 
-        if command == "exit":
+        if command == b"exit":
             print("Bye")
             break
 
-        rednet.broadcast(command, "QuarryControl")
+        rednet.broadcast(command, b"QuarryControl")
 
     rednet.close(modem_name)
