@@ -6,12 +6,8 @@ from cc import import_file
 
 def server_receive_broadcast():
     while True:
-        response = rednet.receive("QuarryMiner")
-        if message == None:
-            break
-        else:
-            for message in response:
-                print(repr(msg))
+        for message in rednet.receive("QuarryMiner":
+            print(repr(msg))
 
 
 def server_send_broadcast(message):
