@@ -4,5 +4,5 @@ Simple miner for [Computercraft Tweaked](https://github.com/SquidDev-CC/CC-Tweak
 ## Run the latest version:
 
 ```
-pastebin run vuaRbCBs
+pastebin run D1D9TnV5
 ```

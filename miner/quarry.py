@@ -529,8 +529,6 @@ def mine():
 
     print("Received mine signal!")
 
-    exit()
-
     target_fuel_count = math.ceil(FUEL_REQUIREMENT // 80)  # 80 is coal amount
 
     print(
@@ -606,8 +604,6 @@ def client_receive_broadcast():
 
         print(f"\nReceived {message}\n")
 
-        valid_command = True
-
         #if message == "ping":
         #    pass
         if message == "start":
@@ -615,13 +611,7 @@ def client_receive_broadcast():
         elif message == "stop":
             DO_MINE = False
         else:
-            valid_command = False
-        
-        if valid_command:
-            client_send_broadcast(f"{os.getComputerLabel()}: Received {message}")
-        else:
             print("Received a non-valid command")
-
 
 
 def init():
@@ -637,7 +627,7 @@ def init():
 
     parallel.waitForAny(mine, client_receive_broadcast)
 
-    rednet.unhost("QuarryControl")
+    rednet.unhost("QuarryMiner")
 
     print("Closing modem")
 

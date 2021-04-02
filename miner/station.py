@@ -35,7 +35,7 @@ def server_command_control():
             print("Bye")
             break
         
-        if command == "ping":
+        elif command == "ping":
             clients = rednet.lookup("QuarryMiner")
 
             if clients:
@@ -66,7 +66,9 @@ def init():
 
     rednet.host("QuarryControl", "QuarryControl_C2")
 
-    parallel.waitForAny(server_command_control, server_receive_broadcast)
+    server_command_control()
+
+    # parallel.waitForAny(server_command_control, server_receive_broadcast)
 
     rednet.unhost("QuarryControl")
 

@@ -20,6 +20,10 @@ shell.run("wget {{PYTHON_URL}} py")
 print("Running miner via python API!")
 shell.run("py {{REPO_NAME}}/miner/main.py")
 
+print("Removing all rednet host stuff in case...")
+rednet.unhost("QuarryMiner")
+rednet.unhost("QuarryControl")
+
 print("Lua exit!")
 
 print("Run the following to start again without pulling updates:")
