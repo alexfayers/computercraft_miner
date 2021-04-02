@@ -591,10 +591,13 @@ def mine():
 
 def client_send_broadcast(message):
     rednet.broadcast(message.encode(), "QuarryMiner")
+    print(f"Sent message")
 
 
 def client_receive_broadcast():
     global DO_MINE
+
+    comp_id = os.getComputerID()
 
     while True:
         print("Receiving messages...")
@@ -617,6 +620,8 @@ def client_receive_broadcast():
             valid_command = False
         
         if valid_command:
+            print(f"Sleeping {comp_id} seconds before responding...")
+            time.sleep(comp_id)
             client_send_broadcast(f"{os.getComputerLabel()}: Received {message}")
         else:
             print("Received a non-valid command")
