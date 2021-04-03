@@ -586,10 +586,12 @@ def mine_path():
             break
 
         if not go_to_coords(x=x, y=y, z=z, mine=True): # returns false if stop was received
-            break
+            return False
 
         if target_index % (WIDTH_X * 2) == 0: # after each layer
             sort_inventory()
+    
+    return True
 
 
 def return_to_start(skipped_layers, straight_up_override=False):
@@ -856,7 +858,8 @@ def mine():
             notify("Mining", f"Starting mining at y={COORDS['y']}!")
 
             #mine_several_layers()
-            mine_path()
+            if not mine_path(): # we've been told to return
+                DO_MINE = True
         else:
             print("Didn't hit any blocks - all of this area is already mined")
             notify("Mining", "Didn't mine - didn't hit any blocks")
