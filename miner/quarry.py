@@ -112,8 +112,10 @@ def calc_globals():
 
     quarry_depth = START_Y - END_Y
 
+    chunk_size = HOLE_WIDTH_X * HOLE_WIDTH_Z
+
     FUEL_REQUIREMENT = (
-        CHUNK_SIZE * CHUNK_SIZE * (quarry_depth) + quarry_depth + CHUNK_SIZE * 2
+        chunk_size * (quarry_depth) + quarry_depth + chunk_size * 2
     )
 
 
