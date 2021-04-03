@@ -110,6 +110,8 @@ def init():
 
     rednet.host("QuarryControl", "QuarryControl_C2")
 
+    term.clear()
+
     server_command_control()
 
     # parallel.waitForAny(server_command_control, server_receive_broadcast)
