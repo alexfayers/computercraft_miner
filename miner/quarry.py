@@ -99,16 +99,15 @@ if not os.getComputerLabel():
 
 
 def calc_globals():
-    global QUARRY_DEPTH
     global COORDS
     global FUEL_REQUIREMENT
 
-    QUARRY_DEPTH = START_Y - END_Y
-
     COORDS["y"] = START_Y
 
+    quarry_depth = START_Y - END_Y
+
     FUEL_REQUIREMENT = (
-        CHUNK_SIZE * CHUNK_SIZE * (QUARRY_DEPTH) + QUARRY_DEPTH + CHUNK_SIZE * 2
+        CHUNK_SIZE * CHUNK_SIZE * (quarry_depth) + quarry_depth + CHUNK_SIZE * 2
     )
 
 
