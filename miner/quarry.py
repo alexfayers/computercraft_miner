@@ -6,6 +6,7 @@ from cc import os
 from cc import peripheral
 from cc import parallel
 from cc import rednet
+from cc import fs
 
 import math
 import requests
