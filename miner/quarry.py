@@ -598,7 +598,7 @@ def mine_several_layers():
 def mine_path():
     targets = generate_path(HOLE_WIDTH_X, COORDS["y"], END_Y, HOLE_WIDTH_Z)
 
-    notify("Path", repr('\n'.join(targets)))
+    # notify("Path", repr('\n'.join(targets)))
 
     for target_index, target in enumerate(targets):
         x, y, z = target.values()
