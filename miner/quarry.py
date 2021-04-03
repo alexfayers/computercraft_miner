@@ -555,9 +555,9 @@ def mine():
         notify("Ready", "Waiting for start signal")
         
         print("Waiting for start signal...")
-        
+
         while not DO_MINE:
-            # print("Waiting for start signal...")
+            print("Waiting for start signal...") # apparently have to spam something so we can parallelise (maybe otherwise the server gets DOSed?)
             # time.sleep(1)
             pass
 
