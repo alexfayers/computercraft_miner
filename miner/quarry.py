@@ -817,10 +817,15 @@ def client_receive_broadcast():
 
 def init():
 
-
-    go_to_coords(z=4)
-    go_to_coords(z=0)
     turn_to_heading(0)
+    turn_to_heading(1)
+    turn_to_heading(2)
+    turn_to_heading(3)
+    turn_to_heading(1)
+    turn_to_heading(0)
+    #go_to_coords(z=4)
+    #go_to_coords(z=0)
+    #turn_to_heading(0)
 
     exit()
     MODEM_SIDE = "right"
