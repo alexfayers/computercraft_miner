@@ -25,16 +25,16 @@ def server_send_broadcast(message):
 
 
 def update_clients():
-    while True:
-        width, height = term.getSize()
+    
+    width, height = term.getSize()
 
-        orig_x, orig_y = term.getCursorPos()
+    orig_x, orig_y = term.getCursorPos()
 
-        term.setCursorPos(width -2, 0)
+    term.setCursorPos(width -2, 0)
 
-        term.write(str(len(rednet.lookup("QuarryMiner"))))
+    term.write(str(len(rednet.lookup("QuarryMiner"))))
 
-        term.setCursorPos(orig_x, orig_y)
+    term.setCursorPos(orig_x, orig_y)
 
 
 def server_command_control():
@@ -43,6 +43,8 @@ def server_command_control():
     first_loop = True
 
     while True:
+        update_clients()
+        
         if not first_loop:
             command = input("QuarryControl> ")
         else:
@@ -66,7 +68,7 @@ def server_command_control():
             print("Bye")
             break
 
-        elif command == "ping":
+        elif 1==2 and command == "ping":
             clients = rednet.lookup("QuarryMiner")
 
             if clients:
@@ -106,7 +108,7 @@ def init():
 
     rednet.host("QuarryControl", "QuarryControl_C2")
 
-    parallel.waitForAny(server_command_control, update_clients)
+    server_command_control()
 
     # parallel.waitForAny(server_command_control, server_receive_broadcast)
 
