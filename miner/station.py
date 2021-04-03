@@ -2,6 +2,7 @@ from cc import rednet
 from cc import peripheral
 from cc import parallel
 from cc import import_file
+from cc import term
 
 
 def server_receive_broadcast():
@@ -21,6 +22,19 @@ def server_receive_broadcast():
 
 def server_send_broadcast(message):
     rednet.broadcast(message.encode(), "QuarryControl")
+
+
+def update_clients():
+    while True:
+        width, height = term.getSize()
+
+        orig_x, orig_y = term.getCursorPos()
+
+        term.setCursorPos(width -2, y)
+
+        term.write(len(rednet.lookup("QuarryMiner")))
+
+        term.setCursorPos(orig_x, orig_y)
 
 
 def server_command_control():
@@ -92,7 +106,7 @@ def init():
 
     rednet.host("QuarryControl", "QuarryControl_C2")
 
-    server_command_control()
+    paralle.waitForAny(server_command_control, update_clients)
 
     # parallel.waitForAny(server_command_control, server_receive_broadcast)
 
