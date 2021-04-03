@@ -12,6 +12,8 @@ import requests
 import urllib
 import time
 
+# TODO: Coords
+
 FUEL_TYPES = ["lava", "blaze", "coal", "wood"]
 LIGHTING_TYPES = ["torch"]
 CURSED_BLOCKS = ["lava", "water"]
@@ -31,7 +33,6 @@ VALUEABLE_BLOCKS = [
     "root",
 ]  # not coal, we wanna keep that
 
-
 # CONFIG
 CHUNK_SIZE = 8
 REFUEL_THRESH = 20
@@ -39,11 +40,19 @@ REFUEL_THRESH = 20
 START_Y = 64  # inclusive
 END_Y = 60  # non inclusive
 
-TURTLE_SLOTS = 16
 
-# Const type things
+# Const/non-config type things
 
 DO_MINE = False
+
+COORDS = {
+    "x": 0,
+    "y": 0,
+    "z": 0,
+    "heading": 0 # 0 is forwards, 1 is right, 2 is back, 3 is left
+}
+
+TURTLE_SLOTS = 16
 
 # JOIN_KEY = requests.get("http://192.168.1.54:8000/join.key").text
 
@@ -57,12 +66,12 @@ if not os.getComputerLabel():
 
 def calc_globals():
     global QUARRY_DEPTH
-    global CURRENT_Y
+    global COORDS
     global FUEL_REQUIREMENT
 
     QUARRY_DEPTH = START_Y - END_Y
 
-    CURRENT_Y = START_Y
+    COORDS["y"] = START_Y
 
     FUEL_REQUIREMENT = (
         CHUNK_SIZE * CHUNK_SIZE * (QUARRY_DEPTH) + QUARRY_DEPTH + CHUNK_SIZE * 2
@@ -84,10 +93,117 @@ def notify(title, text):
         f"http://192.168.1.54:8081/?text={text}&title={title}"
     )
 
+def turn_right():
+    global COORDS
+
+    turtle.turnRight()
+    COORDS["heading"] = (COORDS["heading"] + 1) % 4
+
+
+def turn_left():
+    global COORDS
+
+    turtle.turnLeft()
+    COORDS["heading"] = (COORDS["heading"] - 1) % 4
+
+
+def forward():
+    global COORDS
+
+    turtle.forward()
+
+    if COORDS["heading"] == 0: # forwards
+        COORDS["z"] += 1
+    elif COORDS["heading"] == 1: # right
+        COORDS["x"] += 1
+    elif COORDS["heading"] == 2: # backwards
+        COORDS["z"] -= 1
+    elif COORDS["heading"] == 3: # left
+        COORDS["x"] -= 1
+
+def up():
+    global COORDS
+
+    turtle.up()
+    COORDS["y"] -= 1
+
+def down():
+    global COORDS
+
+    turtle.down()
+    COORDS["y"] -= 1
+
 
 def turn_around():
-    turtle.turnRight()
-    turtle.turnRight()
+    turn_right()
+    turn_right()
+
+
+def turn_to_heading(target_heading):
+    if target_heading == COORDS["heading"]:
+        return
+
+    while target_heading != COORDS["heading"]:
+        if COORDS["heading"] < target_heading:
+            if abs(COORDS["heading"] - target_heading) < 2:
+                turn_right()
+            else:
+                turn_left()
+        else:
+            if abs(COORDS["heading"] - target_heading) < 2:
+                turn_left()
+            else:
+                turn_right()
+    
+    return
+
+
+def go_to_x(target_x):
+    if target_x != COORDS["x"]:
+        if COORDS["x"] < target_x:
+            turn_to_heading(1) # right
+        else:
+            turn_to_heading(3) # left
+
+        while target_x != COORDS["x"]:
+            forward()
+    
+    return
+
+
+def go_to_y(target_y):
+    while target_y != COORDS["y"]:
+        if COORDS["y"] < target_y:
+            up()
+        else:
+            down()
+
+    return
+
+def go_to_z(target_z):
+    if target_z != COORDS["z"]:
+        if COORDS["z"] < target_z:
+            turn_to_heading(0) # forward
+        else:
+            turn_to_heading(2) # backward
+
+        while target_z != COORDS["z"]:
+            forward()
+    
+    return
+
+
+def go_to_coords(x=None,y=None,z=None):
+    if x:
+        go_to_x(x)
+    
+    if y:
+        go_to_y(y)
+    
+    if z:
+        go_to_z(z)
+
+    return
 
 
 def find_item(search):
@@ -283,41 +399,39 @@ def dig_step():
 
 
 def down_layer():
-    global CURRENT_Y
     hit_block = False
 
     if turtle.detectDown():
         turtle.digDown()
         hit_block = True
 
-    turtle.down()
-    CURRENT_Y = CURRENT_Y - 1
+    down()
 
     return hit_block
 
 
 def travel_line():
     for block in range(CHUNK_SIZE - 1):
-        turtle.forward()
+        forward()
 
 
 def mine_line(current_line_number):
     for block in range(CHUNK_SIZE - 1):
         dig_step()
-        turtle.forward()
+        forward()
 
 
 def next_line(current_line_number):
     if current_line_number % 2 == 0:
-        turtle.turnRight()
+        turn_right()
         dig_step()
-        turtle.forward()
-        turtle.turnRight()
+        forward()
+        turn_right()
     else:
-        turtle.turnLeft()
+        turn_left()
         dig_step()
-        turtle.forward()
-        turtle.turnLeft()
+        forward()
+        turn_left()
 
 
 def mine_layer():
@@ -331,32 +445,30 @@ def mine_layer():
 
 
 def mine_several_layers():
-    while END_Y <= CURRENT_Y:
+    while END_Y <= COORDS["y"]:
         mine_layer()
 
         if CHUNK_SIZE % 2 == 0:
-            turtle.turnRight()
+            turn_right()
         else:
-            turtle.turnLeft()
+            turn_left()
 
         if not DO_MINE:
             print("Stop signal was received, returing to start!")
             break
 
-        print(f"y={CURRENT_Y} complete")
-        notify("Mining", f"y={CURRENT_Y} complete (mining until y={END_Y})")
+        print(f"y={COORDS["y"]} complete")
+        notify("Mining", f"y={COORDS["y"]} complete (mining until y={END_Y})")
 
-        if END_Y >= CURRENT_Y:
+        if END_Y >= COORDS["y"]:
             break
         else:
             down_layer()
 
 
 def return_to_start(skipped_layers, straight_up_override=False):
-    global CURRENT_Y
-
-    corner = (START_Y - CURRENT_Y - skipped_layers) % 4
-    notify("Mining", f"Returning home from y={CURRENT_Y}")
+    corner = (START_Y - COORDS["y"] - skipped_layers) % 4
+    notify("Mining", f"Returning home from y={COORDS["y"]}")
 
     if straight_up_override:
         pass
@@ -364,16 +476,16 @@ def return_to_start(skipped_layers, straight_up_override=False):
         travel_line()
     elif corner == 2:
         travel_line()
-        turtle.turnRight()
+        turn_right()
         travel_line()
     elif corner == 3:
-        turtle.turnRight()
+        turn_right()
         travel_line()
 
-    while CURRENT_Y < START_Y:
-        # if turtle.up():
-        turtle.up()
-        CURRENT_Y = CURRENT_Y + 1
+    while COORDS["y"] < START_Y:
+        # if up():
+        up()
+        
         # else:
         #    print("Failed to go upwards!")
         #    notify("Mining", "Failed returning because of an obstruction, exiting!")
@@ -382,9 +494,9 @@ def return_to_start(skipped_layers, straight_up_override=False):
     if straight_up_override:
         pass
     elif corner == 1:
-        turtle.turnRight()
+        turn_right()
     elif corner == 2:
-        turtle.turnRight()
+        turn_right()
     elif corner == 3:
         turn_around()
 
@@ -392,7 +504,7 @@ def return_to_start(skipped_layers, straight_up_override=False):
 def skip_layers():
     hit_block = False
     skipped = 0
-    while END_Y <= CURRENT_Y:
+    while END_Y <= COORDS["y"]:
         hit_block = down_layer()
         if hit_block:
             print("Hit block, stopping layer skip")
@@ -612,8 +724,8 @@ def mine():
         hit_block, skipped_layers = skip_layers()
 
         if hit_block:
-            print(f"Starting properly at y={CURRENT_Y}!")
-            notify("Mining", f"Starting mining at y={CURRENT_Y}!")
+            print(f"Starting properly at y={COORDS["y"]}!")
+            notify("Mining", f"Starting mining at y={COORDS["y"]}!")
 
             mine_several_layers()
         else:
@@ -694,6 +806,13 @@ def client_receive_broadcast():
 
 
 def init():
+
+
+    go_to_coords(x=2, z=4)
+    go_to_coords(x=0, z=0)
+    turn_to_heading(0)
+
+    exit()
     MODEM_SIDE = "right"
 
     if not rednet.isOpen(MODEM_SIDE):
