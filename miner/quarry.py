@@ -894,6 +894,7 @@ def mine():
             notify("Mining", "Didn't mine - didn't hit any blocks")
 
         print("Returning to start...")
+        notify("Mining", "Returning home")
         go_to_coords(x=0, y=START_Y, z=0, mine=True)
 
         turn_to_heading(0)
