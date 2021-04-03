@@ -141,7 +141,7 @@ def up(mine=False):
         while check_if_gravity_block_above():
             turtle.digUp()
 
-        if turtle.detect():
+        if turtle.detectUp():
             turtle.digUp()
         
     turtle.up()
