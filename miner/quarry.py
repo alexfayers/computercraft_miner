@@ -63,6 +63,8 @@ COORDS = {
 TURTLE_SLOTS = 16
 
 def generate_path(width_x, start_y, end_y, width_z):
+    width_z -= 1
+    
     targets = []
 
     if start_y > end_y:
