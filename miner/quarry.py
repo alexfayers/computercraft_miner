@@ -963,12 +963,12 @@ def client_receive_broadcast():
             )
         elif message == "kill":
             notify("KILL", "Stopping execution via an exit")  # add cleanup here maybe
-            exit()
+            return 
         elif message == "update":
             notify("Update", "Stopping execution and updating")
             with fs.open('/miner_update', 'w') as f:
                 f.writeLine('placeholder')
-            exit()
+            return
         elif message == "start":
             DO_MINE = True
         elif message == "stop":
@@ -980,7 +980,6 @@ def client_receive_broadcast():
 
 
 def init():
-
     MODEM_SIDE = "right"
 
     if not rednet.isOpen(MODEM_SIDE):
