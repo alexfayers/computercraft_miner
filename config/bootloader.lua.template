@@ -2,7 +2,7 @@
 
 update_needed = true
 
-while update_needed == true then
+while update_needed == true do
 
     -- cleanup
     print("Clearing up previous py install if exists...")
