@@ -204,13 +204,13 @@ def go_to_z(target_z):
 
 
 def go_to_coords(x=None,y=None,z=None):
-    if x:
+    if x is not None:
         go_to_x(x)
     
-    if y:
+    if y is not None:
         go_to_y(y)
     
-    if z:
+    if z is not None:
         go_to_z(z)
 
     return
