@@ -655,21 +655,18 @@ def return_to_start(skipped_layers, straight_up_override=False):
 
 def skip_layers(target_y):
     hit_block = False
-    skipped = 0
     while COORDS["y"] > target_y :
         hit_block = down_layer()
         if hit_block:
             print("Hit block, stopping layer skip")
             break
-        skipped += 1
     
     while COORDS["y"] < target_y :
         hit_block = up_layer()
         if hit_block:
             print("Hit block, stopping layer skip")
             break
-        skipped += 1
-    return hit_block, skipped
+    return hit_block
 
 
 def locate_item_in_network(search):
@@ -886,12 +883,12 @@ def mine():
             print("Starting layer skip...")
             notify("Mining", f"Skipping to non-home start position (y={START_Y})")
             go_to_coords(y=START_Y, mine=True)
+            hit_block = True
         elif COORDS["y"] != END_Y:
             print("Starting floor detection...")
-            hit_block, skipped_layers = skip_layers(END_Y)
+            hit_block = skip_layers(END_Y)
         else:
             hit_block = True
-            skipped_layers = 0
 
         if hit_block:
             print(f"Starting properly at y={COORDS['y']}!")
