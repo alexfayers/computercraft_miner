@@ -1,28 +1,48 @@
 -- Bootloader to fetch latest data from github and run it
 
--- cleanup
-print("Clearing up previous py install if exists...")
-shell.run("rm /py")
+update_needed = true
 
-print("Installing github module...")
-shell.run("pastebin run p8PJVxC4")
+while update_needed == true then
 
-print("Cloning repo...")
+    -- cleanup
+    print("Clearing up previous py install if exists...")
+    shell.run("rm /py")
 
-gittoken = http.get("{{GIT_TOKEN_URL}}").readAll()
+    print("Installing github module...")
+    shell.run("pastebin run p8PJVxC4")
 
-shell.run(string.format("github auth {{GIT_USERNAME}} %s", gittoken))
-shell.run("github clone {{REPO_PATH}} -b main -a {{GIT_USERNAME}}")
+    print("Cloning repo...")
 
-print("Fetching python...")
-shell.run("wget {{PYTHON_URL}} py")
+    gittoken = http.get("{{GIT_TOKEN_URL}}").readAll()
 
-print("Running miner via python API!")
-shell.run("py {{REPO_NAME}}/miner/main.py")
+    shell.run(string.format("github auth {{GIT_USERNAME}} %s", gittoken))
+    shell.run("github clone {{REPO_PATH}} -b main -a {{GIT_USERNAME}}")
 
-print("Removing all rednet host stuff in case...")
-rednet.unhost("QuarryMiner")
-rednet.unhost("QuarryControl")
+    print("Fetching python...")
+    shell.run("wget {{PYTHON_URL}} py")
+
+    print("Running miner via python API!")
+    shell.run("py {{REPO_NAME}}/miner/main.py")
+
+    print("Removing all rednet host stuff in case...")
+    rednet.unhost("QuarryMiner")
+    rednet.unhost("QuarryControl")
+
+    update_file_exists = fs.exists("/miner_update")
+
+    if update_file_exists == true then
+        fs.delete("/miner_update")	
+    end
+
+    successful_run_exists = fs.exists("/miner_success")
+
+    if successful_run_exists == true then
+        fs.delete("/miner_success")	
+    end
+
+    update_needed = update_file_exists and successful_run_exists
+
+end
 
 print("Lua exit!")
 

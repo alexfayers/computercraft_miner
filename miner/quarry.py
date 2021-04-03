@@ -963,6 +963,11 @@ def client_receive_broadcast():
         elif message == "kill":
             notify("KILL", "Stopping execution via an exit")  # add cleanup here maybe
             exit()
+        elif message == "update":
+            notify("Update", "Stopping execution and updating")
+            with fs.open('/miner_update', 'w') as f:
+                f.writeLine('placeholder')
+            exit()
         elif message == "start":
             DO_MINE = True
         elif message == "stop":

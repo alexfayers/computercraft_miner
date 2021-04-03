@@ -1,5 +1,6 @@
 from cc import is_turtle, turtle
 from cc import import_file
+from cc import fs
 
 
 if is_turtle():
@@ -17,3 +18,7 @@ else:
     station.init()
 
 print("Python exit!")
+
+# write the success file
+with fs.open('/miner_success', 'w') as f:
+    f.writeLine('placeholder')
