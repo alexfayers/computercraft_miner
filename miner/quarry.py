@@ -680,6 +680,9 @@ def client_receive_broadcast():
                 "Config",
                 "Got start_opts but incorrect number of options or invalid options.",
             )
+        elif message == "kill":
+            notify("KILL", "Stopping execution via an exit") # add cleanup here maybe
+            exit()
         elif message == "start":
             DO_MINE = True
         elif message == "stop":
