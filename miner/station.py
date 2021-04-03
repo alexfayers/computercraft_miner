@@ -3,6 +3,7 @@ from cc import peripheral
 from cc import parallel
 from cc import import_file
 from cc import term
+from cc import colors
 
 
 def server_receive_broadcast():
@@ -26,15 +27,16 @@ def server_send_broadcast(message):
 
 def update_clients():
     
-    width, height = term.getSize()
-
     orig_x, orig_y = term.getCursorPos()
 
     status_message = f"Miners available: {len(rednet.lookup('QuarryMiner'))}"
 
-    term.setCursorPos(width - len(status_message) - 1, 1)
+    orig_bg = term.getBackgroundColour()
+    term.setBackgroundColour(colours.blue)
+    term.setCursorPos(1, 1)
     term.clearLine()
     term.write(status_message)
+    term.setBackgroundColour(orig_bg)
 
     term.setCursorPos(orig_x, orig_y)
 
@@ -47,11 +49,13 @@ def server_command_control():
     while True:
         update_clients()
         
-        if not first_loop:
+        if not first_loop or 1==1:
             command = input("QuarryControl> ")
         else:
             command = "ping"
             first_loop = False
+        
+        update_clients()
 
         if command == "help":
             print("start - Start all miners with default params")
@@ -91,6 +95,9 @@ def server_command_control():
             valid in command for valid in valid_commands
         ):  # if any of the valids are a substring of the input
             server_send_broadcast(command)
+        
+        elif command == "":
+            pass
 
         else:
             print("Invalid command. Valid commands are:")
