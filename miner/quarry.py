@@ -576,6 +576,7 @@ def mine():
                 f"Need to refuel - current fuel is {cur_fuel} and requirement is {FUEL_REQUIREMENT}",
             )
 
+        do_re_wait = False
         while cur_fuel < FUEL_REQUIREMENT:
             print(f"REFUELING ({cur_fuel})!!!")
             if not locate_and_get_from_network("coal", target_fuel_count):
@@ -584,7 +585,7 @@ def mine():
                     f"Not enough fuel in network to reach requirement (have {cur_fuel}), exiting!",
                 )
                 print("Not enough fuel")
-                exit()
+                do_re_wait = True
             refuel_from_inventory()
             cur_fuel = turtle.getFuelLevel()
 
@@ -592,8 +593,11 @@ def mine():
                 # couldnt refuel
                 print("Failed to refuel")
                 notify("Refueling", "Failed to refuel to requirement, exiting!")
-                exit()
+                do_re_wait = True
             prev_fuel = cur_fuel
+
+        if do_re_wait == True:
+            continue
 
         print("Got enough fuel, we're off!")
         # notify("Refueling", "Refueling done!")
