@@ -43,7 +43,7 @@ WIDTH_Z = 8
 REFUEL_THRESH = 20
 
 START_Y = 64  # inclusive
-END_Y = 63  # non inclusive
+END_Y = 62  # non inclusive
 
 
 # Const/non-config type things
@@ -73,12 +73,12 @@ def generate_path(width_x, start_y, end_y, width_z):
             targets.append({
             "x": x,
             "y": y,
-            "z": width_z
+            "z": width_z - 1
             })
             targets.append({
             "x": x + 1,
             "y": y,
-            "z": width_z
+            "z": width_z - 1
             })
             targets.append({
             "x": x + 1,
