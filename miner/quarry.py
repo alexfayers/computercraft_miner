@@ -203,9 +203,9 @@ def go_to_x(target_x, mine=False):
 def go_to_y(target_y, mine=False):
     while target_y != COORDS["y"]:
         if COORDS["y"] < target_y:
-            down(mine=mine)
-        else:
             up(mine=mine)
+        else:
+            down(mine=mine)
 
     return
 
@@ -848,9 +848,9 @@ def client_receive_broadcast():
 
 def init():
 
-    go_to_coords(x=5, y=63, z=2, mine=True)
+    go_to_coords(x=5, y=-1, z=2, mine=True)
     print("RETURN NOW")
-    go_to_coords(x=0, y=64, z=0, mine=True)
+    go_to_coords(x=0, y=0, z=0, mine=True)
     turn_to_heading(0)
 
     exit()
