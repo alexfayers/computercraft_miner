@@ -70,29 +70,43 @@ def generate_path(width_x, start_y, end_y, width_z):
     else:
         y_diff = 1
 
-    for y in range(start_y, end_y - y_diff, y_diff):
-        for x in range(0, (width_x), 2):
-            print(x)
-            targets.append({
-            "x": x,
-            "y": y,
-            "z": 0
-            })
-            targets.append({
-            "x": x,
-            "y": y,
-            "z": width_z - 1
-            })
-            targets.append({
-            "x": x + 1,
-            "y": y,
-            "z": width_z - 1
-            })
-            targets.append({
-            "x": x + 1,
-            "y": y,
-            "z": 0
-            })
+    for y in range(start_y, end_y + y_diff, y_diff):
+
+        x_diff = 1
+
+        for _ in range(2):
+            x_diff = -x_diff
+            x_range = range(0, width_x, 1)
+
+            if x_diff > 0:
+                if y == end_y:
+                    break
+                y += y_diff
+                x_range = range(width_x-1, 0, -1)
+                
+            for x in x_range:
+                for internal_i in range(2):
+                    targets.append({
+                    "x": x,
+                    "y": y,
+                    "z": None
+                    })
+
+    last_zs = []
+    for i, target in enumerate(targets):
+        if i == 0:
+            targets[i]['z'] = 0
+            last_zs.append(0)
+        elif i == 1:
+            targets[i]['z'] = width_z
+            last_zs.append(width_z)
+        else:
+            if last_zs.pop(0) == width_z:
+                targets[i]['z'] = 0
+                last_zs.append(0)
+            else:
+                targets[i]['z'] = width_z
+                last_zs.append(width_z)
 
     return targets
 
