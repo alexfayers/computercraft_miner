@@ -935,7 +935,7 @@ def client_receive_broadcast():
             DO_MINE = True
         elif message == "stop":
             if DO_MINE:
-                notify("Mining", "Stop received, returning after this layer")
+                notify("Mining", "Stop received, returning home")
             DO_MINE = False
         else:
             print("Received a non-valid command")
