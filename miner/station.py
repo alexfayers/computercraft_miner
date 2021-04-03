@@ -30,15 +30,17 @@ def update_clients():
 
     orig_x, orig_y = term.getCursorPos()
 
-    term.setCursorPos(width - 2, 1)
+    status_message = f"Miners available: {len(rednet.lookup('QuarryMiner'))}"
 
-    term.write(str(len(rednet.lookup("QuarryMiner"))))
+    term.setCursorPos(width - len(status_message) - 1, 1)
+    term.clearLine()
+    term.write(status_message)
 
     term.setCursorPos(orig_x, orig_y)
 
 
 def server_command_control():
-    valid_commands = ["start", "start_opts", "stop", "kill"]
+    valid_commands = ["start", "start_opts", "stop", "kill", "help", "exit"]
 
     first_loop = True
 
