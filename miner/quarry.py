@@ -597,6 +597,7 @@ def mine():
             prev_fuel = cur_fuel
 
         if do_re_wait == True:
+            DO_MINE = False
             continue
 
         print("Got enough fuel, we're off!")
