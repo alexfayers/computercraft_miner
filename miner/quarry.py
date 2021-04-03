@@ -203,9 +203,9 @@ def go_to_x(target_x, mine=False):
 def go_to_y(target_y, mine=False):
     while target_y != COORDS["y"]:
         if COORDS["y"] < target_y:
-            up(mine=mine)
-        else:
             down(mine=mine)
+        else:
+            up(mine=mine)
 
     return
 
