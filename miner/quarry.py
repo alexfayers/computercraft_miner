@@ -111,8 +111,15 @@ def turn_left():
     print(repr(COORDS))
 
 
-def forward():
+def forward(mine=False):
     global COORDS
+
+    if mine == True:
+        while check_if_gravity_block_in_front():
+            turtle.dig()
+
+        if turtle.detect():
+            turtle.dig()
 
     turtle.forward()
 
@@ -127,16 +134,28 @@ def forward():
 
     print(repr(COORDS))
 
-def up():
+def up(mine=False):
     global COORDS
 
+    if mine == True:
+        while check_if_gravity_block_above():
+            turtle.digUp()
+
+        if turtle.detect():
+            turtle.digUp()
+        
     turtle.up()
-    COORDS["y"] -= 1
+    COORDS["y"] += 1
 
     print(repr(COORDS))
 
-def down():
+
+def down(mine=False):
     global COORDS
+
+    if mine == True:
+        if turtle.detectDown():
+            turtle.digDown()
 
     turtle.down()
     COORDS["y"] -= 1
@@ -168,7 +187,7 @@ def turn_to_heading(target_heading):
     return
 
 
-def go_to_x(target_x):
+def go_to_x(target_x, mine=False):
     if target_x != COORDS["x"]:
         if COORDS["x"] < target_x:
             turn_to_heading(1) # right
@@ -176,21 +195,22 @@ def go_to_x(target_x):
             turn_to_heading(3) # left
 
         while target_x != COORDS["x"]:
-            forward()
+            forward(mine=mine)
     
     return
 
 
-def go_to_y(target_y):
+def go_to_y(target_y, mine=False):
     while target_y != COORDS["y"]:
         if COORDS["y"] < target_y:
-            up()
+            up(mine=mine)
         else:
-            down()
+            down(mine=mine)
 
     return
 
-def go_to_z(target_z):
+
+def go_to_z(target_z, mine=False):
     if target_z != COORDS["z"]:
         if COORDS["z"] < target_z:
             turn_to_heading(0) # forward
@@ -198,20 +218,20 @@ def go_to_z(target_z):
             turn_to_heading(2) # backward
 
         while target_z != COORDS["z"]:
-            forward()
+            forward(mine=mine)
     
     return
 
 
-def go_to_coords(x=None,y=None,z=None):
+def go_to_coords(x=None,y=None,z=None, mine=False):
     if x is not None:
-        go_to_x(x)
+        go_to_x(x, mine=mine)
     
     if y is not None:
-        go_to_y(y)
+        go_to_y(y, mine=mine)
     
     if z is not None:
-        go_to_z(z)
+        go_to_z(z, mine=mine)
 
     return
 
@@ -386,7 +406,7 @@ def status_check():
     check_fuel()
 
 
-def check_if_gravity_block():
+def check_if_gravity_block_in_front():
     for block in GRAVITY_BLOCKS:
         info = turtle.inspect()
 
@@ -397,8 +417,19 @@ def check_if_gravity_block():
     return False
 
 
+def check_if_gravity_block_above():
+    for block in GRAVITY_BLOCKS:
+        info = turtle.inspectUp()
+
+        if info is not None and block.encode() in info[b"name"]:
+            print("Gravity block!")
+
+            return True
+    return False
+
+
 def dig_step():
-    while check_if_gravity_block():
+    while check_if_gravity_block_in_front():
         turtle.dig()
 
     if turtle.detect():
@@ -817,9 +848,9 @@ def client_receive_broadcast():
 
 def init():
 
-    go_to_coords(x=5, z=2)
+    go_to_coords(x=5, z=2, mine=True)
     print("RETURN NOW")
-    go_to_coords(x=0, z=0)
+    go_to_coords(x=0, z=0, mine=True)
     #turn_to_heading(0)
 
     exit()
