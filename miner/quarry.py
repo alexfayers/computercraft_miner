@@ -457,8 +457,8 @@ def mine_several_layers():
             print("Stop signal was received, returing to start!")
             break
 
-        print(f"y={COORDS["y"]} complete")
-        notify("Mining", f"y={COORDS["y"]} complete (mining until y={END_Y})")
+        print(f"y={COORDS['y']} complete")
+        notify("Mining", f"y={COORDS['y']} complete (mining until y={END_Y})")
 
         if END_Y >= COORDS["y"]:
             break
@@ -468,7 +468,7 @@ def mine_several_layers():
 
 def return_to_start(skipped_layers, straight_up_override=False):
     corner = (START_Y - COORDS["y"] - skipped_layers) % 4
-    notify("Mining", f"Returning home from y={COORDS["y"]}")
+    notify("Mining", f"Returning home from y={COORDS['y']}")
 
     if straight_up_override:
         pass
@@ -724,8 +724,8 @@ def mine():
         hit_block, skipped_layers = skip_layers()
 
         if hit_block:
-            print(f"Starting properly at y={COORDS["y"]}!")
-            notify("Mining", f"Starting mining at y={COORDS["y"]}!")
+            print(f"Starting properly at y={COORDS['y']}!")
+            notify("Mining", f"Starting mining at y={COORDS['y']}!")
 
             mine_several_layers()
         else:
