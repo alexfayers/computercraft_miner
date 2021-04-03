@@ -940,8 +940,8 @@ def client_receive_broadcast():
         if "start_opts" in message:
             message = message.split(" ")
 
-            if type(message) == list and len(message) >= 4:
-                if all(item.isdigit() for item in message[1:4]):
+            if type(message) == list and len(message) >= 5:
+                if all(item.isdigit() for item in message[1:5]):
                     START_Y = int(message[1])
                     END_Y = int(message[2])
                     HOLE_WIDTH_X = int(message[3])
