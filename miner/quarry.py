@@ -98,6 +98,8 @@ def turn_right():
 
     turtle.turnRight()
     COORDS["heading"] = (COORDS["heading"] + 1) % 4
+    
+    print(repr(COORDS))
 
 
 def turn_left():
@@ -105,6 +107,8 @@ def turn_left():
 
     turtle.turnLeft()
     COORDS["heading"] = (COORDS["heading"] - 1) % 4
+
+    print(repr(COORDS))
 
 
 def forward():
@@ -121,17 +125,23 @@ def forward():
     elif COORDS["heading"] == 3: # left
         COORDS["x"] -= 1
 
+    print(repr(COORDS))
+
 def up():
     global COORDS
 
     turtle.up()
     COORDS["y"] -= 1
 
+    print(repr(COORDS))
+
 def down():
     global COORDS
 
     turtle.down()
     COORDS["y"] -= 1
+
+    print(repr(COORDS))
 
 
 def turn_around():
