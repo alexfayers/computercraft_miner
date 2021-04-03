@@ -1,6 +1,6 @@
 # uses gps to go to the correct place so need a modem
 
-from cc import is_turtle, turtle
+from cc import turtle
 from cc import term
 from cc import os
 from cc import peripheral
@@ -556,7 +556,7 @@ def mine():
 
         while not DO_MINE:
             print("Waiting for start signal...")
-            time.sleep(1)
+            # time.sleep(1)
             pass
 
         print("Received mine signal!")
