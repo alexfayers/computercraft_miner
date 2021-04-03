@@ -273,7 +273,7 @@ def calc_distance_from_coords(x=None, y=None, z=None):
     if all(coord is not None for coord in [x,y,z]):
         distance = 0
 
-        for index, coord in enumerate(COORDS[:4]):
+        for index, coord in enumerate([COORDS["x"], COORDS["y"], COORDS["z"]]):
             distance = distance + abs(coord - [x,y,z][index])
         
         return distance
