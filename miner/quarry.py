@@ -818,7 +818,7 @@ def client_receive_broadcast():
 def init():
 
     go_to_coords(x=5, z=2)
-    #go_to_coords(z=0)
+    go_to_coords(x=0, z=0)
     #turn_to_heading(0)
 
     exit()
