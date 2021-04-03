@@ -31,12 +31,14 @@ while update_needed == true do
     update_file_exists = fs.exists("/miner_update")
 
     if update_file_exists == true then
+        print("Update file exists")
         fs.delete("/miner_update")	
     end
 
     successful_run_exists = fs.exists("/miner_success")
 
     if successful_run_exists == true then
+        print("Success file exists")
         fs.delete("/miner_success")	
     end
 
