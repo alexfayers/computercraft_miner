@@ -632,7 +632,7 @@ def return_to_start(skipped_layers, straight_up_override=False):
 def skip_layers():
     hit_block = False
     skipped = 0
-    while END_Y <= COORDS["y"]:
+    while COORDS["y"] > END_Y :
         hit_block = down_layer()
         if hit_block:
             print("Hit block, stopping layer skip")
