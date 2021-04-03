@@ -32,7 +32,7 @@ def update_clients():
 
         term.setCursorPos(width -2, 0)
 
-        term.write(len(rednet.lookup("QuarryMiner")))
+        term.write(str(len(rednet.lookup("QuarryMiner"))))
 
         term.setCursorPos(orig_x, orig_y)
 
