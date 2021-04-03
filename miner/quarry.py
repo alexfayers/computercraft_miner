@@ -832,7 +832,8 @@ def mine():
             print(f"Starting properly at y={COORDS['y']}!")
             notify("Mining", f"Starting mining at y={COORDS['y']}!")
 
-            mine_several_layers()
+            #mine_several_layers()
+            mine_path()
         else:
             print("Didn't hit any blocks - all of this area is already mined")
             notify("Mining", "Didn't mine - didn't hit any blocks")
