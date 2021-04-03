@@ -36,8 +36,8 @@ VALUEABLE_BLOCKS = [
 # CONFIG
 CHUNK_SIZE = 8
 
-WIDTH_X = 8
-WIDTH_Z = 8
+HOLE_WIDTH_X = 8
+HOLE_WIDTH_Z = 8
 
 
 REFUEL_THRESH = 20
@@ -577,7 +577,7 @@ def mine_several_layers():
             down_layer()
 
 def mine_path():
-    targets = generate_path(WIDTH_X, COORDS["y"], END_Y, WIDTH_Z)
+    targets = generate_path(HOLE_WIDTH_X, COORDS["y"], END_Y, HOLE_WIDTH_Z)
 
     for target_index, target in enumerate(targets):
         x, y, z = target.values()
@@ -588,7 +588,7 @@ def mine_path():
         if not go_to_coords(x=x, y=y, z=z, mine=True): # returns false if stop was received
             return False
 
-        if target_index % (WIDTH_X * 2) == 0: # after each layer
+        if target_index % (HOLE_WIDTH_X * 2) == 0: # after each layer
             sort_inventory()
     
     return True
@@ -893,6 +893,8 @@ def client_send_broadcast(message):
 def client_receive_broadcast():
     global DO_MINE
     global CHUNK_SIZE
+    global HOLE_WIDTH_X
+    global HOLE_WIDTH_Z
     global START_Y
     global END_Y
 
@@ -914,13 +916,15 @@ def client_receive_broadcast():
                 if all(item.isdigit() for item in message[1:4]):
                     START_Y = int(message[1])
                     END_Y = int(message[2])
-                    CHUNK_SIZE = int(message[3])
+                    HOLE_WIDTH_X = int(message[3])
+                    HOLE_WIDTH_Z = int(message[4])
+                    # CHUNK_SIZE = int(message[3])
 
                     calc_globals()
                     DO_MINE = True
                     notify(
                         "Config",
-                        f"Mining from {START_Y} to {END_Y} with a size of {CHUNK_SIZE}",
+                        f"Mining from {START_Y} to {END_Y} with a size of {HOLE_WIDTH_X}x{HOLE_WIDTH_Z}",
                     )
                     continue
 
