@@ -586,6 +586,7 @@ def mine():
                 )
                 print("Not enough fuel")
                 do_re_wait = True
+                break
             refuel_from_inventory()
             cur_fuel = turtle.getFuelLevel()
 
@@ -594,6 +595,7 @@ def mine():
                 print("Failed to refuel")
                 notify("Refueling", "Failed to refuel to requirement, exiting!")
                 do_re_wait = True
+                break
             prev_fuel = cur_fuel
 
         if do_re_wait == True:
