@@ -64,11 +64,11 @@ def generate_path(width_x, start_y, end_y, width_z):
     targets = []
 
     if start_y > end_y:
-        y_diff = 1
-    else:
         y_diff = -1
+    else:
+        y_diff = 1
 
-    for y in range(start_y, end_y + y_diff, y_diff):
+    for y in range(start_y, end_y - y_diff, y_diff):
         for x in range(0, (width_x), 2):
             print(x)
             targets.append({
