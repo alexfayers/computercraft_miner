@@ -873,8 +873,13 @@ def mine():
         # notify("Refueling", "Refueling done!")
 
         # notify("Mining", "Starting floor detection")
-        print("Starting floor detection...")
-        hit_block, skipped_layers = skip_layers()
+
+        if COORDS["y"] != END_Y:
+            print("Starting floor detection...")
+            hit_block, skipped_layers = skip_layers()
+        else:
+            hit_block = True
+            skipped_layers = 0
 
         if hit_block:
             print(f"Starting properly at y={COORDS['y']}!")
