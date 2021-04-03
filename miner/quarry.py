@@ -886,10 +886,9 @@ def mine():
             print("Starting layer skip...")
             notify("Mining", f"Skipping to non-home start position (y={START_Y})")
             go_to_coords(y=START_Y, mine=True)
-
-        if COORDS["y"] != END_Y:
+        elif COORDS["y"] != END_Y:
             print("Starting floor detection...")
-            hit_block, skipped_layers = skip_layers()
+            hit_block, skipped_layers = skip_layers(END_Y)
         else:
             hit_block = True
             skipped_layers = 0
