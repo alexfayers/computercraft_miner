@@ -26,9 +26,9 @@ ch.setFormatter(formatter)
 logger.addHandler(ch)
 
 
-
 hostName = "0.0.0.0"
 hostPort = 8081
+
 
 class MyServer(BaseHTTPRequestHandler):
     def log_message(self, format, *args):
@@ -44,13 +44,14 @@ class MyServer(BaseHTTPRequestHandler):
         self._set_headers()
         self.wfile.write(f"ack".encode())
 
-        url = f'http://a.com{self.path}'
+        url = f"http://a.com{self.path}"
         parsed = urlparse.urlparse(url)
 
         query = parse_qs(parsed.query)
 
         if "text" in query and "title" in query:
             logger.info(f"{''.join(query['title'])} - {''.join(query['text'])}")
+
 
 myServer = HTTPServer((hostName, hostPort), MyServer)
 logger.info(f"Started notification server on {hostName}:{hostPort}")

@@ -49,7 +49,7 @@ COORDS = {
     "x": 0,
     "y": 0,
     "z": 0,
-    "heading": 0 # 0 is forwards, 1 is right, 2 is back, 3 is left
+    "heading": 0,  # 0 is forwards, 1 is right, 2 is back, 3 is left
 }
 
 TURTLE_SLOTS = 16
@@ -85,20 +85,19 @@ def notify(title, text):
     title = urllib.parse.quote_plus(title)
     text = urllib.parse.quote_plus(text)
 
-    #res = requests.get(
+    # res = requests.get(
     #    f"https://joinjoaomgcd.appspot.com/_ah/api/messaging/v1/sendPush?deviceId=group.all&text={text}&title={title}&apikey={JOIN_KEY}"
-    #)
+    # )
 
-    res = requests.get(
-        f"http://192.168.1.54:8081/?text={text}&title={title}"
-    )
+    res = requests.get(f"http://192.168.1.54:8081/?text={text}&title={title}")
+
 
 def turn_right():
     global COORDS
 
     turtle.turnRight()
     COORDS["heading"] = (COORDS["heading"] + 1) % 4
-    
+
     print(repr(COORDS))
 
 
@@ -123,16 +122,17 @@ def forward(mine=False):
 
     turtle.forward()
 
-    if COORDS["heading"] == 0: # forwards
+    if COORDS["heading"] == 0:  # forwards
         COORDS["z"] += 1
-    elif COORDS["heading"] == 1: # right
+    elif COORDS["heading"] == 1:  # right
         COORDS["x"] += 1
-    elif COORDS["heading"] == 2: # backwards
+    elif COORDS["heading"] == 2:  # backwards
         COORDS["z"] -= 1
-    elif COORDS["heading"] == 3: # left
+    elif COORDS["heading"] == 3:  # left
         COORDS["x"] -= 1
 
     print(repr(COORDS))
+
 
 def up(mine=False):
     global COORDS
@@ -143,7 +143,7 @@ def up(mine=False):
 
         if turtle.detectUp():
             turtle.digUp()
-        
+
     turtle.up()
     COORDS["y"] += 1
 
@@ -183,20 +183,20 @@ def turn_to_heading(target_heading):
                 turn_left()
             else:
                 turn_right()
-    
+
     return
 
 
 def go_to_x(target_x, mine=False):
     if target_x != COORDS["x"]:
         if COORDS["x"] < target_x:
-            turn_to_heading(1) # right
+            turn_to_heading(1)  # right
         else:
-            turn_to_heading(3) # left
+            turn_to_heading(3)  # left
 
         while target_x != COORDS["x"]:
             forward(mine=mine)
-    
+
     return
 
 
@@ -213,23 +213,23 @@ def go_to_y(target_y, mine=False):
 def go_to_z(target_z, mine=False):
     if target_z != COORDS["z"]:
         if COORDS["z"] < target_z:
-            turn_to_heading(0) # forward
+            turn_to_heading(0)  # forward
         else:
-            turn_to_heading(2) # backward
+            turn_to_heading(2)  # backward
 
         while target_z != COORDS["z"]:
             forward(mine=mine)
-    
+
     return
 
 
-def go_to_coords(x=None,y=None,z=None, mine=False):
+def go_to_coords(x=None, y=None, z=None, mine=False):
     if x is not None:
         go_to_x(x, mine=mine)
-    
+
     if y is not None:
         go_to_y(y, mine=mine)
-    
+
     if z is not None:
         go_to_z(z, mine=mine)
 
@@ -526,7 +526,7 @@ def return_to_start(skipped_layers, straight_up_override=False):
     while COORDS["y"] < START_Y:
         # if up():
         up()
-        
+
         # else:
         #    print("Failed to go upwards!")
         #    notify("Mining", "Failed returning because of an obstruction, exiting!")
@@ -706,11 +706,13 @@ def mine():
 
     while True:
         notify("Ready", "Waiting for start signal")
-        
+
         print("Waiting for start signal...")
 
         while not DO_MINE:
-            print("Waiting for start signal...") # apparently have to spam something so we can parallelise (maybe otherwise the server gets DOSed?)
+            print(
+                "Waiting for start signal..."
+            )  # apparently have to spam something so we can parallelise (maybe otherwise the server gets DOSed?)
             # time.sleep(1)
             pass
 
@@ -834,7 +836,7 @@ def client_receive_broadcast():
                 "Got start_opts but incorrect number of options or invalid options.",
             )
         elif message == "kill":
-            notify("KILL", "Stopping execution via an exit") # add cleanup here maybe
+            notify("KILL", "Stopping execution via an exit")  # add cleanup here maybe
             exit()
         elif message == "start":
             DO_MINE = True

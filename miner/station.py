@@ -63,7 +63,10 @@ def server_command_control():
                 print("No clients available")
 
         elif command == "kill":
-            if input("Are you sure you want to kill all clients? (y/N): ").lower() == "y":
+            if (
+                input("Are you sure you want to kill all clients? (y/N): ").lower()
+                == "y"
+            ):
                 server_send_broadcast(command)
 
         elif any(
