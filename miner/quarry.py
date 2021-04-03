@@ -43,7 +43,7 @@ WIDTH_Z = 8
 REFUEL_THRESH = 20
 
 START_Y = 64  # inclusive
-END_Y = 60  # non inclusive
+END_Y = 63  # non inclusive
 
 
 # Const/non-config type things
@@ -62,7 +62,7 @@ TURTLE_SLOTS = 16
 def generate_path(width_x, start_y, end_y, width_z):
     targets = []
 
-    for y in range(START_Y, END_Y - 1, -1):
+    for y in range(start_y, end_y - 1, -1):
         for x in range(0, (width_x), 2):
             print(x)
             targets.append({
