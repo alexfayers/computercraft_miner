@@ -45,7 +45,7 @@ TURTLE_SLOTS = 16
 
 DO_MINE = False
 
-JOIN_KEY = requests.get("http://192.168.1.54:8000/join.key").text
+# JOIN_KEY = requests.get("http://192.168.1.54:8000/join.key").text
 
 term.clear()
 
@@ -53,6 +53,7 @@ if not os.getComputerLabel():
     os.setComputerLabel(f"Quarrybot_{os.getComputerID()}")
 
 ## functions
+
 
 def calc_globals():
     global QUARRY_DEPTH
@@ -75,8 +76,12 @@ def notify(title, text):
     title = urllib.parse.quote_plus(title)
     text = urllib.parse.quote_plus(text)
 
+    #res = requests.get(
+    #    f"https://joinjoaomgcd.appspot.com/_ah/api/messaging/v1/sendPush?deviceId=group.all&text={text}&title={title}&apikey={JOIN_KEY}"
+    #)
+
     res = requests.get(
-        f"https://joinjoaomgcd.appspot.com/_ah/api/messaging/v1/sendPush?deviceId=group.all&text={text}&title={title}&apikey={JOIN_KEY}"
+        f"http://192.168.1.54:8081/?text={text}&title={title}"
     )
 
 
@@ -239,10 +244,10 @@ def deposit_valueables_into_network():
             # sort_inventory()
             break
 
-    desposit_list = ''
+    desposit_list = ""
     for deposit in desposits:
         desposit_list += f"{deposit[0]} - {deposit[1]}\n"
-    
+
     if desposit_list:
         notify("Depositing valuables", f"Deposited the following:\n\n{desposit_list}")
 
@@ -566,7 +571,10 @@ def mine():
         prev_fuel = -1
 
         if cur_fuel < FUEL_REQUIREMENT:
-            notify("Refueling", f"Need to refuel - current fuel is {cur_fuel} and requirement is {FUEL_REQUIREMENT}")
+            notify(
+                "Refueling",
+                f"Need to refuel - current fuel is {cur_fuel} and requirement is {FUEL_REQUIREMENT}",
+            )
 
         while cur_fuel < FUEL_REQUIREMENT:
             print(f"REFUELING ({cur_fuel})!!!")
@@ -633,17 +641,17 @@ def client_receive_broadcast():
 
     while True:
         print("Receiving messages...")
-        
+
         computer_id, message, _ = rednet.receive("QuarryControl")
-    
+
         message = message.decode()
 
         print(f"\nReceived {message}\n")
 
-        #if message == "ping":
+        # if message == "ping":
         #    pass
         if "start_opts" in message:
-            message = message.split(' ')
+            message = message.split(" ")
 
             if type(message) == list and len(message) >= 4:
                 if all(item.isdigit() for item in message[1:4]):
@@ -653,10 +661,16 @@ def client_receive_broadcast():
 
                     calc_globals()
                     DO_MINE = True
-                    notify("Config", f"Mining from {START_Y} to {END_Y} with a size of {CHUNK_SIZE}")
+                    notify(
+                        "Config",
+                        f"Mining from {START_Y} to {END_Y} with a size of {CHUNK_SIZE}",
+                    )
                     continue
-                
-            notify("Config", "Got start_opts but incorrect number of options or invalid options.")
+
+            notify(
+                "Config",
+                "Got start_opts but incorrect number of options or invalid options.",
+            )
         elif message == "start":
             DO_MINE = True
         elif message == "stop":

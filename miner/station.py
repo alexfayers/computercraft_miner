@@ -10,13 +10,13 @@ def server_receive_broadcast():
 
         for each in range(len(info) // 3):
             each = each * 3
-            computer_id, message, _ = info[each:each + 3]
+            computer_id, message, _ = info[each : each + 3]
 
             message = message.decode()
 
             print(f"\n> {message}")
 
-        print("QuarryControl> ", end='')
+        print("QuarryControl> ", end="")
 
 
 def server_send_broadcast(message):
@@ -24,11 +24,7 @@ def server_send_broadcast(message):
 
 
 def server_command_control():
-    valid_commands = [
-        "start",
-        "start_opts",
-        "stop"
-    ]
+    valid_commands = ["start", "start_opts", "stop"]
 
     first_loop = True
 
@@ -41,16 +37,20 @@ def server_command_control():
 
         if command == "help":
             print("start - Start all miners with default params")
-            print("start_opts {START_Y} {END_Y} {CHUNK_SIZE} - Start with params you specify")
+            print(
+                "start_opts {START_Y} {END_Y} {CHUNK_SIZE} - Start with params you specify"
+            )
             print("stop - Stop all miners and make them return home (WIP)")
-            print("ping - Query which miners are on the network and available for commands")
+            print(
+                "ping - Query which miners are on the network and available for commands"
+            )
             print("help - This message")
             print("exit - Exit the C2 (clients are unaffected)")
 
         elif command == "exit":
             print("Bye")
             break
-        
+
         elif command == "ping":
             clients = rednet.lookup("QuarryMiner")
 
@@ -61,9 +61,11 @@ def server_command_control():
             else:
                 print("No clients available")
 
-        elif any(valid in command for valid in valid_commands): # if any of the valids are a substring of the input
+        elif any(
+            valid in command for valid in valid_commands
+        ):  # if any of the valids are a substring of the input
             server_send_broadcast(command)
-        
+
         else:
             print("Invalid command. Valid commands are:")
             for command in valid_commands:
