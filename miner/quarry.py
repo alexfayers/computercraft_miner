@@ -146,6 +146,9 @@ def turn_left():
 def forward(mine=False):
     global COORDS
 
+    if not DO_MINE:
+        return False
+
     if mine == True:
         while check_if_gravity_block_in_front():
             turtle.dig()
@@ -166,9 +169,14 @@ def forward(mine=False):
 
     print(repr(COORDS))
 
+    return True
+
 
 def up(mine=False):
     global COORDS
+
+    if not DO_MINE:
+        return False
 
     if mine == True:
         while check_if_gravity_block_above():
@@ -182,9 +190,14 @@ def up(mine=False):
 
     print(repr(COORDS))
 
+    return True
+
 
 def down(mine=False):
     global COORDS
+
+    if not DO_MINE:
+        return False
 
     if mine == True:
         if turtle.detectDown():
@@ -194,6 +207,8 @@ def down(mine=False):
     COORDS["y"] -= 1
 
     print(repr(COORDS))
+
+    return True
 
 
 def turn_around():
@@ -228,19 +243,22 @@ def go_to_x(target_x, mine=False):
             turn_to_heading(3)  # left
 
         while target_x != COORDS["x"]:
-            forward(mine=mine)
+            if not forward(mine=mine):
+                return False
 
-    return
+    return True
 
 
 def go_to_y(target_y, mine=False):
     while target_y != COORDS["y"]:
         if COORDS["y"] < target_y:
-            up(mine=mine)
+            if not up(mine=mine):
+                return False
         else:
-            down(mine=mine)
+            if not down(mine=mine):
+                return False
 
-    return
+    return True
 
 
 def go_to_z(target_z, mine=False):
@@ -251,22 +269,26 @@ def go_to_z(target_z, mine=False):
             turn_to_heading(2)  # backward
 
         while target_z != COORDS["z"]:
-            forward(mine=mine)
+            if not forward(mine=mine):
+                return False
 
-    return
+    return True
 
 
 def go_to_coords(x=None, y=None, z=None, mine=False):
     if x is not None:
-        go_to_x(x, mine=mine)
+        if not go_to_x(x, mine=mine):
+            return False
 
     if y is not None:
-        go_to_y(y, mine=mine)
+        if not go_to_y(y, mine=mine):
+            return False
 
     if z is not None:
-        go_to_z(z, mine=mine)
+        if not go_to_z(z, mine=mine):
+            return False
 
-    return
+    return DO_MINE
 
 
 def calc_distance_from_coords(x=None, y=None, z=None):
@@ -563,7 +585,8 @@ def mine_path():
         if not status_check():
             break
 
-        go_to_coords(x=x, y=y, z=z, mine=True)
+        if not go_to_coords(x=x, y=y, z=z, mine=True): # returns false if stop was received
+            break
 
         if target_index % (WIDTH_X * 2) == 0: # after each layer
             sort_inventory()
