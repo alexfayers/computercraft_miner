@@ -848,10 +848,10 @@ def client_receive_broadcast():
 
 def init():
 
-    go_to_coords(x=5, z=2, mine=True)
+    go_to_coords(x=5, y=63, z=2, mine=True)
     print("RETURN NOW")
-    go_to_coords(x=0, z=0, mine=True)
-    #turn_to_heading(0)
+    go_to_coords(x=0, y=64, z=0, mine=True)
+    turn_to_heading(0)
 
     exit()
     MODEM_SIDE = "right"
