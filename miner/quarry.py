@@ -526,6 +526,17 @@ def down_layer():
     return hit_block
 
 
+def up_layer():
+    hit_block = False
+
+    if turtle.detectUp():
+        turtle.digUp()
+        hit_block = True
+
+    up()
+
+    return hit_block
+
 def travel_line():
     for block in range(CHUNK_SIZE - 1):
         forward()
@@ -639,6 +650,13 @@ def skip_layers():
     skipped = 0
     while COORDS["y"] > END_Y :
         hit_block = down_layer()
+        if hit_block:
+            print("Hit block, stopping layer skip")
+            break
+        skipped += 1
+    
+    while COORDS["y"] < END_Y :
+        hit_block = up_layer()
         if hit_block:
             print("Hit block, stopping layer skip")
             break
