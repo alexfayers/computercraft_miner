@@ -35,6 +35,11 @@ VALUEABLE_BLOCKS = [
 
 # CONFIG
 CHUNK_SIZE = 8
+
+WIDTH_X = 8
+WIDTH_Z = 8
+
+
 REFUEL_THRESH = 20
 
 START_Y = 64  # inclusive
@@ -53,6 +58,35 @@ COORDS = {
 }
 
 TURTLE_SLOTS = 16
+
+def generate_path(width_x, start_y, end_y, width_z):
+    targets = []
+
+    for y in range(START_Y, END_Y - 1, -1):
+        for x in range(0, (width_x), 2):
+            print(x)
+            targets.append({
+            "x": x,
+            "y": y,
+            "z": 0
+            })
+            targets.append({
+            "x": x,
+            "y": y,
+            "z": width_z
+            })
+            targets.append({
+            "x": x + 1,
+            "y": y,
+            "z": width_z
+            })
+            targets.append({
+            "x": x + 1,
+            "y": y,
+            "z": 0
+            })
+
+    return targets
 
 # JOIN_KEY = requests.get("http://192.168.1.54:8000/join.key").text
 
@@ -236,6 +270,18 @@ def go_to_coords(x=None, y=None, z=None, mine=False):
     return
 
 
+def calc_distance_from_coords(x=None, y=None, z=None):
+    if all(coord is not None for coord in [x,y,z]):
+        distance = 0
+
+        for index, coord in enumerate(COORDS[:4]):
+            distance = distance + abs(coord - [x,y,z][index])
+        
+        return distance
+    else:
+        return False
+
+
 def find_item(search):
     for slot in range(1, TURTLE_SLOTS + 1):
         info = turtle.getItemDetail(slot)
@@ -322,17 +368,19 @@ def check_fuel():
     print("Checking fuel")
     level = turtle.getFuelLevel()
 
-    if level <= REFUEL_THRESH:
-        print("Need to refuel!")
+    if level <= calc_distance_from_coords(x=0, y=START_Y, z=0):
+        print("Not enough fuel to return!")
 
         if refuel_from_inventory():
-            print("Refueled successfully!")
+            print("Refueled successfully!")#
+            return True
         else:
             print("Couldn't refuel! Uh oh...")
+            return False
     else:
         print("No need to refuel.")
 
-    return level
+    return True
 
 
 def throw_away_trash():
@@ -403,7 +451,8 @@ def deposit_valueables_into_network():
 def status_check():
     # checks to make sure everytjing is going well
     throw_away_trash()
-    check_fuel()
+    
+    return check_fuel()
 
 
 def check_if_gravity_block_in_front():
@@ -505,6 +554,20 @@ def mine_several_layers():
             break
         else:
             down_layer()
+
+def mine_path():
+    targets = generate_path(WIDTH_X, COORDS["y"], END_Y, WIDTH_Z)
+
+    for target_index, target in enumerate(targets):
+        x, y, z = target
+
+        if not status_check():
+            break
+
+        go_to_coords(x=x, y=y, z=z, mine=True)
+
+        if target_index % (WIDTH_X * 2) == 0: # after each layer
+            sort_inventory()
 
 
 def return_to_start(skipped_layers, straight_up_override=False):
@@ -776,8 +839,12 @@ def mine():
             notify("Mining", "Didn't mine - didn't hit any blocks")
 
         print("Returning to start...")
-        return_to_start(skipped_layers, straight_up_override=not hit_block)
+        go_to_coords(x=0, y=START_Y, z=0, mine=True)
 
+        turn_to_heading(0)
+
+        # return_to_start(skipped_layers, straight_up_override=not hit_block)
+        
         # turn_around()
         if hit_block:
             if not deposit_valueables_into_network():
@@ -850,12 +917,6 @@ def client_receive_broadcast():
 
 def init():
 
-    go_to_coords(x=5, y=-1, z=2, mine=True)
-    print("RETURN NOW")
-    go_to_coords(x=0, y=0, z=0, mine=True)
-    turn_to_heading(0)
-
-    exit()
     MODEM_SIDE = "right"
 
     if not rednet.isOpen(MODEM_SIDE):
