@@ -48,14 +48,8 @@ def server_command_control():
 
     while True:
         update_clients()
-        
-        if not first_loop or 1==1:
-            command = input("QuarryControl> ")
-        else:
-            command = "ping"
-            first_loop = False
-        
-        update_clients()
+
+        command = input("QuarryControl> ")
 
         if command == "help":
             print("start - Start all miners with default params")
@@ -74,7 +68,7 @@ def server_command_control():
             print("Bye")
             break
 
-        elif 1==2 and command == "ping":
+        elif command == "ping":
             clients = rednet.lookup("QuarryMiner")
 
             if clients:
