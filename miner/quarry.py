@@ -558,7 +558,7 @@ def mine_path():
     targets = generate_path(WIDTH_X, COORDS["y"], END_Y, WIDTH_Z)
 
     for target_index, target in enumerate(targets):
-        x, y, z = target
+        x, y, z = target.values()
 
         if not status_check():
             break
