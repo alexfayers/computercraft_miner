@@ -553,9 +553,11 @@ def mine():
 
     while True:
         notify("Ready", "Waiting for start signal")
-
+        
+        print("Waiting for start signal...")
+        
         while not DO_MINE:
-            print("Waiting for start signal...")
+            # print("Waiting for start signal...")
             # time.sleep(1)
             pass
 
