@@ -31,12 +31,12 @@ def update_clients():
 
     status_message = f"Miners available: {len(rednet.lookup('QuarryMiner'))}"
 
-    orig_bg = term.getBackgroundColour()
-    term.setBackgroundColour(colours.blue)
+    orig_bg = term.getBackgroundColor()
+    term.setBackgroundColor(colors.blue)
     term.setCursorPos(1, 1)
     term.clearLine()
     term.write(status_message)
-    term.setBackgroundColour(orig_bg)
+    term.setBackgroundColor(orig_bg)
 
     term.setCursorPos(orig_x, orig_y)
 
