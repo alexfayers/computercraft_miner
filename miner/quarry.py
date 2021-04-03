@@ -192,7 +192,7 @@ def go_to_y(target_y):
 
 def go_to_z(target_z):
     if target_z != COORDS["z"]:
-        if COORDS["z"] < target_z:
+        if COORDS["z"] > target_z:
             turn_to_heading(0) # forward
         else:
             turn_to_heading(2) # backward
