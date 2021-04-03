@@ -106,7 +106,7 @@ def init():
 
     rednet.host("QuarryControl", "QuarryControl_C2")
 
-    paralle.waitForAny(server_command_control, update_clients)
+    parallel.waitForAny(server_command_control, update_clients)
 
     # parallel.waitForAny(server_command_control, server_receive_broadcast)
 
