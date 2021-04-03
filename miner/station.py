@@ -54,7 +54,7 @@ def server_command_control():
         if command == "help":
             print("start - Start all miners with default params")
             print(
-                "start_opts {START_Y} {END_Y} {HOLE_WIDTH_X} {HOLE_WIDTH_Z} - Start with params you specify"
+                "start_opts {HOME_Y} {END_Y} {HOLE_WIDTH_X} {HOLE_WIDTH_Z} [{START_Y}] - Start with params you specify"
             )
             print("stop - Stop all miners and make them return home (WIP)")
             print(

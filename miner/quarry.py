@@ -43,7 +43,9 @@ HOLE_WIDTH_Z = 8
 
 REFUEL_THRESH = 20
 
-START_Y = 64  # inclusive
+HOME_Y = 64  # inclusive
+
+START_Y = HOME_Y
 END_Y = 62  # non inclusive
 
 
@@ -108,14 +110,14 @@ def calc_globals():
     global COORDS
     global FUEL_REQUIREMENT
 
-    COORDS["y"] = START_Y
+    COORDS["y"] = HOME_Y
 
-    quarry_depth = START_Y - END_Y
+    quarry_depth = HOME_Y - END_Y
 
     chunk_size = HOLE_WIDTH_X * HOLE_WIDTH_Z
 
     FUEL_REQUIREMENT = (
-        chunk_size * (quarry_depth) + quarry_depth + chunk_size * 2
+        chunk_size * (quarry_depth - START_Y) + quarry_depth + chunk_size * 2
     )
 
 
@@ -397,7 +399,7 @@ def check_fuel():
     print("Checking fuel")
     level = turtle.getFuelLevel()
 
-    if level <= calc_distance_from_coords(x=0, y=START_Y, z=0):
+    if level <= calc_distance_from_coords(x=0, y=HOME_Y, z=0):
         print("Not enough fuel to return!")
 
         if refuel_from_inventory():
@@ -610,13 +612,14 @@ def mine_path():
             return False
 
         if target_index % (HOLE_WIDTH_X * 2) == 0: # after each layer
+            notify("Mining", f"Completed y={COORDS['y']}")
             sort_inventory()
     
     return True
 
 
 def return_to_start(skipped_layers, straight_up_override=False):
-    corner = (START_Y - COORDS["y"] - skipped_layers) % 4
+    corner = (HOME_Y - COORDS["y"] - skipped_layers) % 4
     notify("Mining", f"Returning home from y={COORDS['y']}")
 
     if straight_up_override:
@@ -631,7 +634,7 @@ def return_to_start(skipped_layers, straight_up_override=False):
         turn_right()
         travel_line()
 
-    while COORDS["y"] < START_Y:
+    while COORDS["y"] < HOME_Y:
         # if up():
         up()
 
@@ -650,17 +653,17 @@ def return_to_start(skipped_layers, straight_up_override=False):
         turn_around()
 
 
-def skip_layers():
+def skip_layers(target_y):
     hit_block = False
     skipped = 0
-    while COORDS["y"] > END_Y :
+    while COORDS["y"] > target_y :
         hit_block = down_layer()
         if hit_block:
             print("Hit block, stopping layer skip")
             break
         skipped += 1
     
-    while COORDS["y"] < END_Y :
+    while COORDS["y"] < target_y :
         hit_block = up_layer()
         if hit_block:
             print("Hit block, stopping layer skip")
@@ -879,6 +882,11 @@ def mine():
 
         # notify("Mining", "Starting floor detection")
 
+        if START_Y != HOME_Y:
+            print("Starting layer skip...")
+            notify("Mining", f"Skipping to non-home start position (y={START_Y})")
+            go_to_coords(y=START_Y, mine=True)
+
         if COORDS["y"] != END_Y:
             print("Starting floor detection...")
             hit_block, skipped_layers = skip_layers()
@@ -899,7 +907,7 @@ def mine():
 
         print("Returning to start...")
         notify("Mining", "Returning home")
-        go_to_coords(x=0, y=START_Y, z=0, mine=True)
+        go_to_coords(x=0, y=HOME_Y, z=0, mine=True)
 
         turn_to_heading(0)
 
@@ -929,6 +937,7 @@ def client_receive_broadcast():
     global CHUNK_SIZE
     global HOLE_WIDTH_X
     global HOLE_WIDTH_Z
+    global HOME_Y
     global START_Y
     global END_Y
 
@@ -947,18 +956,21 @@ def client_receive_broadcast():
             message = message.split(" ")
 
             if type(message) == list and len(message) >= 5:
-                if all(item.isdigit() for item in message[1:5]):
-                    START_Y = int(message[1])
+                if all(item.isdigit() for item in message[1:]):
+                    HOME_Y = int(message[1])
                     END_Y = int(message[2])
                     HOLE_WIDTH_X = int(message[3])
                     HOLE_WIDTH_Z = int(message[4])
+
+                    if len(message) >= 6:
+                        START_Y = int(message[5])
                     # CHUNK_SIZE = int(message[3])
 
                     calc_globals()
                     DO_MINE = True
                     notify(
                         "Config",
-                        f"Mining from {START_Y} to {END_Y} with a size of {HOLE_WIDTH_X}x{HOLE_WIDTH_Z}",
+                        f"Mining from {HOME_Y} to {END_Y} with a size of {HOLE_WIDTH_X}x{HOLE_WIDTH_Z}",
                     )
                     continue
 
