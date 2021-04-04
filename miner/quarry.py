@@ -1051,7 +1051,12 @@ def client_receive_broadcast():
 
 def init():
 
-    build(8)
+    try:
+        build(8)
+    except Exception as e:
+        print(e)
+        exit()
+        
 
     return
     MODEM_SIDE = "right"
