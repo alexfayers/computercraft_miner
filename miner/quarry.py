@@ -609,7 +609,7 @@ def mine_path():
     # notify("Path", repr('\n'.join(targets)))
 
     for target_index, target in enumerate(targets):
-        x, y, z = target.values()
+        x, y, z = target
 
         if not status_check():
             break
