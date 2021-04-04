@@ -134,11 +134,12 @@ def forward(mine=True, do_fuel_check=True):
         if turtle.detect():
             turtle.dig()
     
-    if do_fuel_check and not check_fuel(): # we want to check the fuel, and we're out of fuel!
-        notify("Low fuel", "Wouldn't have enough fuel to return if we did this move, so going back now!")
-        go_to_coords(x=0, y=HOME_Y, z=0, mine=mine, do_fuel_check=False)
-        turn_to_heading(0)
-        return False
+    if do_fuel_check: # we want to check the fuel, and we're out of fuel!
+        if not check_fuel():
+            notify("Low fuel", "Wouldn't have enough fuel to return if we did this move, so going back now!")
+            go_to_coords(x=0, y=HOME_Y, z=0, mine=mine, do_fuel_check=False)
+            turn_to_heading(0)
+            return False
 
     turtle.forward()
 
@@ -169,11 +170,12 @@ def up(mine=True, do_fuel_check=True):
         if turtle.detectUp():
             turtle.digUp()
 
-    if do_fuel_check and not check_fuel(): # we want to check the fuel, and we're out of fuel!
-        notify("Low fuel", "Wouldn't have enough fuel to return if we did this move, so going back now!")
-        go_to_coords(x=0, y=HOME_Y, z=0, mine=mine, do_fuel_check=False)
-        turn_to_heading(0)
-        return False
+    if do_fuel_check: # we want to check the fuel, and we're out of fuel!
+        if not check_fuel():
+            notify("Low fuel", "Wouldn't have enough fuel to return if we did this move, so going back now!")
+            go_to_coords(x=0, y=HOME_Y, z=0, mine=mine, do_fuel_check=False)
+            turn_to_heading(0)
+            return False
 
     turtle.up()
     COORDS["y"] += 1
@@ -193,11 +195,12 @@ def down(mine=True, do_fuel_check=True):
         if turtle.detectDown():
             turtle.digDown()
     
-    if do_fuel_check and not check_fuel(): # we want to check the fuel, and we're out of fuel!
-        notify("Low fuel", "Wouldn't have enough fuel to return if we did this move, so going back now!")
-        go_to_coords(x=0, y=HOME_Y, z=0, mine=mine, do_fuel_check=False)
-        turn_to_heading(0)
-        return False
+    if do_fuel_check: # we want to check the fuel, and we're out of fuel!
+        if not check_fuel():
+            notify("Low fuel", "Wouldn't have enough fuel to return if we did this move, so going back now!")
+            go_to_coords(x=0, y=HOME_Y, z=0, mine=mine, do_fuel_check=False)
+            turn_to_heading(0)
+            return False
 
     turtle.down()
     COORDS["y"] -= 1
