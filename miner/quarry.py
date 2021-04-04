@@ -62,9 +62,10 @@ COORDS = {
 
 TURTLE_SLOTS = 16
 
+
 def generate_path(width_x, start_y, end_y, width_z):
     targets = []
-    
+
     if start_y > end_y:
         y_diff = -1
     else:
@@ -73,32 +74,33 @@ def generate_path(width_x, start_y, end_y, width_z):
     # calculate layer targets
     layer_targets = []
     for counter in range(1, width_x + 1):
-      cycle = [
-        [counter-1,counter-1],
-        [counter-1, width_z - counter],
-        [width_x - counter, width_z - counter],
-        [width_x - counter, counter-1]
-      ]
+        cycle = [
+            [counter - 1, counter - 1],
+            [counter - 1, width_z - counter],
+            [width_x - counter, width_z - counter],
+            [width_x - counter, counter - 1],
+        ]
 
-      layer_targets.extend(cycle)
-    
+        layer_targets.extend(cycle)
+
     layer_targets_cleaned = []
     for coord in layer_targets:
-      if layer_targets_cleaned.count(coord) < 1:
-        layer_targets_cleaned.append(coord)
+        if layer_targets_cleaned.count(coord) < 1:
+            layer_targets_cleaned.append(coord)
 
     layer_targets = layer_targets_cleaned
 
     for loop_count, y_val in enumerate(range(start_y, end_y + y_diff, y_diff)):
-      print(loop_count)
+        print(loop_count)
 
-      for layer_target in layer_targets:
-        temp_target = [layer_target[0], y_val, layer_target[1]]
-        targets.append(temp_target)
-      
-      layer_targets = list(reversed(layer_targets))
+        for layer_target in layer_targets:
+            temp_target = [layer_target[0], y_val, layer_target[1]]
+            targets.append(temp_target)
+
+        layer_targets = list(reversed(layer_targets))
 
     return targets
+
 
 # JOIN_KEY = requests.get("http://192.168.1.54:8000/join.key").text
 
@@ -306,12 +308,12 @@ def go_to_coords(x=None, y=None, z=None, mine=False):
 
 
 def calc_distance_from_coords(x=None, y=None, z=None):
-    if all(coord is not None for coord in [x,y,z]):
+    if all(coord is not None for coord in [x, y, z]):
         distance = 0
 
         for index, coord in enumerate([COORDS["x"], COORDS["y"], COORDS["z"]]):
-            distance = distance + abs(coord - [x,y,z][index])
-        
+            distance = distance + abs(coord - [x, y, z][index])
+
         return distance
     else:
         return False
@@ -407,7 +409,7 @@ def check_fuel():
         print("Not enough fuel to return!")
 
         if refuel_from_inventory():
-            print("Refueled successfully!")#
+            print("Refueled successfully!")  #
             return True
         else:
             print("Couldn't refuel! Uh oh...")
@@ -486,7 +488,7 @@ def deposit_valueables_into_network():
 def status_check():
     # checks to make sure everytjing is going well
     throw_away_trash()
-    
+
     return check_fuel()
 
 
@@ -546,6 +548,7 @@ def up_layer():
 
     return hit_block
 
+
 def travel_line():
     for block in range(CHUNK_SIZE - 1):
         forward()
@@ -601,6 +604,7 @@ def mine_several_layers():
         else:
             down_layer()
 
+
 def mine_path():
     targets = generate_path(HOLE_WIDTH_X, COORDS["y"], END_Y, HOLE_WIDTH_Z)
 
@@ -626,9 +630,9 @@ def mine_path():
                     return False
 
             z_diff = -z_diff
-        
+
         x_diff = -x_diff
-        
+
         if mine_break:
             break
 
@@ -638,7 +642,7 @@ def mine_path():
         if layer < depth:
             if not down(mine=True):
                 return False
-    
+
     return True
 
     for target_index, target in enumerate(targets):
@@ -647,13 +651,15 @@ def mine_path():
         if not status_check():
             break
 
-        if not go_to_coords(x=x, y=y, z=z, mine=True): # returns false if stop was received
+        if not go_to_coords(
+            x=x, y=y, z=z, mine=True
+        ):  # returns false if stop was received
             return False
 
-        if target_index % (HOLE_WIDTH_X * 2) == 0: # after each layer
+        if target_index % (HOLE_WIDTH_X * 2) == 0:  # after each layer
             notify("Mining", f"Completed y={COORDS['y']}")
             sort_inventory()
-    
+
     return True
 
 
@@ -694,13 +700,13 @@ def return_to_start(skipped_layers, straight_up_override=False):
 
 def skip_layers(target_y):
     hit_block = False
-    while COORDS["y"] > target_y :
+    while COORDS["y"] > target_y:
         hit_block = down_layer()
         if hit_block:
             print("Hit block, stopping layer skip")
             break
-    
-    while COORDS["y"] < target_y :
+
+    while COORDS["y"] < target_y:
         hit_block = up_layer()
         if hit_block:
             print("Hit block, stopping layer skip")
@@ -933,8 +939,8 @@ def mine():
             print(f"Starting properly at y={COORDS['y']}!")
             notify("Mining", f"Starting mining at y={COORDS['y']}!")
 
-            #mine_several_layers()
-            if not mine_path(): # we've been told to return
+            # mine_several_layers()
+            if not mine_path():  # we've been told to return
                 DO_MINE = True
         else:
             print("Didn't hit any blocks - all of this area is already mined")
@@ -947,7 +953,7 @@ def mine():
         turn_to_heading(0)
 
         # return_to_start(skipped_layers, straight_up_override=not hit_block)
-        
+
         # turn_around()
         if hit_block:
             if not deposit_valueables_into_network():
@@ -1015,11 +1021,11 @@ def client_receive_broadcast():
             )
         elif message == "kill":
             notify("KILL", "Stopping execution via an exit")  # add cleanup here maybe
-            return 
+            return
         elif message == "update":
             notify("Update", "Stopping execution and updating")
-            with fs.open('/miner_update', 'w') as f:
-                f.writeLine('placeholder')
+            with fs.open("/miner_update", "w") as f:
+                f.writeLine("placeholder")
             return
         elif message == "start":
             DO_MINE = True
