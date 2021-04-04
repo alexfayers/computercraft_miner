@@ -621,7 +621,7 @@ def mine_path():
                 mine_break = True
                 break
 
-            if (z_diff >= 0 and row != HOLE_WIDTH_X - 1) and (z_diff < 0 and row != 0): # if not on edges of quarry
+            if row < HOLE_WIDTH_X - 1:
                 if not go_to_x(COORDS["x"] + x_diff, mine=True):
                     return False
 
