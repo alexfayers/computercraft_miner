@@ -824,71 +824,78 @@ def locate_space_and_put_in_network(from_slot):
     return transferred
 
 
-def build(z_dist):
+def build(z_dist, repeat_count=1):
     global DO_MINE
 
     DO_MINE = True
 
-    check_fuel()
+    for count in range(repeat_count):
+        check_fuel()
 
-    item_map = {
-        "cable": -1,
-        "modem": -1,
-        "furnace": -1
-    }
+        item_map = {
+            "cable": -1, # need 10
+            "modem": -1, # need 1
+            "furnace": -1 # need 1
+        }
 
-    for item in item_map.keys():
-        slot = find_item(item)
+        for item in item_map.keys():
+            slot = find_item(item)
 
-        if not slot:
-            print(f"Don't have any {item}! ERRRORRRRRR")
-            exit()
-        else:
-            item_map[item] = slot
-    
-    initial_slot = turtle.getSelectedSlot()
+            if not slot:
+                print(f"Don't have any {item}! ERRRORRRRRR")
+                go_to_coords(x=0, z=0, mine=True)
+                turn_to_heading(0)
+                exit()
+            else:
+                item_map[item] = slot
+        
+        initial_slot = turtle.getSelectedSlot()
 
-    # place furnace and cable
-    turn_left()
-    forward(mine=True)
-    turn_left()
-    if turtle.inspect():
-        turtle.dig()
-    turtle.select(item_map["furnace"])
-    turtle.place()
+        # place furnace and cable
+        turn_left()
+        forward(mine=True)
+        turn_left()
+        if turtle.inspect():
+            turtle.dig()
+        turtle.select(item_map["furnace"])
+        turtle.place()
 
-    if turtle.inspectUp():
-        turtle.digUp()
-    turtle.select(item_map["cable"])
-    turtle.placeUp()
-
-    # place modem
-    turn_around()
-    forward(mine=True)
-
-    turn_around()
-    if turtle.inspect():
-        turtle.dig()
-    turtle.select(item_map["modem"])
-    turtle.place()
-    turn_around()
-
-    for _ in range(z_dist):
         if turtle.inspectUp():
             turtle.digUp()
         turtle.select(item_map["cable"])
         turtle.placeUp()
+
+        # place modem
+        turn_around()
         forward(mine=True)
 
-    if turtle.inspectUp():
-            turtle.digUp()
-    turtle.select(item_map["cable"])
-    turtle.placeUp()
-    
-    turtle.select(initial_slot)
+        turn_around()
+        if turtle.inspect():
+            turtle.dig()
+        turtle.select(item_map["modem"])
+        turtle.place()
+        turn_around()
 
-    turn_right()
-    forward(mine=True)
+        for _ in range(z_dist):
+            if turtle.inspectUp():
+                turtle.digUp()
+            turtle.select(item_map["cable"])
+            turtle.placeUp()
+            forward(mine=True)
+
+        if turtle.inspectUp():
+                turtle.digUp()
+        turtle.select(item_map["cable"])
+        turtle.placeUp()
+        
+        turtle.select(initial_slot)
+
+        turn_right()
+        forward(mine=True)
+
+        if count != repeat_count:
+            turn_left()
+            forward(mine=True)
 
     go_to_coords(x=0, z=0, mine=True)
     turn_to_heading(0)
@@ -1076,7 +1083,7 @@ def init():
 
     try:
         
-        build(8)
+        build(8, repeat_count=2)
     except Exception as e:
         print(e)
         exit()
