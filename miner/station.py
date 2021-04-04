@@ -46,10 +46,18 @@ def server_command_control():
 
     first_loop = True
 
+    prev_command = ''
+    do_prev = False
     while True:
         update_clients()
 
-        command = input("QuarryControl> ")
+        if do_prev:
+            print("Executing previous command")
+            do_prev = False
+            command = prev_command
+        else:
+            command = input("QuarryControl> ")
+            prev_command = command
 
         if command == "help":
             print("start - Start all miners with default params")
@@ -92,6 +100,8 @@ def server_command_control():
                 == "y"
             ):
                 server_send_broadcast(command)
+        elif command == "prev":
+            do_prev = True
 
         elif any(
             valid in command for valid in valid_commands
