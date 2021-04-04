@@ -825,7 +825,7 @@ def locate_space_and_put_in_network(from_slot):
 
 
 def build(z_dist):
-    refuel_from_inventory()
+    check_fuel()
 
     item_map = {
         "cable": -1,
@@ -866,6 +866,8 @@ def build(z_dist):
     for _ in range(z_dist):
         turtle.select(item_map["cable"])
         turtle.placeUp()
+    
+    turtle.slot(initial_slot)
 
 
 def mine():
@@ -1048,7 +1050,6 @@ def client_receive_broadcast():
 
 def init():
 
-    check_fuel()
     build(8)
 
     return
