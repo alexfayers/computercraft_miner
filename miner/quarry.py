@@ -830,6 +830,8 @@ def build(z_dist, repeat_count=1):
     DO_MINE = True
 
     for count in range(repeat_count):
+        notify(f"Building starting to section {count}!")
+
         check_fuel()
 
         item_map = {
@@ -1080,16 +1082,7 @@ def client_receive_broadcast():
 
 
 def init():
-
-    try:
         
-        build(8, repeat_count=2)
-    except Exception as e:
-        print(e)
-        exit()
-        
-
-    return
     MODEM_SIDE = "right"
 
     if not rednet.isOpen(MODEM_SIDE):
@@ -1099,6 +1092,9 @@ def init():
         print("Modem is open")
 
     rednet.host("QuarryMiner", os.getComputerLabel())
+
+    if all(find_item(item) for item in ["furnace", "modem", "cable"]): # if we have building materials, start building
+        build(8, repeat_count=1)
 
     parallel.waitForAny(mine, client_receive_broadcast)
 
