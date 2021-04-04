@@ -878,7 +878,7 @@ def build(z_dist, repeat_count=1):
         turtle.place()
         turn_around()
 
-        for _ in range(z_dist):
+        for _ in range(z_dist - 1):
             if turtle.inspectUp():
                 turtle.digUp()
             turtle.select(item_map["cable"])
