@@ -830,7 +830,7 @@ def build(z_dist, repeat_count=1):
     DO_MINE = True
 
     for count in range(repeat_count):
-        notify(f"Building starting to section {count}!")
+        notify("Building", f"Starting section {count}!")
 
         check_fuel()
 
