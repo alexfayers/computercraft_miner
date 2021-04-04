@@ -614,14 +614,14 @@ def mine_path():
     for layer in range(depth + 2):
         z_diff = HOLE_WIDTH_Z - 1
         for _ in range(HOLE_WIDTH_X - 1):
-            if not go_to_z(COORDS["z"] + z_diff):
+            if not go_to_z(COORDS["z"] + z_diff, mine=True):
                 return False
 
             if not status_check():
                 mine_break = True
                 break
 
-            if not go_to_x(COORDS["x"] + x_diff):
+            if not go_to_x(COORDS["x"] + x_diff, mine=True):
                 return False
 
             z_diff = -z_diff
@@ -634,7 +634,7 @@ def mine_path():
         notify("Mining", f"Completed y={COORDS['y']}")
         sort_inventory()
 
-        if not down():
+        if not down(mine=True):
             return False
     
     return True
