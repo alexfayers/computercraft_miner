@@ -63,52 +63,42 @@ COORDS = {
 TURTLE_SLOTS = 16
 
 def generate_path(width_x, start_y, end_y, width_z):
-    width_z -= 1
-    
     targets = []
-
+    middle_val = [width_x // 2, width_x // 2]
+    
     if start_y > end_y:
         y_diff = -1
     else:
         y_diff = 1
 
-    for y in range(start_y, end_y + y_diff, y_diff):
+    # calculate layer targets
+    layer_targets = []
+    for counter in range(1, width_x + 1):
+      cycle = [
+        [counter-1,counter-1],
+        [counter-1, width_z - counter],
+        [width_x - counter, width_z - counter],
+        [width_x - counter, counter-1]
+      ]
 
-        x_diff = 1
+      if middle_val in cycle:
+        del cycle[cycle.index(middle_val):]
+        cycle.append(middle_val)
+        layer_targets.extend(cycle)
+        break
+      
+      layer_targets.extend(cycle)
 
-        for _ in range(2):
-            x_diff = -x_diff
-            x_range = range(0, width_x, 1)
+    print(layer_targets)
 
-            if x_diff > 0:
-                if y == end_y:
-                    break
-                y += y_diff
-                x_range = range(width_x-1, 0, -1)
-                
-            for x in x_range:
-                for internal_i in range(2):
-                    targets.append({
-                    "x": x,
-                    "y": y,
-                    "z": None
-                    })
+    for loop_count, y_val in enumerate(range(start_y, end_y + y_diff, y_diff)):
+      print(loop_count)
 
-    last_zs = []
-    for i, target in enumerate(targets):
-        if i == 0:
-            targets[i]['z'] = 0
-            last_zs.append(0)
-        elif i == 1:
-            targets[i]['z'] = width_z
-            last_zs.append(width_z)
-        else:
-            if last_zs.pop(0) == width_z:
-                targets[i]['z'] = 0
-                last_zs.append(0)
-            else:
-                targets[i]['z'] = width_z
-                last_zs.append(width_z)
+      for layer_target in layer_targets:
+        temp_target = [layer_target[0], y_val, layer_target[1]]
+        targets.append(temp_target)
+      
+      layer_targets = list(reversed(layer_targets))
 
     return targets
 
