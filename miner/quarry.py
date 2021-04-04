@@ -1038,6 +1038,7 @@ def init():
 
     DO_MINE = True
     for _ in range(100):
+        print("ee")
         forward(mine=True)
 
     exit()
