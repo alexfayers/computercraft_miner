@@ -121,7 +121,7 @@ def turn_left():
     print(repr(COORDS))
 
 
-def forward(mine=False, do_fuel_check=True):
+def forward(mine=True, do_fuel_check=True):
     global COORDS
 
     if not DO_MINE:
@@ -156,7 +156,7 @@ def forward(mine=False, do_fuel_check=True):
     return True
 
 
-def up(mine=False, do_fuel_check=True):
+def up(mine=True, do_fuel_check=True):
     global COORDS
 
     if not DO_MINE:
@@ -183,7 +183,7 @@ def up(mine=False, do_fuel_check=True):
     return True
 
 
-def down(mine=False, do_fuel_check=True):
+def down(mine=True, do_fuel_check=True):
     global COORDS
 
     if not DO_MINE:
@@ -231,7 +231,7 @@ def turn_to_heading(target_heading):
     return
 
 
-def go_to_x(target_x, mine=False, do_fuel_check=True):
+def go_to_x(target_x, mine=True, do_fuel_check=True):
     if target_x != COORDS["x"]:
         if COORDS["x"] < target_x:
             turn_to_heading(1)  # right
@@ -245,7 +245,7 @@ def go_to_x(target_x, mine=False, do_fuel_check=True):
     return True
 
 
-def go_to_y(target_y, mine=False, do_fuel_check=True):
+def go_to_y(target_y, mine=True, do_fuel_check=True):
     while target_y != COORDS["y"]:
         if COORDS["y"] < target_y:
             if not up(mine=mine):
@@ -257,7 +257,7 @@ def go_to_y(target_y, mine=False, do_fuel_check=True):
     return True
 
 
-def go_to_z(target_z, mine=False, do_fuel_check=True):
+def go_to_z(target_z, mine=True, do_fuel_check=True):
     if target_z != COORDS["z"]:
         if COORDS["z"] < target_z:
             turn_to_heading(0)  # forward
@@ -271,7 +271,7 @@ def go_to_z(target_z, mine=False, do_fuel_check=True):
     return True
 
 
-def go_to_coords(x=None, y=None, z=None, mine=False, do_fuel_check=True):
+def go_to_coords(x=None, y=None, z=None, mine=True, do_fuel_check=True):
     if x is not None:
         if not go_to_x(x, mine=mine, do_fuel_check=do_fuel_check):
             return False
@@ -539,7 +539,7 @@ def mine_path():
     z_diff = HOLE_WIDTH_Z - 1
     for layer in range(depth + 1):
         for row in range(HOLE_WIDTH_X):
-            if not go_to_z(COORDS["z"] + z_diff, mine=True):
+            if not go_to_z(COORDS["z"] + z_diff):
                 return False
 
             if not status_check():
@@ -547,7 +547,7 @@ def mine_path():
                 break
 
             if row < HOLE_WIDTH_X - 1:
-                if not go_to_x(COORDS["x"] + x_diff, mine=True):
+                if not go_to_x(COORDS["x"] + x_diff):
                     return False
 
             z_diff = -z_diff
@@ -573,7 +573,7 @@ def mine_path():
             break
 
         if not go_to_coords(
-            x=x, y=y, z=z, mine=True
+            x=x, y=y, z=z
         ):  # returns false if stop was received
             return False
 
@@ -795,7 +795,7 @@ def build(z_dist, repeat_count=1):
 
             if not slot:
                 print(f"Don't have any {item}! ERRRORRRRRR")
-                go_to_coords(x=0, z=0, mine=True)
+                go_to_coords(x=0, z=0)
                 turn_to_heading(0)
                 exit()
             else:
@@ -849,7 +849,7 @@ def build(z_dist, repeat_count=1):
             turn_left()
             forward(mine=True)
 
-    go_to_coords(x=0, z=0, mine=True)
+    go_to_coords(x=0, z=0)
     turn_to_heading(0)
     DO_MINE = False
 
@@ -922,7 +922,7 @@ def mine():
         if START_Y != HOME_Y:
             print("Starting layer skip...")
             notify("Mining", f"Skipping to non-home start position (y={START_Y})")
-            go_to_coords(y=START_Y, mine=True)
+            go_to_coords(y=START_Y)
             hit_block = True
         elif COORDS["y"] != END_Y:
             print("Starting floor detection...")
@@ -943,7 +943,7 @@ def mine():
 
         print("Returning to start...")
         notify("Mining", "Returning home")
-        go_to_coords(x=0, y=HOME_Y, z=0, mine=True)
+        go_to_coords(x=0, y=HOME_Y, z=0)
 
         turn_to_heading(0)
 
@@ -1038,7 +1038,7 @@ def init():
 
     DO_MINE = True
     for _ in range(100):
-        forward()
+        forward(mine=True)
 
     exit()
         
@@ -1061,7 +1061,7 @@ def init():
         print("Lua exception!")
         notify("EXCEPTION", e)
         notify("EXCEPTION", "Attempting to return home")
-        go_to_coords(x=0, y=HOME_Y, z=0, mine=True)
+        go_to_coords(x=0, y=HOME_Y, z=0)
         turn_to_heading(0)
         notify("EXCEPTION", "Made it back home, killing program")
         exit()
