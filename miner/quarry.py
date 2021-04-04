@@ -611,9 +611,9 @@ def mine_path():
     mine_break = False
 
     x_diff = 1
+    z_diff = HOLE_WIDTH_Z - 1
     for layer in range(depth + 1):
-        z_diff = HOLE_WIDTH_Z - 1
-        for _ in range(HOLE_WIDTH_X - 1):
+        for _ in range(HOLE_WIDTH_X):
             if not go_to_z(COORDS["z"] + z_diff, mine=True):
                 return False
 
@@ -624,8 +624,7 @@ def mine_path():
             if not go_to_x(COORDS["x"] + x_diff, mine=True):
                 return False
 
-            if COORDS["x"] < HOLE_WIDTH_X:
-                z_diff = -z_diff
+            z_diff = -z_diff
         
         x_diff = -x_diff
         
