@@ -871,7 +871,10 @@ def build(z_dist):
         turtle.placeUp()
         forward(mine=True)
     
-    turtle.slot(initial_slot)
+    turtle.select(item_map["cable"])
+    turtle.placeUp()
+    
+    turtle.select(initial_slot)
 
     turn_right()
     forward(mine=True)
