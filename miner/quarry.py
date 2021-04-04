@@ -846,7 +846,7 @@ def build(z_dist):
 
     # turn left, go forward, turn back, place furnace, place first cable above
     turn_to_heading(3)
-    forward()
+    forward(mine=True)
     turn_to_heading(2)
     turtle.select(item_map["furnace"])
     turtle.place()
@@ -856,7 +856,7 @@ def build(z_dist):
 
     # go back to starting pos and place modem on left
     turn_to_heading(0)
-    forward()
+    forward(mine=True)
     turn_to_heading(2)
     turtle.select(item_map["modem"])
     turtle.place()
@@ -866,6 +866,7 @@ def build(z_dist):
     for _ in range(z_dist):
         turtle.select(item_map["cable"])
         turtle.placeUp()
+        forward(mine=True)
     
     turtle.slot(initial_slot)
 
