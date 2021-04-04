@@ -606,6 +606,36 @@ def mine_path():
 
     # notify("Path", repr('\n'.join(targets)))
 
+    depth = COORDS["y"] - END_Y
+
+    mine_break = False
+
+    for layer in range(depth + 1):
+        pos_diff = HOLE_WIDTH_Z - 1
+        for _ in range(HOLE_WIDTH_X):
+            if not go_to_z(COORDS["z"] + pos_diff):
+                return False
+
+            if not status_check():
+                mine_break = True
+                break
+
+            if not go_to_x(COORDS["x"] + 1):
+                return False
+
+            pos_diff = -pos_diff
+        
+        if mine_break:
+            break
+
+        notify("Mining", f"Completed y={COORDS['y']}")
+        sort_inventory()
+
+        if not down():
+            return False
+    
+    return True
+
     for target_index, target in enumerate(targets):
         x, y, z = target
 
