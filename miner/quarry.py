@@ -825,6 +825,10 @@ def locate_space_and_put_in_network(from_slot):
 
 
 def build(z_dist):
+    global DO_MINE
+
+    DO_MINE = True
+
     check_fuel()
 
     item_map = {
@@ -844,26 +848,25 @@ def build(z_dist):
     
     initial_slot = turtle.getSelectedSlot()
 
-    # turn left, go forward, turn back, place furnace, place first cable above
+    # place furnace and cable
     turn_left()
     forward(mine=True)
     turn_left()
     turtle.select(item_map["furnace"])
     turtle.place()
-
     turtle.select(item_map["cable"])
     turtle.placeUp()
 
-    # go back to starting pos and place modem on left
+    # place modem
     turn_around()
     forward(mine=True)
-    turn_left()
+
+    turn_around()
     turtle.select(item_map["modem"])
     turtle.place()
+    turn_around()
 
-    turn_right()
-
-    for _ in range(z_dist):
+    for _ in range(z_dist - 1):
         turtle.select(item_map["cable"])
         turtle.placeUp()
         forward(mine=True)
@@ -1057,6 +1060,7 @@ def client_receive_broadcast():
 def init():
 
     try:
+        
         build(8)
     except Exception as e:
         print(e)
