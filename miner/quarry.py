@@ -136,7 +136,7 @@ def forward(mine=True, do_fuel_check=True):
     
     if do_fuel_check and not check_fuel(): # we want to check the fuel, and we're out of fuel!
         notify("Low fuel", "Wouldn't have enough fuel to return if we did this move, so going back now!")
-        go_to_coords(x=0, z=0, mine=mine, do_fuel_check=False)
+        go_to_coords(x=0, y=HOME_Y, z=0, mine=mine, do_fuel_check=False)
         turn_to_heading(0)
         return False
 
@@ -171,7 +171,7 @@ def up(mine=True, do_fuel_check=True):
 
     if do_fuel_check and not check_fuel(): # we want to check the fuel, and we're out of fuel!
         notify("Low fuel", "Wouldn't have enough fuel to return if we did this move, so going back now!")
-        go_to_coords(x=0, z=0, mine=mine, do_fuel_check=False)
+        go_to_coords(x=0, y=HOME_Y, z=0, mine=mine, do_fuel_check=False)
         turn_to_heading(0)
         return False
 
@@ -195,7 +195,7 @@ def down(mine=True, do_fuel_check=True):
     
     if do_fuel_check and not check_fuel(): # we want to check the fuel, and we're out of fuel!
         notify("Low fuel", "Wouldn't have enough fuel to return if we did this move, so going back now!")
-        go_to_coords(x=0, z=0, mine=mine, do_fuel_check=False)
+        go_to_coords(x=0, y=HOME_Y, z=0, mine=mine, do_fuel_check=False)
         turn_to_heading(0)
         return False
 
@@ -383,9 +383,8 @@ def sort_inventory():
 
 def check_fuel():
     print("Checking fuel")
-    level = turtle.getFuelLevel()
 
-    while level - REFUEL_THRESH <= calc_distance_from_coords(x=0, y=HOME_Y, z=0):
+    while turtle.getFuelLevel() - REFUEL_THRESH <= calc_distance_from_coords(x=0, y=HOME_Y, z=0):
         print("Not enough fuel to return!")
 
         if refuel_from_inventory():
