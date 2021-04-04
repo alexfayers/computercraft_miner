@@ -852,8 +852,13 @@ def build(z_dist):
     turn_left()
     forward(mine=True)
     turn_left()
+    if turtle.inspect():
+        turtle.dig()
     turtle.select(item_map["furnace"])
     turtle.place()
+
+    if turtle.inspectUp():
+        turtle.digUp()
     turtle.select(item_map["cable"])
     turtle.placeUp()
 
@@ -862,15 +867,21 @@ def build(z_dist):
     forward(mine=True)
 
     turn_around()
+    if turtle.inspect():
+        turtle.dig()
     turtle.select(item_map["modem"])
     turtle.place()
     turn_around()
 
-    for _ in range(z_dist - 1):
+    for _ in range(z_dist):
+        if turtle.inspectUp():
+            turtle.digUp()
         turtle.select(item_map["cable"])
         turtle.placeUp()
         forward(mine=True)
-    
+
+    if turtle.inspectUp():
+            turtle.digUp()
     turtle.select(item_map["cable"])
     turtle.placeUp()
     
@@ -880,6 +891,7 @@ def build(z_dist):
     forward(mine=True)
 
     go_to_coords(x=0, z=0, mine=True)
+    turn_to_heading(0)
 
 
 def mine():
