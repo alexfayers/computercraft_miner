@@ -64,7 +64,6 @@ TURTLE_SLOTS = 16
 
 def generate_path(width_x, start_y, end_y, width_z):
     targets = []
-    middle_val = [width_x // 2, width_x // 2]
     
     if start_y > end_y:
         y_diff = -1
@@ -81,15 +80,14 @@ def generate_path(width_x, start_y, end_y, width_z):
         [width_x - counter, counter-1]
       ]
 
-      if middle_val in cycle:
-        del cycle[cycle.index(middle_val):]
-        cycle.append(middle_val)
-        layer_targets.extend(cycle)
-        break
-      
       layer_targets.extend(cycle)
+    
+    layer_targets_cleaned = []
+    for coord in layer_targets:
+      if layer_targets_cleaned.count(coord) < 1:
+        layer_targets_cleaned.append(coord)
 
-    print(layer_targets)
+    layer_targets = layer_targets_cleaned
 
     for loop_count, y_val in enumerate(range(start_y, end_y + y_diff, y_diff)):
       print(loop_count)
