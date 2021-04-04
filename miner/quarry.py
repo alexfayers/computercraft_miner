@@ -895,12 +895,13 @@ def build(z_dist, repeat_count=1):
         turn_right()
         forward(mine=True)
 
-        if count != repeat_count:
+        if count != repeat_count - 1:
             turn_left()
             forward(mine=True)
 
     go_to_coords(x=0, z=0, mine=True)
     turn_to_heading(0)
+    DO_MINE = False
 
 
 def mine():
