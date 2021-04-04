@@ -92,9 +92,6 @@ def server_command_control():
             if input("Kill all clients? (y/N): ").lower() == "y":
                 server_send_broadcast(command)
 
-        elif command == "update":
-            if input("Update all clients? (y/N): ").lower() == "y":
-                server_send_broadcast(command)
         elif command == "prev":
             do_prev = True
 
