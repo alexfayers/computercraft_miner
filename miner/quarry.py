@@ -1033,6 +1033,13 @@ def client_receive_broadcast():
 
 
 def init():
+
+    # fuel test
+
+    for _ in range(100):
+        forward()
+
+    exit()
         
     MODEM_SIDE = "right"
 
