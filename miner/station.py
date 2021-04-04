@@ -26,7 +26,7 @@ def server_send_broadcast(message):
 
 
 def update_clients():
-    
+
     orig_x, orig_y = term.getCursorPos()
 
     status_message = f"Miners available: {len(rednet.lookup('QuarryMiner'))}"
@@ -46,7 +46,7 @@ def server_command_control():
 
     first_loop = True
 
-    prev_command = ''
+    prev_command = ""
     do_prev = False
     while True:
         update_clients()
@@ -89,17 +89,11 @@ def server_command_control():
                 print("No clients available")
 
         elif command == "kill":
-            if (
-                input("Kill all clients? (y/N): ").lower()
-                == "y"
-            ):
+            if input("Kill all clients? (y/N): ").lower() == "y":
                 server_send_broadcast(command)
 
         elif command == "update":
-            if (
-                input("Update all clients? (y/N): ").lower()
-                == "y"
-            ):
+            if input("Update all clients? (y/N): ").lower() == "y":
                 server_send_broadcast(command)
         elif command == "prev":
             do_prev = True
@@ -108,7 +102,7 @@ def server_command_control():
             valid in command for valid in valid_commands
         ):  # if any of the valids are a substring of the input
             server_send_broadcast(command)
-        
+
         elif command == "":
             pass
 

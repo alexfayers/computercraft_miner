@@ -20,5 +20,5 @@ else:
 print("Python exit!")
 
 # write the success file
-with fs.open('/miner_success', 'w') as f:
-    f.writeLine('placeholder')
+with fs.open("/miner_success", "w") as f:
+    f.writeLine("placeholder")
