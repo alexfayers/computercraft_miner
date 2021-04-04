@@ -521,9 +521,6 @@ def dig_step():
     if turtle.detect():
         turtle.dig()
 
-    # if turtle.detectDown():
-    #    turtle.digDown()
-
 
 def down_layer():
     hit_block = False
@@ -571,38 +568,6 @@ def next_line(current_line_number):
         dig_step()
         forward()
         turn_left()
-
-
-def mine_layer():
-    for line_number in range(CHUNK_SIZE):
-        status_check()
-        mine_line(line_number)
-
-        if line_number < CHUNK_SIZE - 1:
-            next_line(line_number)
-    sort_inventory()
-
-
-def mine_several_layers():
-    while END_Y <= COORDS["y"]:
-        mine_layer()
-
-        if CHUNK_SIZE % 2 == 0:
-            turn_right()
-        else:
-            turn_left()
-
-        if not DO_MINE:
-            print("Stop signal was received, returing to start!")
-            break
-
-        print(f"y={COORDS['y']} complete")
-        notify("Mining", f"y={COORDS['y']} complete (mining until y={END_Y})")
-
-        if END_Y >= COORDS["y"]:
-            break
-        else:
-            down_layer()
 
 
 def mine_path():
@@ -859,6 +824,50 @@ def locate_space_and_put_in_network(from_slot):
     return transferred
 
 
+def build(z_dist):
+    refuel_from_inventory()
+
+    item_map = {
+        "cable": -1,
+        "modem": -1,
+        "furnace": -1
+    }
+
+    for item in item_map.keys():
+        slot = find_item(item)
+
+        if not slot:
+            print(f"Don't have any {item}! ERRRORRRRRR")
+            exit()
+        else:
+            item_map[item] = slot
+    
+    initial_slot = turtle.getSelectedSlot()
+
+    # turn left, go forward, turn back, place furnace, place first cable above
+    turn_to_heading(3)
+    forward()
+    turn_to_heading(2)
+    turtle.select(item_map["furnace"])
+    turtle.place()
+
+    turtle.select(item_map["cable"])
+    turtle.placeUp()
+
+    # go back to starting pos and place modem on left
+    turn_to_heading(0)
+    forward()
+    turn_to_heading(2)
+    turtle.select(item_map["modem"])
+    turtle.place()
+
+    turn_to_heading(0)
+
+    for _ in range(z_dist):
+        turtle.select(item_map["cable"])
+        turtle.placeUp()
+
+
 def mine():
     global DO_MINE
 
@@ -1038,6 +1047,11 @@ def client_receive_broadcast():
 
 
 def init():
+
+    check_fuel()
+    build(8)
+
+    return
     MODEM_SIDE = "right"
 
     if not rednet.isOpen(MODEM_SIDE):
