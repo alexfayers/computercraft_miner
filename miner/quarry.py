@@ -613,7 +613,7 @@ def mine_path():
     x_diff = 1
     z_diff = HOLE_WIDTH_Z - 1
     for layer in range(depth + 1):
-        for _ in range(HOLE_WIDTH_X - 1):
+        for row in range(HOLE_WIDTH_X):
             if not go_to_z(COORDS["z"] + z_diff, mine=True):
                 return False
 
@@ -621,8 +621,9 @@ def mine_path():
                 mine_break = True
                 break
 
-            if not go_to_x(COORDS["x"] + x_diff, mine=True):
-                return False
+            if row != HOLE_WIDTH_X - 1 and row != 0: # if not on edges of quarry
+                    if not go_to_x(COORDS["x"] + x_diff, mine=True):
+                        return False
 
             z_diff = -z_diff
         
