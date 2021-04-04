@@ -1036,6 +1036,7 @@ def init():
 
     # fuel test
 
+    DO_MINE = True
     for _ in range(100):
         forward()
 
