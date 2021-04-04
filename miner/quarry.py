@@ -1035,7 +1035,7 @@ def client_receive_broadcast():
 def init():
 
     # fuel test
-
+    global DO_MINE
     DO_MINE = True
     for _ in range(100):
         print("ee")
