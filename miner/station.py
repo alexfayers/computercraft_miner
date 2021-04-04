@@ -57,7 +57,8 @@ def server_command_control():
             command = prev_command
         else:
             command = input("QuarryControl> ")
-            prev_command = command
+            if command != "prev":
+                prev_command = command
 
         if command == "help":
             print("start - Start all miners with default params")
