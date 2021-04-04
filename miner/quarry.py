@@ -7,6 +7,7 @@ from cc import peripheral
 from cc import parallel
 from cc import rednet
 from cc import fs
+from computercraft import errors as cc_errors
 
 import math
 import requests
@@ -62,48 +63,6 @@ COORDS = {
 
 TURTLE_SLOTS = 16
 
-
-def generate_path(width_x, start_y, end_y, width_z):
-    targets = []
-
-    if start_y > end_y:
-        y_diff = -1
-    else:
-        y_diff = 1
-
-    # calculate layer targets
-    layer_targets = []
-    for counter in range(1, width_x + 1):
-        cycle = [
-            [counter - 1, counter - 1],
-            [counter - 1, width_z - counter],
-            [width_x - counter, width_z - counter],
-            [width_x - counter, counter - 1],
-        ]
-
-        layer_targets.extend(cycle)
-
-    layer_targets_cleaned = []
-    for coord in layer_targets:
-        if layer_targets_cleaned.count(coord) < 1:
-            layer_targets_cleaned.append(coord)
-
-    layer_targets = layer_targets_cleaned
-
-    for loop_count, y_val in enumerate(range(start_y, end_y + y_diff, y_diff)):
-        print(loop_count)
-
-        for layer_target in layer_targets:
-            temp_target = [layer_target[0], y_val, layer_target[1]]
-            targets.append(temp_target)
-
-        layer_targets = list(reversed(layer_targets))
-
-    return targets
-
-
-# JOIN_KEY = requests.get("http://192.168.1.54:8000/join.key").text
-
 term.clear()
 
 if not os.getComputerLabel():
@@ -128,6 +87,9 @@ def calc_globals():
 
 
 def notify(title, text):
+    title = repr(title)
+    text = repr(text)
+
     text = f"{title}: {text}"
     title = f"{os.getComputerLabel()}"
 
@@ -159,7 +121,7 @@ def turn_left():
     print(repr(COORDS))
 
 
-def forward(mine=False):
+def forward(mine=False, do_fuel_check=True):
     global COORDS
 
     if not DO_MINE:
@@ -171,6 +133,12 @@ def forward(mine=False):
 
         if turtle.detect():
             turtle.dig()
+    
+    if do_fuel_check and not check_fuel(): # we want to check the fuel, and we're out of fuel!
+        notify("Low fuel", "Wouldn't have enough fuel to return if we did this move, so going back now!")
+        go_to_coords(x=0, z=0, mine=mine, do_fuel_check=False)
+        turn_to_heading(0)
+        return False
 
     turtle.forward()
 
@@ -188,7 +156,7 @@ def forward(mine=False):
     return True
 
 
-def up(mine=False):
+def up(mine=False, do_fuel_check=True):
     global COORDS
 
     if not DO_MINE:
@@ -201,6 +169,12 @@ def up(mine=False):
         if turtle.detectUp():
             turtle.digUp()
 
+    if do_fuel_check and not check_fuel(): # we want to check the fuel, and we're out of fuel!
+        notify("Low fuel", "Wouldn't have enough fuel to return if we did this move, so going back now!")
+        go_to_coords(x=0, z=0, mine=mine, do_fuel_check=False)
+        turn_to_heading(0)
+        return False
+
     turtle.up()
     COORDS["y"] += 1
 
@@ -209,7 +183,7 @@ def up(mine=False):
     return True
 
 
-def down(mine=False):
+def down(mine=False, do_fuel_check=True):
     global COORDS
 
     if not DO_MINE:
@@ -218,6 +192,12 @@ def down(mine=False):
     if mine == True:
         if turtle.detectDown():
             turtle.digDown()
+    
+    if do_fuel_check and not check_fuel(): # we want to check the fuel, and we're out of fuel!
+        notify("Low fuel", "Wouldn't have enough fuel to return if we did this move, so going back now!")
+        go_to_coords(x=0, z=0, mine=mine, do_fuel_check=False)
+        turn_to_heading(0)
+        return False
 
     turtle.down()
     COORDS["y"] -= 1
@@ -251,7 +231,7 @@ def turn_to_heading(target_heading):
     return
 
 
-def go_to_x(target_x, mine=False):
+def go_to_x(target_x, mine=False, do_fuel_check=True):
     if target_x != COORDS["x"]:
         if COORDS["x"] < target_x:
             turn_to_heading(1)  # right
@@ -259,25 +239,25 @@ def go_to_x(target_x, mine=False):
             turn_to_heading(3)  # left
 
         while target_x != COORDS["x"]:
-            if not forward(mine=mine):
+            if not forward(mine=mine, do_fuel_check=do_fuel_check):
                 return False
 
     return True
 
 
-def go_to_y(target_y, mine=False):
+def go_to_y(target_y, mine=False, do_fuel_check=True):
     while target_y != COORDS["y"]:
         if COORDS["y"] < target_y:
             if not up(mine=mine):
                 return False
         else:
-            if not down(mine=mine):
+            if not down(mine=mine, do_fuel_check=do_fuel_check):
                 return False
 
     return True
 
 
-def go_to_z(target_z, mine=False):
+def go_to_z(target_z, mine=False, do_fuel_check=True):
     if target_z != COORDS["z"]:
         if COORDS["z"] < target_z:
             turn_to_heading(0)  # forward
@@ -285,23 +265,23 @@ def go_to_z(target_z, mine=False):
             turn_to_heading(2)  # backward
 
         while target_z != COORDS["z"]:
-            if not forward(mine=mine):
+            if not forward(mine=mine, do_fuel_check=do_fuel_check):
                 return False
 
     return True
 
 
-def go_to_coords(x=None, y=None, z=None, mine=False):
+def go_to_coords(x=None, y=None, z=None, mine=False, do_fuel_check=True):
     if x is not None:
-        if not go_to_x(x, mine=mine):
+        if not go_to_x(x, mine=mine, do_fuel_check=do_fuel_check):
             return False
 
     if y is not None:
-        if not go_to_y(y, mine=mine):
+        if not go_to_y(y, mine=mine, do_fuel_check=do_fuel_check):
             return False
 
     if z is not None:
-        if not go_to_z(z, mine=mine):
+        if not go_to_z(z, mine=mine, do_fuel_check=do_fuel_check):
             return False
 
     return DO_MINE
@@ -405,12 +385,12 @@ def check_fuel():
     print("Checking fuel")
     level = turtle.getFuelLevel()
 
-    if level <= calc_distance_from_coords(x=0, y=HOME_Y, z=0):
+    while level - REFUEL_THRESH <= calc_distance_from_coords(x=0, y=HOME_Y, z=0):
         print("Not enough fuel to return!")
 
         if refuel_from_inventory():
-            print("Refueled successfully!")  #
-            return True
+            print("Refueled successfully!")
+            # return True
         else:
             print("Couldn't refuel! Uh oh...")
             return False
@@ -546,30 +526,6 @@ def up_layer():
     return hit_block
 
 
-def travel_line():
-    for block in range(CHUNK_SIZE - 1):
-        forward()
-
-
-def mine_line(current_line_number):
-    for block in range(CHUNK_SIZE - 1):
-        dig_step()
-        forward()
-
-
-def next_line(current_line_number):
-    if current_line_number % 2 == 0:
-        turn_right()
-        dig_step()
-        forward()
-        turn_right()
-    else:
-        turn_left()
-        dig_step()
-        forward()
-        turn_left()
-
-
 def mine_path():
     targets = generate_path(HOLE_WIDTH_X, COORDS["y"], END_Y, HOLE_WIDTH_Z)
 
@@ -645,13 +601,7 @@ def return_to_start(skipped_layers, straight_up_override=False):
         travel_line()
 
     while COORDS["y"] < HOME_Y:
-        # if up():
         up()
-
-        # else:
-        #    print("Failed to go upwards!")
-        #    notify("Mining", "Failed returning because of an obstruction, exiting!")
-        #    exit()
 
     if straight_up_override:
         pass
@@ -683,7 +633,7 @@ def locate_item_in_network(search):
     try:
         network = peripheral.wrap("left")
     except:
-        print("No modem to the right of the turtle!")
+        print("No modem to the left of the turtle!")
         return ()
 
     for device in network.getNamesRemote():
@@ -706,7 +656,7 @@ def locate_empty_storage_in_network(search):
     try:
         network = peripheral.wrap("left")
     except:
-        print("No modem to the right of the turtle!")
+        print("No modem to the left of the turtle!")
         return ()
 
     for device in network.getNamesRemote():
@@ -724,7 +674,7 @@ def get_from_network(storage_name, from_slot, count=64):
     try:
         network = peripheral.wrap("left")
     except:
-        print("No modem to the right of the turtle!")
+        print("No modem to the left of the turtle!")
         return 0
 
     try:
@@ -749,7 +699,7 @@ def put_in_network(storage_name, from_slot, count=64):
     try:
         network = peripheral.wrap("left")
     except:
-        print("No modem to the right of the turtle!")
+        print("No modem to the left of the turtle!")
         return 0
 
     try:
@@ -1097,7 +1047,16 @@ def init():
     if all(find_item(item) for item in ["furnace", "modem", "cable"]): # if we have building materials, start building
         build(8, repeat_count=1)
 
-    parallel.waitForAny(mine, client_receive_broadcast)
+    try:
+        parallel.waitForAny(mine, client_receive_broadcast)
+    except cc_errors.LuaException as e:
+        print("Lua exception!")
+        notify("EXCEPTION", e)
+        notify("EXCEPTION", "Attempting to return home")
+        go_to_coords(x=0, y=HOME_Y, z=0, mine=True)
+        turn_to_heading(0)
+        notify("EXCEPTION", "Made it back home, killing program")
+        exit()
 
     rednet.unhost("QuarryMiner")
 
