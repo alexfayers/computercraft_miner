@@ -134,7 +134,7 @@ def forward(mine=True, do_fuel_check=True):
         if turtle.detect():
             turtle.dig()
     
-    if do_fuel_check: # we want to check the fuel, and we're out of fuel!
+    if do_fuel_check == True: # we want to check the fuel, and we're out of fuel!
         if not check_fuel():
             notify("Low fuel", "Wouldn't have enough fuel to return if we did this move, so going back now!")
             go_to_coords(x=0, y=HOME_Y, z=0, mine=mine, do_fuel_check=False)
