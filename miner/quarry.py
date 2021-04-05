@@ -42,7 +42,7 @@ HOLE_WIDTH_X = 8
 HOLE_WIDTH_Z = 8
 
 
-REFUEL_THRESH = 2
+REFUEL_THRESH = 10
 
 HOME_Y = 64  # inclusive
 
@@ -783,10 +783,6 @@ def locate_space_and_put_in_network(from_slot):
 
 
 def build(z_dist, repeat_count=1):
-    global DO_MINE
-
-    DO_MINE = True
-
     for count in range(repeat_count):
         notify("Building", f"Starting section {count}!")
 
@@ -813,7 +809,9 @@ def build(z_dist, repeat_count=1):
 
         # place furnace and cable
         turn_left()
-        forward(mine=True)
+        if not forward(mine=True):
+            return False
+
         turn_left()
         if turtle.inspect():
             turtle.dig()
@@ -827,7 +825,8 @@ def build(z_dist, repeat_count=1):
 
         # place modem
         turn_around()
-        forward(mine=True)
+        if not forward(mine=True):
+            return False
 
         turn_around()
         if turtle.inspect():
@@ -841,7 +840,8 @@ def build(z_dist, repeat_count=1):
                 turtle.digUp()
             turtle.select(item_map["cable"])
             turtle.placeUp()
-            forward(mine=True)
+            if not forward(mine=True):
+                return False
 
         if turtle.inspectUp():
                 turtle.digUp()
@@ -851,15 +851,15 @@ def build(z_dist, repeat_count=1):
         turtle.select(initial_slot)
 
         turn_right()
-        forward(mine=True)
+        if not forward(mine=True):
+            return False
 
         if count != repeat_count - 1:
             turn_left()
-            forward(mine=True)
+            if not forward(mine=True):
+                return False
 
-    go_to_coords(x=0, z=0)
-    turn_to_heading(0)
-    DO_MINE = False
+    return_home()
 
 
 def mine():
@@ -1059,7 +1059,9 @@ def init():
     rednet.host("QuarryMiner", os.getComputerLabel())
 
     if all(find_item(item) for item in ["furnace", "modem", "cable"]): # if we have building materials, start building
+        DO_MINE = True
         build(8, repeat_count=1)
+        DO_MINE = False
 
     try:
         parallel.waitForAny(mine, client_receive_broadcast)
