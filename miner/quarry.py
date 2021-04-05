@@ -299,7 +299,7 @@ def calc_distance_from_coords(x=None, y=None, z=None):
 
         return distance
     else:
-        return False
+        return 0
 
 
 def find_item(search):
@@ -386,6 +386,8 @@ def sort_inventory():
 
 def check_fuel():
     print("Checking fuel")
+
+    notify("debug", calc_distance_from_coords(x=0, y=HOME_Y, z=0))
 
     while turtle.getFuelLevel() - REFUEL_THRESH <= calc_distance_from_coords(x=0, y=HOME_Y, z=0):
         print("Not enough fuel to return!")
