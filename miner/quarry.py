@@ -42,7 +42,7 @@ HOLE_WIDTH_X = 8
 HOLE_WIDTH_Z = 8
 
 
-REFUEL_THRESH = 20
+REFUEL_THRESH = 2
 
 HOME_Y = 64  # inclusive
 
@@ -137,8 +137,7 @@ def forward(mine=True, do_fuel_check=True):
     if do_fuel_check == True: # we want to check the fuel, and we're out of fuel!
         if not check_fuel():
             notify("Low fuel", "Wouldn't have enough fuel to return if we did this move, so going back now!")
-            go_to_coords(x=0, y=HOME_Y, z=0, mine=mine, do_fuel_check=False)
-            turn_to_heading(0)
+            return_home()
             return False
 
     turtle.forward()
@@ -173,8 +172,7 @@ def up(mine=True, do_fuel_check=True):
     if do_fuel_check: # we want to check the fuel, and we're out of fuel!
         if not check_fuel():
             notify("Low fuel", "Wouldn't have enough fuel to return if we did this move, so going back now!")
-            go_to_coords(x=0, y=HOME_Y, z=0, mine=mine, do_fuel_check=False)
-            turn_to_heading(0)
+            return_home()
             return False
 
     turtle.up()
@@ -198,8 +196,7 @@ def down(mine=True, do_fuel_check=True):
     if do_fuel_check: # we want to check the fuel, and we're out of fuel!
         if not check_fuel():
             notify("Low fuel", "Wouldn't have enough fuel to return if we did this move, so going back now!")
-            go_to_coords(x=0, y=HOME_Y, z=0, mine=mine, do_fuel_check=False)
-            turn_to_heading(0)
+            return_home()
             return False
 
     turtle.down()
@@ -288,6 +285,13 @@ def go_to_coords(x=None, y=None, z=None, mine=True, do_fuel_check=True):
             return False
 
     return DO_MINE
+
+
+def return_home():
+    notify("Returning", "Returning back to starting position")
+
+    go_to_coords(x=0, y=HOME_Y, z=0, mine=True, do_fuel_check=False)
+    turn_to_heading(0)
 
 
 def calc_distance_from_coords(x=None, y=None, z=None):
@@ -946,10 +950,7 @@ def mine():
             notify("Mining", "Didn't mine - didn't hit any blocks")
 
         print("Returning to start...")
-        notify("Mining", "Returning home")
-        go_to_coords(x=0, y=HOME_Y, z=0)
-
-        turn_to_heading(0)
+        return_home()
 
         # return_to_start(skipped_layers, straight_up_override=not hit_block)
 
@@ -1042,8 +1043,8 @@ def init():
     global DO_MINE
     DO_MINE = True
     for _ in range(100):
-        print("ee")
-        forward(mine=True)
+        if not forward(mine=True):
+            break
 
     exit()
         
@@ -1065,9 +1066,7 @@ def init():
     except cc_errors.LuaException as e:
         print("Lua exception!")
         notify("EXCEPTION", e)
-        notify("EXCEPTION", "Attempting to return home")
-        go_to_coords(x=0, y=HOME_Y, z=0)
-        turn_to_heading(0)
+        return_home()
         notify("EXCEPTION", "Made it back home, killing program")
         exit()
 
