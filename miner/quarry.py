@@ -330,11 +330,10 @@ def refuel_from_inventory():
                 turtle.select(fuel_slot)
 
                 print(f"Refueling from slot {fuel_slot}...")
-                if not turtle.refuel():
-                    break
+                if turtle.refuel():
+                    turtle.select(prevSlot)
+                    refueled = True
 
-                turtle.select(prevSlot)
-                refueled = True
                 break
 
     # give up
@@ -1039,14 +1038,7 @@ def client_receive_broadcast():
 
 def init():
 
-    # fuel test
     global DO_MINE
-    DO_MINE = True
-    for _ in range(100):
-        if not forward(mine=True):
-            break
-
-    exit()
         
     MODEM_SIDE = "right"
 
