@@ -56,7 +56,7 @@ DO_MINE = False
 
 COORDS = {
     "x": 0,
-    "y": 0,
+    "y": START_Y,
     "z": 0,
     "heading": 0,  # 0 is forwards, 1 is right, 2 is back, 3 is left
 }
